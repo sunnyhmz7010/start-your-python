@@ -1,13 +1,19 @@
 import { defineStore } from 'pinia'
 import type { LessonProgress, UserProgress } from '@/types/lesson'
+import { loadProgressSnapshot, saveProgressSnapshot } from '@/utils/progressStorage'
+
+function createDefaultProgress(): UserProgress {
+  return {
+    lessons: {},
+    totalCompleted: 0,
+    totalTimeSpent: 0,
+    recentLessonId: null
+  }
+}
 
 export const useProgressStore = defineStore('progress', {
   state: () => ({
-    progress: {
-      lessons: {} as Record<string, LessonProgress>,
-      totalCompleted: 0,
-      totalTimeSpent: 0
-    } as UserProgress
+    progress: createDefaultProgress()
   }),
 
   getters: {
@@ -27,18 +33,11 @@ export const useProgressStore = defineStore('progress', {
 
   actions: {
     loadProgress() {
-      const saved = localStorage.getItem('lessonProgress')
-      if (saved) {
-        try {
-          this.progress = JSON.parse(saved)
-        } catch (e) {
-          console.error('Failed to load progress:', e)
-        }
-      }
+      this.progress = loadProgressSnapshot(createDefaultProgress())
     },
 
     saveProgress() {
-      localStorage.setItem('lessonProgress', JSON.stringify(this.progress))
+      saveProgressSnapshot(this.progress)
     },
 
     updateProgress(lessonId: string, progress: Partial<LessonProgress>) {
@@ -78,17 +77,18 @@ export const useProgressStore = defineStore('progress', {
       this.updateProgress(lessonId, { currentStep: step })
     },
 
+    setRecentLesson(lessonId: string) {
+      this.progress.recentLessonId = lessonId
+      this.saveProgress()
+    },
+
     addTimeSpent(minutes: number) {
       this.progress.totalTimeSpent += minutes
       this.saveProgress()
     },
 
     resetProgress() {
-      this.progress = {
-        lessons: {},
-        totalCompleted: 0,
-        totalTimeSpent: 0
-      }
+      this.progress = createDefaultProgress()
       this.saveProgress()
     }
   }

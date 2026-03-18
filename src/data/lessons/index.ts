@@ -63,56 +63,56 @@ export const chapters: Chapter[] = [
     title: '第5章：运算符和表达式',
     description: '学习Python的运算符和表达式',
     order: 5,
-    lessons: [] // 待添加
+    lessons: lessons.filter(lesson => lesson.chapter === 5)
   },
   {
     id: 'ch6',
     title: '第6章：控制流语句',
     description: '学习Python的控制流语句',
     order: 6,
-    lessons: [] // 待添加
+    lessons: lessons.filter(lesson => lesson.chapter === 6)
   },
   {
     id: 'ch7',
     title: '第7章：循环结构',
     description: '学习Python的循环结构',
     order: 7,
-    lessons: [] // 待添加
+    lessons: lessons.filter(lesson => lesson.chapter === 7)
   },
   {
     id: 'ch8',
     title: '第8章：函数',
     description: '学习Python的函数定义和使用',
     order: 8,
-    lessons: [] // 待添加
+    lessons: lessons.filter(lesson => lesson.chapter === 8)
   },
   {
     id: 'ch9',
     title: '第9章：列表和元组',
     description: '学习Python的列表和元组',
     order: 9,
-    lessons: [] // 待添加
+    lessons: lessons.filter(lesson => lesson.chapter === 9)
   },
   {
     id: 'ch10',
     title: '第10章：字典和集合',
     description: '学习Python的字典和集合',
     order: 10,
-    lessons: [] // 待添加
+    lessons: lessons.filter(lesson => lesson.chapter === 10)
   },
   {
     id: 'ch11',
     title: '第11章：文件操作',
     description: '学习Python的文件操作',
     order: 11,
-    lessons: [] // 待添加
+    lessons: lessons.filter(lesson => lesson.chapter === 11)
   },
   {
     id: 'ch12',
     title: '第12章：面向对象编程',
     description: '学习Python的面向对象编程',
     order: 12,
-    lessons: [] // 待添加
+    lessons: lessons.filter(lesson => lesson.chapter === 12)
   }
 ]
 

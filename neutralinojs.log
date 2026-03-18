@@ -1,4 +1,0 @@
-INFO 2026-02-17 11:49:52,874 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 Sunny@LAPTOP-5M8N41DB
-ERROR 2026-02-17 11:49:54,601 NE_RS_UNBLDRE: Unable to load application resource file /dist/python.svg api\debug\debug.cpp:20 Sunny@LAPTOP-5M8N41DB
-INFO 2026-02-26 10:56:40,282 Auth info was exported to ./.tmp/auth_info.json api\debug\debug.cpp:17 Sunny@LAPTOP-5M8N41DB
-ERROR 2026-02-26 10:56:41,863 NE_RS_UNBLDRE: Unable to load application resource file /build/python.svg api\debug\debug.cpp:20 Sunny@LAPTOP-5M8N41DB

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import type { Lesson, Chapter, LessonStep } from '@/types/lesson'
-import { lessonsData } from '@/data/lessonsData'
+import { localContentProvider } from '@/services/content/localContentProvider'
 
 export const useLessonStore = defineStore('lesson', {
   state: () => ({
@@ -22,8 +22,8 @@ export const useLessonStore = defineStore('lesson', {
   },
 
   actions: {
-    loadLessons() {
-      this.chapters = lessonsData
+    async loadLessons() {
+      this.chapters = await localContentProvider.getChapters()
     },
 
     selectLesson(lesson: Lesson) {
@@ -57,6 +57,11 @@ export const useLessonStore = defineStore('lesson', {
       if (this.currentStepIndex > 0) {
         this.currentStepIndex--
       }
+    },
+
+    setCurrentStep(index: number) {
+      if (!this.currentLesson) return
+      this.currentStepIndex = Math.max(0, Math.min(index, this.currentLesson.steps.length - 1))
     },
 
     completeLesson() {

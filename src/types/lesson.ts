@@ -49,4 +49,10 @@ export interface UserProgress {
   lessons: Record<string, LessonProgress>
   totalCompleted: number
   totalTimeSpent: number
+  recentLessonId: string | null
+}
+
+export interface ContentProvider {
+  getChapters(): Promise<Chapter[]>
+  getLessonById(id: string): Promise<Lesson | null>
 }
