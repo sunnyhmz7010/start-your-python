@@ -1,62 +1,52 @@
 <template>
-  <div class="workspace-shell">
-    <header class="topbar">
-      <div>
-        <p class="eyebrow">Start Your Python</p>
-        <h1>IDE 风格 Python 自学工作区</h1>
-      </div>
-      <button class="run-button" type="button" :disabled="!currentLesson" @click="handleRunLesson">
-        开始本节学习
-      </button>
-    </header>
-
-    <main class="workspace-main">
-      <LessonTree
-        :chapters="chapters"
-        :current-lesson-id="currentLesson?.id ?? null"
-        :completed-lesson-ids="completedLessonIds"
-        @select-lesson="handleSelectLesson"
-      />
-
-      <section class="workspace-center">
-        <RecentLessonCard
-          v-if="recentLesson"
-          :lesson="recentLesson"
-          :current-step="recentLessonStep"
-          @resume="handleSelectLesson(recentLesson)"
+  <IdeFrame :current-lesson="currentLesson" @run="handleRunLesson">
+    <div class="workspace-layout">
+      <ProjectToolWindow>
+        <LessonTree
+          :chapters="chapters"
+          :current-lesson-id="currentLesson?.id ?? null"
+          :completed-lesson-ids="completedLessonIds"
+          @select-lesson="handleSelectLesson"
         />
+      </ProjectToolWindow>
 
+      <section class="editor-column">
+        <EditorTabs :current-lesson="currentLesson" />
         <LessonMainPanel
           :lesson="currentLesson"
-          :chapter="currentChapter"
           :step="currentStep"
+          :workspace-mode="workspaceMode"
         />
-
         <LessonBottomPanel
-          :lesson="currentLesson"
-          :step="currentStep"
+          :active-tab="activeBottomTab"
           :console-output="lessonStore.consoleOutput"
+          @change-tab="lessonStore.setActiveBottomTab"
         />
+        <StatusBar :mode="workspaceMode" :lesson="currentLesson" />
       </section>
 
       <LessonStepsPanel
+        v-if="workspaceMode === 'run'"
         :lesson="currentLesson"
         :current-step-index="currentStepIndex"
         @goto-step="handleGotoStep"
         @next-step="handleNextStep"
         @previous-step="handlePreviousStep"
       />
-    </main>
-  </div>
+    </div>
+  </IdeFrame>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
+import EditorTabs from '@/components/workspace/EditorTabs.vue'
+import IdeFrame from '@/components/workspace/IdeFrame.vue'
 import LessonBottomPanel from '@/components/workspace/LessonBottomPanel.vue'
 import LessonMainPanel from '@/components/workspace/LessonMainPanel.vue'
 import LessonStepsPanel from '@/components/workspace/LessonStepsPanel.vue'
 import LessonTree from '@/components/workspace/LessonTree.vue'
-import RecentLessonCard from '@/components/workspace/RecentLessonCard.vue'
+import ProjectToolWindow from '@/components/workspace/ProjectToolWindow.vue'
+import StatusBar from '@/components/workspace/StatusBar.vue'
 import { useLessonStore } from '@/stores/lesson'
 import { useProgressStore } from '@/stores/progress'
 import type { Lesson } from '@/types/lesson'
@@ -68,15 +58,8 @@ const chapters = computed(() => lessonStore.chapters)
 const currentLesson = computed(() => lessonStore.currentLesson)
 const currentStepIndex = computed(() => lessonStore.currentStepIndex)
 const currentStep = computed(() => lessonStore.currentStep)
-const currentChapter = computed(() => {
-  if (!currentLesson.value) {
-    return null
-  }
-
-  return chapters.value.find((chapter) =>
-    chapter.lessons.some((lesson) => lesson.id === currentLesson.value?.id)
-  ) ?? null
-})
+const workspaceMode = computed(() => lessonStore.workspaceMode)
+const activeBottomTab = computed(() => lessonStore.activeBottomTab)
 
 const completedLessonIds = computed(() =>
   Object.values(progressStore.progress.lessons)
@@ -84,41 +67,35 @@ const completedLessonIds = computed(() =>
     .map((item) => item.lessonId)
 )
 
-const recentLesson = computed(() => {
-  const lessonId = progressStore.progress.recentLessonId
-  if (!lessonId) {
-    return null
+function selectInitialLesson() {
+  const recentLessonId = progressStore.progress.recentLessonId
+  const recentLesson = recentLessonId ? lessonStore.getLessonById(recentLessonId) : null
+  const selected = recentLesson ?? lessonStore.allLessons[0] ?? null
+
+  if (!selected) {
+    return
   }
 
-  return lessonStore.getLessonById(lessonId) ?? null
-})
+  lessonStore.selectLesson(selected)
+  const savedStep = progressStore.getProgress(selected.id)?.currentStep ?? 0
+  lessonStore.setCurrentStep(savedStep)
+}
 
-const recentLessonStep = computed(() => {
-  if (!recentLesson.value) {
-    return 0
-  }
-
-  return progressStore.getProgress(recentLesson.value.id)?.currentStep ?? 0
-})
-
-function restoreLessonProgress(lesson: Lesson) {
+function handleSelectLesson(lesson: Lesson) {
+  lessonStore.selectLesson(lesson)
   const savedStep = progressStore.getProgress(lesson.id)?.currentStep ?? 0
   lessonStore.setCurrentStep(savedStep)
   progressStore.setRecentLesson(lesson.id)
 }
 
-function handleSelectLesson(lesson: Lesson) {
-  lessonStore.selectLesson(lesson)
-  restoreLessonProgress(lesson)
-}
-
 function handleRunLesson() {
-  lessonStore.runLesson()
-
-  if (currentLesson.value) {
-    progressStore.updateCurrentStep(currentLesson.value.id, 0)
-    progressStore.setRecentLesson(currentLesson.value.id)
+  if (!currentLesson.value) {
+    return
   }
+
+  lessonStore.enterRunMode()
+  progressStore.setRecentLesson(currentLesson.value.id)
+  progressStore.updateCurrentStep(currentLesson.value.id, currentStepIndex.value)
 }
 
 function handleGotoStep(index: number) {
@@ -127,6 +104,7 @@ function handleGotoStep(index: number) {
   }
 
   lessonStore.setCurrentStep(index)
+  lessonStore.appendConsoleOutput(`[Run] 跳转到步骤 ${lessonStore.currentStepIndex + 1}: ${lessonStore.currentStep?.title}\n`)
   progressStore.updateCurrentStep(currentLesson.value.id, lessonStore.currentStepIndex)
 }
 
@@ -158,84 +136,27 @@ function handlePreviousStep() {
 onMounted(async () => {
   progressStore.loadProgress()
   await lessonStore.loadLessons()
-
-  if (recentLesson.value) {
-    handleSelectLesson(recentLesson.value)
-  }
+  selectInitialLesson()
 })
 </script>
 
 <style scoped>
-.workspace-shell {
-  min-height: 100vh;
-  background:
-    radial-gradient(circle at top right, rgba(79, 140, 255, 0.18), transparent 28%),
-    linear-gradient(180deg, #171b20 0%, #1d232b 100%);
-  color: #eef3f8;
-}
-
-.topbar {
+.workspace-layout {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  padding: 18px 22px;
-  border-bottom: 1px solid #2a313b;
-  background: rgba(19, 23, 29, 0.82);
-  backdrop-filter: blur(8px);
+  min-height: calc(100vh - 76px);
 }
 
-.eyebrow {
-  margin: 0 0 4px;
-  color: #8ea0b5;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.topbar h1 {
-  margin: 0;
-  font-size: 24px;
-}
-
-.run-button {
-  border: none;
-  border-radius: 999px;
-  padding: 12px 18px;
-  background: #4f8cff;
-  color: #fff;
-  cursor: pointer;
-  font-weight: 700;
-}
-
-.run-button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.workspace-main {
-  display: flex;
-  min-height: calc(100vh - 83px);
-}
-
-.workspace-center {
+.editor-column {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  min-width: 0;
+  background: #1f2229;
 }
 
 @media (max-width: 1200px) {
-  .workspace-main {
+  .workspace-layout {
     flex-direction: column;
-  }
-
-  :deep(.lesson-tree),
-  :deep(.steps-panel) {
-    width: 100%;
-    border-right: none;
-    border-left: none;
-    border-bottom: 1px solid #32363a;
   }
 }
 </style>

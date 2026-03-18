@@ -1,6 +1,6 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import { createPinia } from 'pinia'
-import { describe, expect, it, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import HomeView from '@/views/HomeView.vue'
 
 describe('HomeView workspace', () => {
@@ -20,7 +20,7 @@ describe('HomeView workspace', () => {
     }))
   })
 
-  it('shows a recent lesson entry and a visible learning steps region', async () => {
+  it('shows a pseudo python file view before run mode starts', async () => {
     const wrapper = mount(HomeView, {
       global: {
         plugins: [createPinia()]
@@ -29,7 +29,23 @@ describe('HomeView workspace', () => {
 
     await flushPromises()
 
-    expect(wrapper.text()).toContain('继续学习')
-    expect(wrapper.text()).toContain('学习步骤')
+    expect(wrapper.text()).toContain('.py')
+    expect(wrapper.text()).toContain('Project')
+    expect(wrapper.text()).not.toContain('课程开始')
+  })
+
+  it('switches to run mode and activates the Run tool window', async () => {
+    const wrapper = mount(HomeView, {
+      global: {
+        plugins: [createPinia()]
+      }
+    })
+
+    await flushPromises()
+    await wrapper.get('[data-testid="run-button"]').trigger('click')
+
+    expect(wrapper.text()).toContain('Run')
+    expect(wrapper.text()).toContain('课程开始')
+    expect(wrapper.get('[data-testid="tool-tab-run"]').classes()).toContain('active')
   })
 })

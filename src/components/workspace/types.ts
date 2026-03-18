@@ -1,1 +1,3 @@
-export type WorkspaceBottomTab = 'tips' | 'summary' | 'console'
+export type WorkspaceBottomTab = 'problems' | 'terminal' | 'run'
+
+export type WorkspaceMode = 'editor' | 'run'

@@ -81,7 +81,7 @@ function stepTypeLabel(type: LessonStep['type']) {
 .steps-panel {
   width: 340px;
   border-left: 1px solid #32363a;
-  background: #252a31;
+  background: #252931;
   padding: 18px 16px;
   display: flex;
   flex-direction: column;

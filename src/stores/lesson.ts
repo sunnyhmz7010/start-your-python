@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import type { Lesson, Chapter, LessonStep } from '@/types/lesson'
 import { localContentProvider } from '@/services/content/localContentProvider'
+import type { WorkspaceBottomTab, WorkspaceMode } from '@/components/workspace/types'
 
 export const useLessonStore = defineStore('lesson', {
   state: () => ({
@@ -8,7 +9,9 @@ export const useLessonStore = defineStore('lesson', {
     currentLesson: null as Lesson | null,
     currentStepIndex: 0,
     isLessonRunning: false,
-    consoleOutput: ''
+    consoleOutput: '',
+    workspaceMode: 'editor' as WorkspaceMode,
+    activeBottomTab: 'problems' as WorkspaceBottomTab
   }),
 
   getters: {
@@ -31,15 +34,22 @@ export const useLessonStore = defineStore('lesson', {
       this.currentStepIndex = 0
       this.isLessonRunning = false
       this.consoleOutput = ''
+      this.workspaceMode = 'editor'
+      this.activeBottomTab = 'problems'
+    },
+
+    enterRunMode() {
+      if (!this.currentLesson) return
+
+      this.workspaceMode = 'run'
+      this.activeBottomTab = 'run'
+      this.isLessonRunning = true
+      this.consoleOutput = `[Run] 课程开始: ${this.currentLesson.title}\n`
+      this.consoleOutput += `[Run] 当前步骤 ${this.currentStepIndex + 1}: ${this.currentStep?.title ?? '准备开始'}\n`
     },
 
     runLesson() {
-      if (!this.currentLesson) return
-
-      this.isLessonRunning = true
-      this.consoleOutput = `>>> 正在执行 ${this.currentLesson.title}...\n\n`
-      this.consoleOutput += `>>> 课程开始！\n\n`
-      this.currentStepIndex = 0
+      this.enterRunMode()
     },
 
     nextStep() {
@@ -47,7 +57,7 @@ export const useLessonStore = defineStore('lesson', {
 
       if (this.currentStepIndex < this.currentLesson.steps.length - 1) {
         this.currentStepIndex++
-        this.consoleOutput += `>>> 步骤 ${this.currentStepIndex + 1}: ${this.currentStep?.title}\n\n`
+        this.consoleOutput += `[Run] 步骤 ${this.currentStepIndex + 1}: ${this.currentStep?.title}\n`
       } else {
         this.completeLesson()
       }
@@ -64,10 +74,14 @@ export const useLessonStore = defineStore('lesson', {
       this.currentStepIndex = Math.max(0, Math.min(index, this.currentLesson.steps.length - 1))
     },
 
+    setActiveBottomTab(tab: WorkspaceBottomTab) {
+      this.activeBottomTab = tab
+    },
+
     completeLesson() {
       if (!this.currentLesson) return
 
-      this.consoleOutput += `\n>>> 课程完成！恭喜你学完了 ${this.currentLesson.title}\n`
+      this.consoleOutput += `[Run] 课程完成: ${this.currentLesson.title}\n`
       this.isLessonRunning = false
     },
 

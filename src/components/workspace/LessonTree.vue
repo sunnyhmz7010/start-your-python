@@ -1,12 +1,6 @@
 <template>
   <aside class="lesson-tree">
-    <div class="tree-header">
-      <div>
-        <p class="label">课程导航</p>
-        <h2>Python 入门路径</h2>
-      </div>
-      <span class="lesson-count">{{ totalLessons }} 节</span>
-    </div>
+    <div class="tree-root">learning_project</div>
 
     <div v-for="chapter in chapters" :key="chapter.id" class="chapter">
       <div class="chapter-title">{{ chapter.title }}</div>
@@ -18,19 +12,17 @@
         type="button"
         @click="$emit('selectLesson', lesson)"
       >
-        <span class="lesson-name">{{ lesson.title }}</span>
-        <span v-if="completedLessonIds.includes(lesson.id)" class="badge completed">已完成</span>
-        <span v-else class="badge pending">{{ lesson.estimatedTime }} 分钟</span>
+        <span class="lesson-name">{{ lesson.order }}-{{ lesson.title }}.py</span>
+        <span v-if="completedLessonIds.includes(lesson.id)" class="badge completed">done</span>
       </button>
     </div>
   </aside>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import type { Chapter, Lesson } from '@/types/lesson'
 
-const props = defineProps<{
+defineProps<{
   chapters: Chapter[]
   currentLessonId: string | null
   completedLessonIds: string[]
@@ -39,77 +31,53 @@ const props = defineProps<{
 defineEmits<{
   selectLesson: [lesson: Lesson]
 }>()
-
-const totalLessons = computed(() =>
-  props.chapters.reduce((count, chapter) => count + chapter.lessons.length, 0)
-)
 </script>
 
 <style scoped>
 .lesson-tree {
-  width: 300px;
-  border-right: 1px solid #32363a;
-  background: #252a31;
-  padding: 18px 14px;
+  flex: 1;
+  background: #252931;
+  padding: 10px 8px 16px;
   overflow-y: auto;
 }
 
-.tree-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: start;
-  margin-bottom: 18px;
-}
-
-.label {
-  margin: 0 0 4px;
-  font-size: 12px;
-  color: #8ea0b5;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-h2 {
-  margin: 0;
-  font-size: 18px;
-  color: #f3f6fa;
-}
-
-.lesson-count {
-  font-size: 12px;
-  color: #9ba7b4;
+.tree-root {
+  padding: 6px 8px 12px;
+  color: #d9e0ea;
+  font-size: 13px;
 }
 
 .chapter + .chapter {
-  margin-top: 16px;
+  margin-top: 10px;
 }
 
 .chapter-title {
-  color: #dbe4ee;
-  font-size: 13px;
-  margin-bottom: 8px;
+  color: #8ea0b5;
+  font-size: 12px;
+  margin-bottom: 6px;
+  padding: 0 8px;
 }
 
 .lesson-item {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  gap: 12px;
-  padding: 10px 12px;
+  gap: 8px;
+  padding: 7px 8px;
   border: 1px solid transparent;
-  border-radius: 10px;
+  border-radius: 6px;
   background: transparent;
   color: #c1cad4;
   cursor: pointer;
-  margin-bottom: 6px;
+  margin-bottom: 2px;
   text-align: left;
+  font-size: 13px;
 }
 
 .lesson-item:hover,
 .lesson-item.active {
-  background: #313845;
-  border-color: #465063;
+  background: #303642;
+  border-color: #3e4553;
 }
 
 .lesson-name {
@@ -123,9 +91,5 @@ h2 {
 
 .badge.completed {
   color: #72d28c;
-}
-
-.badge.pending {
-  color: #8ea0b5;
 }
 </style>
