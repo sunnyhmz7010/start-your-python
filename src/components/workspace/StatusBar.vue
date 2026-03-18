@@ -1,7 +1,7 @@
 <template>
   <footer class="status-bar">
     <span>{{ mode === 'editor' ? 'Editor' : 'Run' }}</span>
-    <span>{{ lesson ? `${lesson.title}.py` : 'No file selected' }}</span>
+    <span>{{ lesson ? (lesson.fileName ?? `${lesson.title}.py`) : 'No file selected' }}</span>
   </footer>
 </template>
 

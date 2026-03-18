@@ -1,7 +1,7 @@
 <template>
   <div class="editor-view" data-testid="editor-code-view">
     <div v-if="lesson" class="code-shell">
-      <div class="code-header">{{ lesson.title }}.py</div>
+      <div class="code-header">{{ lesson.fileName ?? `${lesson.title}.py` }}</div>
       <pre class="code-block"><code>{{ lesson.pseudoCode }}</code></pre>
     </div>
     <div v-else class="empty">Select a lesson file to start.</div>

@@ -3,7 +3,7 @@
     <div class="tree-root">learning_project</div>
 
     <div v-for="chapter in chapters" :key="chapter.id" class="chapter">
-      <div class="chapter-title">{{ chapter.title }}</div>
+      <div class="chapter-title">{{ chapter.folderName }}</div>
       <button
         v-for="lesson in chapter.lessons"
         :key="lesson.id"
@@ -12,7 +12,7 @@
         type="button"
         @click="$emit('selectLesson', lesson)"
       >
-        <span class="lesson-name">{{ lesson.order }}-{{ lesson.title }}.py</span>
+        <span class="lesson-name">{{ lesson.fileName ?? `${lesson.title}.py` }}</span>
         <span v-if="completedLessonIds.includes(lesson.id)" class="badge completed">done</span>
       </button>
     </div>

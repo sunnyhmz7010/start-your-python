@@ -18,6 +18,7 @@ export interface QuizOption {
 export interface Lesson {
   id: string
   title: string
+  fileName?: string
   description: string
   difficulty: 'beginner' | 'intermediate' | 'advanced'
   estimatedTime: number
@@ -32,6 +33,7 @@ export interface Lesson {
 export interface Chapter {
   id: string
   title: string
+  folderName: string
   description: string
   order: number
   lessons: Lesson[]

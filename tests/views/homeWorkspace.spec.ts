@@ -34,6 +34,20 @@ describe('HomeView workspace', () => {
     expect(wrapper.text()).not.toContain('课程开始')
   })
 
+  it('shows Chinese chapter folders with multiple lesson files', async () => {
+    const wrapper = mount(HomeView, {
+      global: {
+        plugins: [createPinia()]
+      }
+    })
+
+    await flushPromises()
+
+    expect(wrapper.text()).toContain('第一章 Python环境准备')
+    expect(wrapper.text()).toContain('Python是什么.py')
+    expect(wrapper.text()).toContain('安装Python.py')
+  })
+
   it('switches to run mode and activates the Run tool window', async () => {
     const wrapper = mount(HomeView, {
       global: {

@@ -1,7 +1,7 @@
 <template>
   <div class="editor-tabs">
     <div class="tab active">
-      {{ currentLesson ? `${currentLesson.title}.py` : 'main.py' }}
+      {{ currentLesson ? (currentLesson.fileName ?? `${currentLesson.title}.py`) : 'main.py' }}
     </div>
   </div>
 </template>
