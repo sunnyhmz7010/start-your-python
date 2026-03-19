@@ -6,9 +6,14 @@ $packageJson = Get-Content $packageJsonPath -Raw | ConvertFrom-Json
 
 $version = $packageJson.version
 $sourceExe = Join-Path $projectRoot "src-tauri\target\release\start-your-python.exe"
+$sourceContent = Join-Path $projectRoot "content"
 
 if (-not (Test-Path $sourceExe)) {
   throw "Tauri executable not found at $sourceExe. Run 'npm run tauri:build' first."
+}
+
+if (-not (Test-Path $sourceContent)) {
+  throw "Content directory not found at $sourceContent."
 }
 
 $releaseRoot = Join-Path $projectRoot "release\windows"
@@ -28,6 +33,7 @@ if (Test-Path $bundleZip) {
 
 New-Item -ItemType Directory -Path $bundleDir -Force | Out-Null
 Copy-Item $sourceExe $bundleExe -Force
+Copy-Item $sourceContent (Join-Path $bundleDir "content") -Recurse -Force
 
 $readmeContent = @"
 Start Your Python v$version
@@ -39,6 +45,7 @@ How to run
 Notes
 - This package contains the Tauri desktop build for Windows x64.
 - The app is a PyCharm-inspired Python learning workspace.
+- The editable lesson files are stored under the bundled content\lessons directory.
 "@
 
 Set-Content -Path $bundleReadme -Value $readmeContent -Encoding UTF8

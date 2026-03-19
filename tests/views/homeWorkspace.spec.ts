@@ -3,20 +3,26 @@ import { createPinia } from 'pinia'
 import { beforeEach, describe, expect, it } from 'vitest'
 import HomeView from '@/views/HomeView.vue'
 
+async function waitForWorkspace() {
+  await flushPromises()
+  await flushPromises()
+  await new Promise((resolve) => setTimeout(resolve, 20))
+}
+
 describe('HomeView workspace', () => {
   beforeEach(() => {
     localStorage.clear()
     localStorage.setItem('start-your-python.progress', JSON.stringify({
       lessons: {
         lesson_2_1: {
-          lessonId: 'lesson_2_1',
+          lessonId: 'lesson_syntax_hello_world',
           completed: false,
           currentStep: 1
         }
       },
       totalCompleted: 0,
       totalTimeSpent: 0,
-      recentLessonId: 'lesson_2_1'
+      recentLessonId: 'lesson_syntax_hello_world'
     }))
   })
 
@@ -27,7 +33,7 @@ describe('HomeView workspace', () => {
       }
     })
 
-    await flushPromises()
+    await waitForWorkspace()
 
     expect(wrapper.text()).toContain('.py')
     expect(wrapper.text()).toContain('Project')
@@ -42,7 +48,7 @@ describe('HomeView workspace', () => {
       }
     })
 
-    await flushPromises()
+    await waitForWorkspace()
 
     expect(wrapper.text()).toContain('第一章 Python环境准备')
     expect(wrapper.text()).toContain('Python是什么.py')
@@ -56,8 +62,9 @@ describe('HomeView workspace', () => {
       }
     })
 
-    await flushPromises()
+    await waitForWorkspace()
     await wrapper.get('[data-testid="run-button"]').trigger('click')
+    await flushPromises()
 
     expect(wrapper.text()).toContain('Run')
     expect(wrapper.text()).toContain('课程开始')

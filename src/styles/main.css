@@ -11,6 +11,30 @@ body {
   overflow: hidden;
 }
 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #596273 #252931;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #252931;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #596273;
+  border-radius: 999px;
+  border: 2px solid #252931;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #6b7587;
+}
+
 .app-container {
   width: 100vw;
   height: 100vh;

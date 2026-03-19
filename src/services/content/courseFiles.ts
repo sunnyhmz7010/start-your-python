@@ -35,9 +35,13 @@ type ParsedStep = LessonStep & {
 
 const lessonModules = import.meta.glob('../../../content/lessons/**/*.py', {
   query: '?raw',
-  import: 'default',
-  eager: true
-}) as Record<string, string>
+  import: 'default'
+}) as Record<string, () => Promise<string>>
+
+export type LessonSourceFile = {
+  filePath: string
+  source: string
+}
 
 const LESSON_PREFIX = '# @lesson.'
 const STEP_PREFIX = '# @step.'
@@ -255,10 +259,21 @@ export function parseLessonFile(filePath: string, source: string): Lesson {
   }
 }
 
-function buildChapters(): Chapter[] {
+async function loadBundledLessonSources(): Promise<LessonSourceFile[]> {
+  const sources = await Promise.all(
+    Object.entries(lessonModules).map(async ([filePath, loader]) => {
+      const source = await loader()
+      return { filePath, source }
+    })
+  )
+
+  return sources
+}
+
+export function buildChaptersFromLessonSources(lessonSources: LessonSourceFile[]): Chapter[] {
   const chaptersMap = new Map<string, Chapter>()
 
-  for (const [filePath, source] of Object.entries(lessonModules)) {
+  for (const { filePath, source } of lessonSources) {
     const lesson = parseLessonFile(filePath, source)
     const pathParts = filePath.split('/')
     const folderName = pathParts[pathParts.length - 2] ?? `第${lesson.chapter}章`
@@ -287,4 +302,14 @@ function buildChapters(): Chapter[] {
     }))
 }
 
-export const courseFileChapters = buildChapters()
+let cachedChaptersPromise: Promise<Chapter[]> | null = null
+
+export function getBundledCourseFileChapters() {
+  if (!cachedChaptersPromise) {
+    cachedChaptersPromise = loadBundledLessonSources().then((lessonSources) =>
+      buildChaptersFromLessonSources(lessonSources)
+    )
+  }
+
+  return cachedChaptersPromise
+}
