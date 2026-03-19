@@ -5,6 +5,7 @@ coverage/
 .tmp/
 .trae/
 release/
+src-tauri/target/
 *.log
 *.exe
 

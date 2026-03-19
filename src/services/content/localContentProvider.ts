@@ -1,13 +1,13 @@
-import { chapters } from '@/data/lessons'
+import { courseFileChapters } from './courseFiles'
 import type { ContentProvider } from './contentProvider'
 
 export const localContentProvider: ContentProvider = {
   async getChapters() {
-    return chapters
+    return courseFileChapters
   },
 
   async getLessonById(id) {
-    for (const chapter of chapters) {
+    for (const chapter of courseFileChapters) {
       const lesson = chapter.lessons.find((item) => item.id === id)
       if (lesson) {
         return lesson

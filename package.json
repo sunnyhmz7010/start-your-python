@@ -10,10 +10,13 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "neu:dev": "neu run",
-    "neu:build": "npm run build && neu build --release"
+    "tauri:dev": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$env:Path += ';' + (Join-Path $env:USERPROFILE '.cargo\\bin'); tauri dev\"",
+    "tauri:build": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$env:Path += ';' + (Join-Path $env:USERPROFILE '.cargo\\bin'); tauri build --no-bundle\"",
+    "tauri:bundle": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$env:Path += ';' + (Join-Path $env:USERPROFILE '.cargo\\bin'); tauri build\"",
+    "tauri:release": "npm run tauri:build && powershell -NoProfile -ExecutionPolicy Bypass -File .\\scripts\\package-windows-release.ps1"
   },
   "dependencies": {
+    "@tauri-apps/api": "^2.0.0",
     "vue": "^3.4.21",
     "pinia": "^2.1.7",
     "vue-router": "^4.3.0",
@@ -24,6 +27,7 @@
     "highlight.js": "^11.9.0"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0",
     "@vue/test-utils": "^2.4.6",
     "@vitejs/plugin-vue": "^5.0.4",
     "jsdom": "^26.0.0",
