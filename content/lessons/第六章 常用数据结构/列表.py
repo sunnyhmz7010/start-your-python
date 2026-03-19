@@ -1,39 +1,32 @@
-"""
-{
-  "id": "lesson_ds_list",
-  "title": "列表",
-  "description": "列表是最常见的可变序列。",
-  "difficulty": "beginner",
-  "estimatedTime": 10,
-  "chapter": 6,
-  "chapterTitle": "第六章 常用数据结构",
-  "chapterOrder": 6,
-  "order": 1,
-  "prerequisites": [],
-  "tags": [],
-  "steps": [
-    {
-      "id": "s1",
-      "type": "text",
-      "title": "列表特点",
-      "content": "列表有顺序，可以增删改。"
-    },
-    {
-      "id": "s2",
-      "type": "code",
-      "title": "访问元素",
-      "content": "用下标访问列表元素。",
-      "code": "fruits[0]"
-    },
-    {
-      "id": "s3",
-      "type": "code",
-      "title": "添加元素",
-      "content": "append 可以在末尾添加。",
-      "code": "fruits.append(\"orange\")"
-    }
-  ]
-}
-"""
+# @lesson.id: lesson_ds_list
+# @lesson.title: 列表
+# @lesson.description:
+# 列表是最常见的可变序列。
+# @lesson.difficulty: beginner
+# @lesson.estimated_time: 10
+# @lesson.chapter: 6
+# @lesson.chapter_title: 第六章 常用数据结构
+# @lesson.chapter_order: 6
+# @lesson.order: 1
+# @lesson.prerequisites: 
+# @lesson.tags: 
 
-fruits = ["apple", "banana"]
+# @step.id: s1
+# @step.type: text
+# @step.title: 列表特点
+# @step.content:
+# 列表有顺序，可以增删改。
+
+# @step.id: s2
+# @step.type: code
+# @step.title: 访问元素
+# @step.content:
+# 用下标访问列表元素。
+fruits[0]
+
+# @step.id: s3
+# @step.type: code
+# @step.title: 添加元素
+# @step.content:
+# append 可以在末尾添加。
+fruits.append("orange")

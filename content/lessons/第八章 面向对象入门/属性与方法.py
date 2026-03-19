@@ -1,40 +1,31 @@
-"""
-{
-  "id": "lesson_oop_attrs",
-  "title": "属性与方法",
-  "description": "为对象添加数据和行为。",
-  "difficulty": "beginner",
-  "estimatedTime": 10,
-  "chapter": 8,
-  "chapterTitle": "第八章 面向对象入门",
-  "chapterOrder": 8,
-  "order": 2,
-  "prerequisites": [],
-  "tags": [],
-  "steps": [
-    {
-      "id": "s1",
-      "type": "text",
-      "title": "属性",
-      "content": "属性是对象保存的数据。"
-    },
-    {
-      "id": "s2",
-      "type": "text",
-      "title": "方法",
-      "content": "方法是对象能做的事。"
-    },
-    {
-      "id": "s3",
-      "type": "code",
-      "title": "调用方法",
-      "content": "对象.方法名() 可以调用行为。",
-      "code": "dog.bark()"
-    }
-  ]
-}
-"""
+# @lesson.id: lesson_oop_attrs
+# @lesson.title: 属性与方法
+# @lesson.description:
+# 为对象添加数据和行为。
+# @lesson.difficulty: beginner
+# @lesson.estimated_time: 10
+# @lesson.chapter: 8
+# @lesson.chapter_title: 第八章 面向对象入门
+# @lesson.chapter_order: 8
+# @lesson.order: 2
+# @lesson.prerequisites: 
+# @lesson.tags: 
 
-class Dog:
-    def bark(self):
-        print("wang")
+# @step.id: s1
+# @step.type: text
+# @step.title: 属性
+# @step.content:
+# 属性是对象保存的数据。
+
+# @step.id: s2
+# @step.type: text
+# @step.title: 方法
+# @step.content:
+# 方法是对象能做的事。
+
+# @step.id: s3
+# @step.type: code
+# @step.title: 调用方法
+# @step.content:
+# 对象.方法名() 可以调用行为。
+dog.bark()

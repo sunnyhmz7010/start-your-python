@@ -1,40 +1,32 @@
-"""
-{
-  "id": "lesson_var_convert",
-  "title": "类型转换",
-  "description": "在字符串和数字之间转换。",
-  "difficulty": "beginner",
-  "estimatedTime": 10,
-  "chapter": 3,
-  "chapterTitle": "第三章 变量与数据类型",
-  "chapterOrder": 3,
-  "order": 5,
-  "prerequisites": [],
-  "tags": [],
-  "steps": [
-    {
-      "id": "s1",
-      "type": "text",
-      "title": "为什么要转换",
-      "content": "用户输入通常是字符串。"
-    },
-    {
-      "id": "s2",
-      "type": "code",
-      "title": "转整数",
-      "content": "用 int 把字符串变成整数。",
-      "code": "age = int(\"18\")"
-    },
-    {
-      "id": "s3",
-      "type": "code",
-      "title": "转字符串",
-      "content": "用 str 把数字变成字符串。",
-      "code": "message = str(100)"
-    }
-  ]
-}
-"""
+# @lesson.id: lesson_var_convert
+# @lesson.title: 类型转换
+# @lesson.description:
+# 在字符串和数字之间转换。
+# @lesson.difficulty: beginner
+# @lesson.estimated_time: 10
+# @lesson.chapter: 3
+# @lesson.chapter_title: 第三章 变量与数据类型
+# @lesson.chapter_order: 3
+# @lesson.order: 5
+# @lesson.prerequisites: 
+# @lesson.tags: 
 
-age_text = "18"
-age = int(age_text)
+# @step.id: s1
+# @step.type: text
+# @step.title: 为什么要转换
+# @step.content:
+# 用户输入通常是字符串。
+
+# @step.id: s2
+# @step.type: code
+# @step.title: 转整数
+# @step.content:
+# 用 int 把字符串变成整数。
+age = int("18")
+
+# @step.id: s3
+# @step.type: code
+# @step.title: 转字符串
+# @step.content:
+# 用 str 把数字变成字符串。
+message = str(100)

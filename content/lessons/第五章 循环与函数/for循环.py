@@ -1,39 +1,32 @@
-"""
-{
-  "id": "lesson_loop_for",
-  "title": "for循环",
-  "description": "遍历一组数据。",
-  "difficulty": "beginner",
-  "estimatedTime": 10,
-  "chapter": 5,
-  "chapterTitle": "第五章 循环与函数",
-  "chapterOrder": 5,
-  "order": 2,
-  "prerequisites": [],
-  "tags": [],
-  "steps": [
-    {
-      "id": "s1",
-      "type": "text",
-      "title": "遍历",
-      "content": "for 适合按顺序访问集合里的元素。"
-    },
-    {
-      "id": "s2",
-      "type": "code",
-      "title": "range",
-      "content": "range 常用来生成一串数字。",
-      "code": "for i in range(3):\n    print(i)"
-    },
-    {
-      "id": "s3",
-      "type": "text",
-      "title": "和 while 的区别",
-      "content": "for 更适合“遍历”，while 更适合“条件控制”。"
-    }
-  ]
-}
-"""
+# @lesson.id: lesson_loop_for
+# @lesson.title: for循环
+# @lesson.description:
+# 遍历一组数据。
+# @lesson.difficulty: beginner
+# @lesson.estimated_time: 10
+# @lesson.chapter: 5
+# @lesson.chapter_title: 第五章 循环与函数
+# @lesson.chapter_order: 5
+# @lesson.order: 2
+# @lesson.prerequisites: 
+# @lesson.tags: 
 
-for item in ["a", "b", "c"]:
-    print(item)
+# @step.id: s1
+# @step.type: text
+# @step.title: 遍历
+# @step.content:
+# for 适合按顺序访问集合里的元素。
+
+# @step.id: s2
+# @step.type: code
+# @step.title: range
+# @step.content:
+# range 常用来生成一串数字。
+for i in range(3):
+    print(i)
+
+# @step.id: s3
+# @step.type: text
+# @step.title: 和 while 的区别
+# @step.content:
+# for 更适合“遍历”，while 更适合“条件控制”。

@@ -1,38 +1,32 @@
-"""
-{
-  "id": "lesson_var_bool",
-  "title": "布尔类型",
-  "description": "认识 True 和 False。",
-  "difficulty": "beginner",
-  "estimatedTime": 10,
-  "chapter": 3,
-  "chapterTitle": "第三章 变量与数据类型",
-  "chapterOrder": 3,
-  "order": 4,
-  "prerequisites": [],
-  "tags": [],
-  "steps": [
-    {
-      "id": "s1",
-      "type": "text",
-      "title": "布尔值",
-      "content": "布尔值只有 True 和 False 两种。"
-    },
-    {
-      "id": "s2",
-      "type": "text",
-      "title": "使用场景",
-      "content": "常用于条件判断。"
-    },
-    {
-      "id": "s3",
-      "type": "code",
-      "title": "简单示例",
-      "content": "把判断结果保存到变量里。",
-      "code": "age = 18\nis_adult = age >= 18"
-    }
-  ]
-}
-"""
+# @lesson.id: lesson_var_bool
+# @lesson.title: 布尔类型
+# @lesson.description:
+# 认识 True 和 False。
+# @lesson.difficulty: beginner
+# @lesson.estimated_time: 10
+# @lesson.chapter: 3
+# @lesson.chapter_title: 第三章 变量与数据类型
+# @lesson.chapter_order: 3
+# @lesson.order: 4
+# @lesson.prerequisites: 
+# @lesson.tags: 
 
-is_ready = True
+# @step.id: s1
+# @step.type: text
+# @step.title: 布尔值
+# @step.content:
+# 布尔值只有 True 和 False 两种。
+
+# @step.id: s2
+# @step.type: text
+# @step.title: 使用场景
+# @step.content:
+# 常用于条件判断。
+
+# @step.id: s3
+# @step.type: code
+# @step.title: 简单示例
+# @step.content:
+# 把判断结果保存到变量里。
+age = 18
+is_adult = age >= 18
