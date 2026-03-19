@@ -1,12 +1,14 @@
 <template>
   <div class="ide-frame">
     <header class="titlebar">
-      <div class="window-actions">
-        <span class="dot close"></span>
-        <span class="dot minimize"></span>
-        <span class="dot maximize"></span>
+      <div class="titlebar-start">
+        <div class="window-actions">
+          <span class="dot close"></span>
+          <span class="dot minimize"></span>
+          <span class="dot maximize"></span>
+        </div>
+        <div class="project-title">Start Your Python</div>
       </div>
-      <div class="project-title">Start Your Python</div>
       <div class="toolbar-actions">
         <button
           data-testid="run-button"
@@ -64,6 +66,13 @@ defineEmits<{
   padding: 0 14px;
 }
 
+.titlebar-start {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
 .toolbar {
   height: 36px;
   padding: 0 12px;
@@ -92,6 +101,10 @@ defineEmits<{
 .tool-label,
 .tool-path {
   font-size: 13px;
+}
+
+.project-title {
+  white-space: nowrap;
 }
 
 .toolbar-actions {

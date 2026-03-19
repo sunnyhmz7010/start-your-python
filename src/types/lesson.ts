@@ -43,6 +43,7 @@ export interface LessonProgress {
   lessonId: string
   completed: boolean
   currentStep: number
+  stepStates: Record<string, boolean>
   completedAt?: string
   score?: number
 }

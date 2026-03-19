@@ -28,6 +28,10 @@ export const useProgressStore = defineStore('progress', {
     getCompletionRate: (state) => (totalLessons: number): number => {
       if (totalLessons === 0) return 0
       return state.progress.totalCompleted / totalLessons
+    },
+
+    isStepCompleted: (state) => (lessonId: string, stepId: string): boolean => {
+      return state.progress.lessons[lessonId]?.stepStates?.[stepId] || false
     }
   },
 
@@ -44,11 +48,16 @@ export const useProgressStore = defineStore('progress', {
       const current = this.progress.lessons[lessonId] || {
         lessonId,
         completed: false,
-        currentStep: 0
+        currentStep: 0,
+        stepStates: {}
       }
 
       const newProgress = {
         ...current,
+        stepStates: {
+          ...current.stepStates,
+          ...progress.stepStates
+        },
         ...progress
       }
 
@@ -77,6 +86,29 @@ export const useProgressStore = defineStore('progress', {
       this.updateProgress(lessonId, { currentStep: step })
     },
 
+    setStepCompleted(lessonId: string, stepId: string, completed: boolean, totalSteps: number) {
+      const current = this.progress.lessons[lessonId] || {
+        lessonId,
+        completed: false,
+        currentStep: 0,
+        stepStates: {}
+      }
+
+      const stepStates = {
+        ...current.stepStates,
+        [stepId]: completed
+      }
+
+      const completedSteps = Object.values(stepStates).filter(Boolean).length
+      const isLessonComplete = totalSteps > 0 && completedSteps >= totalSteps
+
+      this.updateProgress(lessonId, {
+        stepStates,
+        completed: isLessonComplete,
+        completedAt: isLessonComplete ? new Date().toISOString() : undefined
+      })
+    },
+
     setRecentLesson(lessonId: string) {
       this.progress.recentLessonId = lessonId
       this.saveProgress()
@@ -85,6 +117,19 @@ export const useProgressStore = defineStore('progress', {
     addTimeSpent(minutes: number) {
       this.progress.totalTimeSpent += minutes
       this.saveProgress()
+    },
+
+    resetLessonProgress(lessonId: string) {
+      const existing = this.progress.lessons[lessonId]
+
+      this.updateProgress(lessonId, {
+        lessonId,
+        completed: false,
+        currentStep: 0,
+        stepStates: {},
+        completedAt: undefined,
+        score: existing?.score
+      })
     },
 
     resetProgress() {

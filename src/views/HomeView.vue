@@ -29,9 +29,13 @@
         v-if="workspaceMode === 'run'"
         :lesson="currentLesson"
         :current-step-index="currentStepIndex"
+        :completed-step-ids="completedStepIds"
         @goto-step="handleGotoStep"
         @next-step="handleNextStep"
         @previous-step="handlePreviousStep"
+        @toggle-current-step-completed="handleToggleCurrentStepCompleted"
+        @reset-lesson-progress="handleResetLessonProgress"
+        @reset-all-progress="handleResetAllProgress"
       />
     </div>
   </IdeFrame>
@@ -66,6 +70,17 @@ const completedLessonIds = computed(() =>
     .filter((item) => item.completed)
     .map((item) => item.lessonId)
 )
+
+const completedStepIds = computed(() => {
+  if (!currentLesson.value) {
+    return []
+  }
+
+  const stepStates = progressStore.getProgress(currentLesson.value.id)?.stepStates ?? {}
+  return Object.entries(stepStates)
+    .filter(([, completed]) => completed)
+    .map(([stepId]) => stepId)
+})
 
 function selectInitialLesson() {
   const recentLessonId = progressStore.progress.recentLessonId
@@ -113,13 +128,27 @@ function handleNextStep() {
     return
   }
 
+  const step = currentLesson.value.steps[currentStepIndex.value]
   const isLastStep = currentStepIndex.value >= currentLesson.value.steps.length - 1
   if (isLastStep) {
-    lessonStore.completeLesson()
-    progressStore.markLessonCompleted(currentLesson.value.id)
+    progressStore.setStepCompleted(
+      currentLesson.value.id,
+      step.id,
+      true,
+      currentLesson.value.steps.length
+    )
+    if (progressStore.isLessonCompleted(currentLesson.value.id)) {
+      lessonStore.completeLesson()
+    }
     return
   }
 
+  progressStore.setStepCompleted(
+    currentLesson.value.id,
+    step.id,
+    true,
+    currentLesson.value.steps.length
+  )
   lessonStore.nextStep()
   progressStore.updateCurrentStep(currentLesson.value.id, lessonStore.currentStepIndex)
 }
@@ -131,6 +160,46 @@ function handlePreviousStep() {
 
   lessonStore.prevStep()
   progressStore.updateCurrentStep(currentLesson.value.id, lessonStore.currentStepIndex)
+}
+
+function handleToggleCurrentStepCompleted() {
+  if (!currentLesson.value || !currentStep.value) {
+    return
+  }
+
+  const isCompleted = progressStore.isStepCompleted(currentLesson.value.id, currentStep.value.id)
+  progressStore.setStepCompleted(
+    currentLesson.value.id,
+    currentStep.value.id,
+    !isCompleted,
+    currentLesson.value.steps.length
+  )
+}
+
+function handleResetLessonProgress() {
+  if (!currentLesson.value) {
+    return
+  }
+
+  const confirmed = window.confirm(`确定要重置《${currentLesson.value.title}》的学习进度吗？`)
+  if (!confirmed) {
+    return
+  }
+
+  progressStore.resetLessonProgress(currentLesson.value.id)
+  lessonStore.setCurrentStep(0)
+}
+
+function handleResetAllProgress() {
+  const confirmed = window.confirm('确定要清空全部学习进度吗？此操作无法撤销。')
+  if (!confirmed) {
+    return
+  }
+
+  progressStore.resetProgress()
+  if (currentLesson.value) {
+    lessonStore.setCurrentStep(0)
+  }
 }
 
 onMounted(async () => {

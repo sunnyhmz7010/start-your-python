@@ -14,7 +14,7 @@
         :key="step.id"
         type="button"
         class="step-item"
-        :class="{ active: currentStepIndex === index }"
+        :class="{ active: currentStepIndex === index, completed: completedStepIds.includes(step.id) }"
         @click="$emit('gotoStep', index)"
       >
         <span class="index">{{ index + 1 }}</span>
@@ -22,6 +22,7 @@
           <strong>{{ step.title }}</strong>
           <small>{{ stepTypeLabel(step.type) }}</small>
         </span>
+        <span v-if="completedStepIds.includes(step.id)" class="step-done">done</span>
       </button>
     </div>
 
@@ -37,6 +38,24 @@
         {{ isLastStep ? '标记完成' : '下一步' }}
       </button>
     </div>
+
+    <div class="progress-actions">
+      <button
+        type="button"
+        class="secondary"
+        data-testid="toggle-step-completed"
+        @click="$emit('toggleCurrentStepCompleted')"
+        :disabled="!lesson || !currentStep"
+      >
+        {{ isCurrentStepCompleted ? '取消本步完成' : '标记本步完成' }}
+      </button>
+      <button type="button" class="ghost" data-testid="reset-lesson-progress" @click="$emit('resetLessonProgress')" :disabled="!lesson">
+        重置本课
+      </button>
+      <button type="button" class="danger" data-testid="reset-all-progress" @click="$emit('resetAllProgress')">
+        清空全部进度
+      </button>
+    </div>
   </aside>
 </template>
 
@@ -47,13 +66,25 @@ import type { Lesson, LessonStep } from '@/types/lesson'
 const props = defineProps<{
   lesson: Lesson | null
   currentStepIndex: number
+  completedStepIds: string[]
 }>()
 
 defineEmits<{
   gotoStep: [index: number]
   nextStep: []
   previousStep: []
+  toggleCurrentStepCompleted: []
+  resetLessonProgress: []
+  resetAllProgress: []
 }>()
+
+const currentStep = computed(() => {
+  if (!props.lesson) {
+    return null
+  }
+
+  return props.lesson.steps[props.currentStepIndex] ?? null
+})
 
 const isLastStep = computed(() => {
   if (!props.lesson) {
@@ -61,6 +92,14 @@ const isLastStep = computed(() => {
   }
 
   return props.currentStepIndex >= props.lesson.steps.length - 1
+})
+
+const isCurrentStepCompleted = computed(() => {
+  if (!currentStep.value) {
+    return false
+  }
+
+  return props.completedStepIds.includes(currentStep.value.id)
 })
 
 function stepTypeLabel(type: LessonStep['type']) {
@@ -143,6 +182,10 @@ h2 {
   background: #31394a;
 }
 
+.step-item.completed {
+  border-color: #395946;
+}
+
 .index {
   width: 24px;
   height: 24px;
@@ -160,6 +203,14 @@ h2 {
   gap: 4px;
 }
 
+.step-done {
+  margin-left: auto;
+  color: #88d993;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 small,
 .empty-copy {
   color: #97a4b2;
@@ -172,6 +223,11 @@ small,
   margin-top: 2px;
   padding-top: 8px;
   border-top: 1px solid #303540;
+}
+
+.progress-actions {
+  display: grid;
+  gap: 8px;
 }
 
 button {
@@ -189,6 +245,16 @@ button {
 .primary {
   background: #4f8cff;
   color: #fff;
+}
+
+.ghost {
+  background: #2e343d;
+  color: #cfd8e4;
+}
+
+.danger {
+  background: #4a2428;
+  color: #ffd8dc;
 }
 
 button:disabled {
