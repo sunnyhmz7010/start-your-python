@@ -32,6 +32,7 @@ describe('HomeView workspace', () => {
     expect(wrapper.text()).toContain('.py')
     expect(wrapper.text()).toContain('Project')
     expect(wrapper.text()).not.toContain('课程开始')
+    expect(wrapper.get('[data-testid="tool-tab-terminal"]').classes()).toContain('active')
   })
 
   it('shows Chinese chapter folders with multiple lesson files', async () => {

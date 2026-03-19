@@ -11,7 +11,7 @@ export const useLessonStore = defineStore('lesson', {
     isLessonRunning: false,
     consoleOutput: '',
     workspaceMode: 'editor' as WorkspaceMode,
-    activeBottomTab: 'problems' as WorkspaceBottomTab
+    activeBottomTab: 'terminal' as WorkspaceBottomTab
   }),
 
   getters: {
@@ -35,7 +35,7 @@ export const useLessonStore = defineStore('lesson', {
       this.isLessonRunning = false
       this.consoleOutput = ''
       this.workspaceMode = 'editor'
-      this.activeBottomTab = 'problems'
+      this.activeBottomTab = 'terminal'
     },
 
     enterRunMode() {

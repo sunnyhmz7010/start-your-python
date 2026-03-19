@@ -32,16 +32,17 @@
 
     <div class="tool-content">
       <div v-if="activeTab === 'problems'">No problems found</div>
-      <div v-else-if="activeTab === 'terminal'">Terminal is unavailable in lesson mode.</div>
+      <pre v-else-if="activeTab === 'terminal'" class="terminal-copy">{{ terminalOutput }}</pre>
       <pre v-else>{{ consoleOutput || 'Run the current lesson to see teaching output.' }}</pre>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { WorkspaceBottomTab } from './types'
 
-defineProps<{
+const props = defineProps<{
   activeTab: WorkspaceBottomTab
   consoleOutput: string
 }>()
@@ -49,11 +50,22 @@ defineProps<{
 defineEmits<{
   changeTab: [tab: WorkspaceBottomTab]
 }>()
+
+const terminalOutput = computed(() => {
+  return [
+    '(.venv) PS C:\\Users\\Sunny\\start-your-python>',
+    props.consoleOutput
+      ? 'Lesson workspace ready. Click Run to enter teaching mode.'
+      : 'Terminal ready. Select a lesson file or press Run to continue.',
+    'Python 3.12.0'
+  ].join('\n')
+})
 </script>
 
 <style scoped>
 .bottom-tools {
-  height: 220px;
+  height: clamp(170px, 24vh, 220px);
+  min-height: 150px;
   border-top: 1px solid #313540;
   background: #22262e;
   display: flex;
@@ -95,5 +107,9 @@ pre {
   margin: 0;
   white-space: pre-wrap;
   font-family: 'JetBrains Mono', Consolas, monospace;
+}
+
+.terminal-copy {
+  color: #b8d6b6;
 }
 </style>

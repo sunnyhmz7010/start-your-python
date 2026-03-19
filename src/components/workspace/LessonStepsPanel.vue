@@ -79,13 +79,16 @@ function stepTypeLabel(type: LessonStep['type']) {
 
 <style scoped>
 .steps-panel {
-  width: 340px;
+  width: clamp(260px, 24vw, 340px);
+  min-width: 240px;
   border-left: 1px solid #32363a;
   background: #252931;
-  padding: 18px 16px;
+  padding: 16px 14px 14px;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .steps-header {
@@ -114,6 +117,8 @@ h2 {
 }
 
 .steps-list {
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -164,7 +169,9 @@ small,
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-  margin-top: auto;
+  margin-top: 2px;
+  padding-top: 8px;
+  border-top: 1px solid #303540;
 }
 
 button {
@@ -187,5 +194,22 @@ button {
 button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+@media (max-width: 1180px) {
+  .steps-panel {
+    width: 280px;
+    min-width: 220px;
+  }
+}
+
+@media (max-width: 980px) {
+  .steps-panel {
+    width: 100%;
+    min-width: 0;
+    max-height: 38vh;
+    border-left: none;
+    border-top: 1px solid #32363a;
+  }
 }
 </style>

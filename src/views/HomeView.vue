@@ -143,20 +143,27 @@ onMounted(async () => {
 <style scoped>
 .workspace-layout {
   display: flex;
-  min-height: calc(100vh - 76px);
+  height: calc(100vh - 76px);
+  min-height: 0;
+  overflow: hidden;
 }
 
 .editor-column {
   flex: 1;
   min-width: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   background: #1f2229;
+  overflow: hidden;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 980px) {
   .workspace-layout {
     flex-direction: column;
+    height: auto;
+    min-height: calc(100vh - 76px);
+    overflow: auto;
   }
 }
 </style>

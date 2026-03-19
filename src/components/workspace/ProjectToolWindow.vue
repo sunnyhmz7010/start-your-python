@@ -118,10 +118,11 @@
 }
 
 .project-panel {
-  width: 280px;
-  min-width: 280px;
+  width: clamp(240px, 22vw, 280px);
+  min-width: 220px;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
 .panel-header {
