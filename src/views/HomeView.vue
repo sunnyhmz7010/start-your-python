@@ -16,17 +16,27 @@
           :lesson="currentLesson"
           :step="currentStep"
           :workspace-mode="workspaceMode"
+          :editor-code="editorCode"
+          @update-code="lessonStore.updateEditorCode"
+          @run-step-code="handleRunStepCode"
         />
         <LessonBottomPanel
           :active-tab="activeBottomTab"
           :console-output="lessonStore.consoleOutput"
+          :terminal-output="runtimeStore.terminalOutput"
+          :can-submit-input="runtimeStore.canSubmitInput"
+          :is-python-missing="runtimeStore.isPythonMissing"
           @change-tab="lessonStore.setActiveBottomTab"
+          @submit-input="handleSubmitInput"
+          @stop-run="runtimeStore.stopRun"
+          @recheck-python="() => runtimeStore.detectPython(true)"
+          @open-install-lesson="handleOpenInstallPythonLesson"
         />
         <StatusBar :mode="workspaceMode" :lesson="currentLesson" />
       </section>
 
       <LessonStepsPanel
-        v-if="workspaceMode === 'run'"
+        v-if="currentLesson && workspaceMode === 'run'"
         :lesson="currentLesson"
         :current-step-index="currentStepIndex"
         :completed-step-ids="completedStepIds"
@@ -53,10 +63,12 @@ import ProjectToolWindow from '@/components/workspace/ProjectToolWindow.vue'
 import StatusBar from '@/components/workspace/StatusBar.vue'
 import { useLessonStore } from '@/stores/lesson'
 import { useProgressStore } from '@/stores/progress'
+import { useRuntimeStore } from '@/stores/runtime'
 import type { Lesson } from '@/types/lesson'
 
 const lessonStore = useLessonStore()
 const progressStore = useProgressStore()
+const runtimeStore = useRuntimeStore()
 
 const chapters = computed(() => lessonStore.chapters)
 const currentLesson = computed(() => lessonStore.currentLesson)
@@ -64,6 +76,7 @@ const currentStepIndex = computed(() => lessonStore.currentStepIndex)
 const currentStep = computed(() => lessonStore.currentStep)
 const workspaceMode = computed(() => lessonStore.workspaceMode)
 const activeBottomTab = computed(() => lessonStore.activeBottomTab)
+const editorCode = computed(() => lessonStore.currentEditorCode)
 
 const completedLessonIds = computed(() =>
   Object.values(progressStore.progress.lessons)
@@ -111,6 +124,21 @@ function handleRunLesson() {
   lessonStore.enterRunMode()
   progressStore.setRecentLesson(currentLesson.value.id)
   progressStore.updateCurrentStep(currentLesson.value.id, currentStepIndex.value)
+}
+
+async function handleRunStepCode(step: Lesson['steps'][number]) {
+  if (!currentLesson.value) {
+    return
+  }
+
+  const code = step.runnableCode ?? step.code
+  if (!code) {
+    return
+  }
+
+  lessonStore.setActiveBottomTab('terminal')
+  progressStore.setRecentLesson(currentLesson.value.id)
+  await runtimeStore.runCode(code)
 }
 
 function handleGotoStep(index: number) {
@@ -202,8 +230,23 @@ function handleResetAllProgress() {
   }
 }
 
+async function handleSubmitInput(input: string) {
+  await runtimeStore.submitInput(input)
+}
+
+function handleOpenInstallPythonLesson() {
+  const installLesson = lessonStore.getLessonById('lesson_env_install_python')
+  if (!installLesson) {
+    return
+  }
+
+  handleSelectLesson(installLesson)
+  lessonStore.setWorkspaceMode('editor')
+}
+
 onMounted(async () => {
   progressStore.loadProgress()
+  await runtimeStore.initialize()
   await lessonStore.loadLessons()
   selectInitialLesson()
 })

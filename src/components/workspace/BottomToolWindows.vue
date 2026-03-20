@@ -32,34 +32,77 @@
 
     <div class="tool-content">
       <div v-if="activeTab === 'problems'">No problems found</div>
-      <pre v-else-if="activeTab === 'terminal'" class="terminal-copy">{{ terminalOutput }}</pre>
-      <pre v-else>{{ consoleOutput || 'Run the current lesson to see teaching output.' }}</pre>
+      <div v-else-if="activeTab === 'terminal'" class="terminal-panel">
+        <pre class="terminal-copy">{{ terminalOutput }}</pre>
+
+        <div v-if="isPythonMissing" class="runtime-actions">
+          <button data-testid="go-to-install-python" type="button" class="inline-button" @click="$emit('openInstallLesson')">
+            去学习安装 Python
+          </button>
+          <button data-testid="recheck-python" type="button" class="inline-button" @click="$emit('recheckPython')">
+            重新检测 Python
+          </button>
+        </div>
+
+        <form v-if="canSubmitInput" class="terminal-input-row" @submit.prevent="submitInput">
+          <span class="prompt">&gt;</span>
+          <input
+            v-model="inputValue"
+            data-testid="terminal-input"
+            class="terminal-input"
+            type="text"
+            autocomplete="off"
+            placeholder="输入后按 Enter 发送给 Python"
+          />
+          <button data-testid="stop-run" type="button" class="inline-button danger" @click="$emit('stopRun')">
+            Stop
+          </button>
+        </form>
+      </div>
+      <pre v-else>{{ consoleOutput || terminalOutput || 'Run the current lesson to see output.' }}</pre>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { WorkspaceBottomTab } from './types'
 
 const props = defineProps<{
   activeTab: WorkspaceBottomTab
   consoleOutput: string
+  terminalOutput: string
+  canSubmitInput: boolean
+  isPythonMissing: boolean
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   changeTab: [tab: WorkspaceBottomTab]
+  submitInput: [input: string]
+  stopRun: []
+  recheckPython: []
+  openInstallLesson: []
 }>()
+
+const inputValue = ref('')
 
 const terminalOutput = computed(() => {
-  return [
-    '(.venv) PS C:\\Users\\Sunny\\start-your-python>',
-    props.consoleOutput
-      ? 'Lesson workspace ready. Click Run to enter teaching mode.'
-      : 'Terminal ready. Select a lesson file or press Run to continue.',
-    'Python 3.12.0'
-  ].join('\n')
+  if (props.terminalOutput) {
+    return props.terminalOutput
+  }
+
+  return 'Terminal ready. Select a lesson file or press Run to continue.'
 })
+
+function submitInput() {
+  const value = inputValue.value.trim()
+  if (!value) {
+    return
+  }
+
+  emit('submitInput', value)
+  inputValue.value = ''
+}
 </script>
 
 <style scoped>
@@ -111,5 +154,48 @@ pre {
 
 .terminal-copy {
   color: #b8d6b6;
+  flex: 1;
+}
+
+.terminal-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+  height: 100%;
+}
+
+.runtime-actions,
+.terminal-input-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.inline-button {
+  border: 1px solid #3c4450;
+  background: #303744;
+  color: #e6edf7;
+  border-radius: 6px;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+
+.inline-button.danger {
+  background: #4a2428;
+  border-color: #603137;
+}
+
+.prompt {
+  color: #90d48b;
+}
+
+.terminal-input {
+  flex: 1;
+  border: 1px solid #394150;
+  border-radius: 6px;
+  background: #181c22;
+  color: #e6edf7;
+  padding: 8px 10px;
 }
 </style>

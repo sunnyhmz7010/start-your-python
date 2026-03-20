@@ -7,6 +7,8 @@ export const useLessonStore = defineStore('lesson', {
   state: () => ({
     chapters: [] as Chapter[],
     currentLesson: null as Lesson | null,
+    workingCopies: {} as Record<string, string>,
+    currentEditorCode: '',
     currentStepIndex: 0,
     isLessonRunning: false,
     consoleOutput: '',
@@ -31,6 +33,7 @@ export const useLessonStore = defineStore('lesson', {
 
     selectLesson(lesson: Lesson) {
       this.currentLesson = lesson
+      this.currentEditorCode = this.workingCopies[lesson.id] ?? lesson.pseudoCode
       this.currentStepIndex = 0
       this.isLessonRunning = false
       this.consoleOutput = ''
@@ -76,6 +79,22 @@ export const useLessonStore = defineStore('lesson', {
 
     setActiveBottomTab(tab: WorkspaceBottomTab) {
       this.activeBottomTab = tab
+    },
+
+    setWorkspaceMode(mode: WorkspaceMode) {
+      this.workspaceMode = mode
+    },
+
+    updateEditorCode(code: string) {
+      if (!this.currentLesson) return
+      this.currentEditorCode = code
+      this.workingCopies[this.currentLesson.id] = code
+    },
+
+    resetEditorCode() {
+      if (!this.currentLesson) return
+      delete this.workingCopies[this.currentLesson.id]
+      this.currentEditorCode = this.currentLesson.pseudoCode
     },
 
     completeLesson() {

@@ -4,6 +4,7 @@ export interface LessonStep {
   title: string
   content: string
   code?: string
+  runnableCode?: string
   hint?: string
   options?: QuizOption[]
   correctAnswer?: string | number

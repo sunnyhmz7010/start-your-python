@@ -13,7 +13,7 @@ type LessonAnnotationKey =
   | 'prerequisites'
   | 'tags'
 
-type StepAnnotationKey = 'id' | 'type' | 'title' | 'content' | 'hint'
+type StepAnnotationKey = 'id' | 'type' | 'title' | 'content' | 'hint' | 'runtime'
 
 type LessonMetadata = {
   id: string
@@ -31,6 +31,7 @@ type LessonMetadata = {
 
 type ParsedStep = LessonStep & {
   codeLines: string[]
+  runtimeLines: string[]
 }
 
 const lessonModules = import.meta.glob('../../../content/lessons/**/*.py', {
@@ -105,6 +106,7 @@ function finalizeStep(step: ParsedStep | null): LessonStep | null {
   }
 
   const code = step.codeLines.join('\n').trim()
+  const runnableCode = step.runtimeLines.join('\n').trim() || code
 
   return {
     id: step.id,
@@ -112,6 +114,7 @@ function finalizeStep(step: ParsedStep | null): LessonStep | null {
     title: step.title,
     content: step.content,
     code: code || undefined,
+    runnableCode: runnableCode || undefined,
     hint: step.hint
   }
 }
@@ -187,7 +190,8 @@ export function parseLessonFile(filePath: string, source: string): Lesson {
           title: '',
           content: '',
           hint: undefined,
-          codeLines: []
+          codeLines: [],
+          runtimeLines: []
         }
         index += 1
         continue
@@ -202,6 +206,7 @@ export function parseLessonFile(filePath: string, source: string): Lesson {
         if (key === 'title') currentStep.title = value
         if (key === 'content') currentStep.content = value
         if (key === 'hint') currentStep.hint = value
+        if (key === 'runtime') currentStep.runtimeLines = [value]
         index += 1
         continue
       }
@@ -210,6 +215,7 @@ export function parseLessonFile(filePath: string, source: string): Lesson {
 
       if (key === 'content') currentStep.content = block.value
       if (key === 'hint') currentStep.hint = block.value
+      if (key === 'runtime') currentStep.runtimeLines = block.value ? block.value.split('\n') : []
 
       index = block.nextIndex
       continue

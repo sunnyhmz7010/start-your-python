@@ -2,7 +2,13 @@
   <div class="editor-view" data-testid="editor-code-view">
     <div v-if="lesson" class="code-shell">
       <div class="code-header">{{ lesson.fileName ?? `${lesson.title}.py` }}</div>
-      <pre class="code-block"><code>{{ lesson.pseudoCode }}</code></pre>
+      <textarea
+        data-testid="editor-input"
+        class="code-input"
+        :value="code"
+        spellcheck="false"
+        @input="$emit('updateCode', ($event.target as HTMLTextAreaElement).value)"
+      ></textarea>
     </div>
     <div v-else class="empty">Select a lesson file to start.</div>
   </div>
@@ -13,6 +19,11 @@ import type { Lesson } from '@/types/lesson'
 
 defineProps<{
   lesson: Lesson | null
+  code: string
+}>()
+
+defineEmits<{
+  updateCode: [code: string]
 }>()
 </script>
 
@@ -36,8 +47,12 @@ defineProps<{
   border-bottom: 1px solid #2f3440;
 }
 
-.code-block {
-  margin: 0;
+.code-input {
+  width: 100%;
+  flex: 1;
+  border: none;
+  outline: none;
+  resize: none;
   padding: 16px 20px 40px;
   overflow: auto;
   white-space: pre-wrap;
@@ -45,6 +60,7 @@ defineProps<{
   font-size: 13px;
   line-height: 1.6;
   color: #d7deea;
+  background: #1f2229;
 }
 
 .empty {

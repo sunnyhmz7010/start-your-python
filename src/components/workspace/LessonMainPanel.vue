@@ -1,7 +1,17 @@
 <template>
   <section class="main-panel">
-    <EditorCodeView v-if="workspaceMode === 'editor'" :lesson="lesson" />
-    <RunLessonView v-else :lesson="lesson" :step="step" />
+    <EditorCodeView
+      v-if="workspaceMode === 'editor'"
+      :lesson="lesson"
+      :code="editorCode"
+      @update-code="$emit('updateCode', $event)"
+    />
+    <RunLessonView
+      v-else
+      :lesson="lesson"
+      :step="step"
+      @run-step-code="$emit('runStepCode', $event)"
+    />
   </section>
 </template>
 
@@ -15,6 +25,12 @@ defineProps<{
   lesson: Lesson | null
   step: LessonStep | null
   workspaceMode: WorkspaceMode
+  editorCode: string
+}>()
+
+defineEmits<{
+  updateCode: [code: string]
+  runStepCode: [step: LessonStep]
 }>()
 </script>
 

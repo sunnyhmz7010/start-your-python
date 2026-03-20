@@ -14,7 +14,17 @@
       </div>
 
       <div v-if="step?.code" class="run-card code">
-        <p class="label">示例</p>
+        <div class="code-header">
+          <p class="label">示例</p>
+          <button
+            data-testid="step-run-button"
+            type="button"
+            class="step-run-button"
+            @click="$emit('runStepCode', step)"
+          >
+            Run
+          </button>
+        </div>
         <pre><code>{{ step.code }}</code></pre>
       </div>
     </div>
@@ -27,6 +37,10 @@ import type { Lesson, LessonStep } from '@/types/lesson'
 defineProps<{
   lesson: Lesson | null
   step: LessonStep | null
+}>()
+
+defineEmits<{
+  runStepCode: [step: LessonStep]
 }>()
 </script>
 
@@ -72,5 +86,22 @@ defineProps<{
   white-space: pre-wrap;
   color: #d9e1eb;
   font-family: 'JetBrains Mono', Consolas, monospace;
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.step-run-button {
+  border: 1px solid #3f7f53;
+  background: #2f5d3b;
+  color: #edf7ef;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 12px;
 }
 </style>
