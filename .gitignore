@@ -21,3 +21,7 @@ fix_bottom_bar.py
 patch_css.py
 patch_css2.py
 replace_styles.py
+PROJECT_CONTEXT.md
+NEXT_TASKS.md
+release-notes-*.md
+docs/superpowers/
