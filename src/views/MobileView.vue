@@ -6,12 +6,25 @@
         <h1>Start Your Python</h1>
         <p class="subtitle">纯课程阅读模式，不依赖系统 Python。</p>
       </div>
-      <a class="desktop-link" href="/desktop">桌面版工作区</a>
+      <div class="header-actions">
+        <button type="button" class="catalog-toggle" @click="isCatalogOpen = true">选择课程</button>
+        <a class="desktop-link" href="/desktop">桌面版工作区</a>
+      </div>
     </header>
 
     <main class="mobile-body">
-      <section class="lesson-browser">
-        <h2>课程目录</h2>
+      <aside
+        class="lesson-browser"
+        :class="{ 'is-open': isCatalogOpen }"
+        :aria-hidden="!isCatalogOpen"
+      >
+        <div class="browser-header">
+          <div>
+            <p class="eyebrow">Course Catalog</p>
+            <h2>课程目录</h2>
+          </div>
+          <button type="button" class="browser-close" @click="isCatalogOpen = false">关闭</button>
+        </div>
         <div class="chapter-list">
           <details v-for="chapter in chapters" :key="chapter.id" class="chapter-group" open>
             <summary>{{ chapter.title }}</summary>
@@ -30,9 +43,23 @@
             </div>
           </details>
         </div>
-      </section>
+      </aside>
+      <button
+        v-if="isCatalogOpen"
+        type="button"
+        class="browser-backdrop"
+        aria-label="关闭课程目录"
+        @click="isCatalogOpen = false"
+      />
 
       <section v-if="currentLesson" class="lesson-reader" data-testid="mobile-reader">
+        <div class="reader-toolbar">
+          <button type="button" class="catalog-entry" @click="isCatalogOpen = true">
+            {{ currentLesson.chapterTitle }} / {{ currentLesson.title }}
+          </button>
+          <span class="reader-progress">步骤 {{ currentStepIndex + 1 }} / {{ currentLesson.steps.length }}</span>
+        </div>
+
         <div class="lesson-summary">
           <div class="summary-copy">
             <p class="eyebrow">{{ currentLesson.chapterTitle }}</p>
@@ -102,7 +129,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import MarkdownContent from '@/components/content/MarkdownContent.vue'
 import { useLessonCatalog } from '@/composables/useLessonCatalog'
 import type { Lesson } from '@/types/lesson'
@@ -119,6 +146,8 @@ const {
   bootstrap,
   selectLesson
 } = useLessonCatalog()
+
+const isCatalogOpen = ref(false)
 
 const isLastStep = computed(() => {
   if (!currentLesson.value) {
@@ -140,6 +169,7 @@ function difficultyLabel(level: Lesson['difficulty']) {
 
 function handleSelectLesson(lesson: Lesson) {
   selectLesson(lesson)
+  isCatalogOpen.value = false
 }
 
 function handleGotoStep(index: number) {
@@ -229,6 +259,12 @@ onMounted(async () => {
   border-bottom: 1px solid rgba(164, 183, 208, 0.16);
 }
 
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
 .eyebrow {
   margin: 0 0 6px;
   font-size: 12px;
@@ -264,9 +300,7 @@ h3 {
 
 .mobile-body {
   padding: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+  position: relative;
 }
 
 .lesson-browser,
@@ -281,6 +315,53 @@ h3 {
 .lesson-browser,
 .lesson-reader {
   padding: 16px;
+}
+
+.lesson-browser {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 30;
+  max-height: min(72vh, 720px);
+  border-radius: 24px 24px 0 0;
+  overflow: auto;
+  transform: translateY(calc(100% + 16px));
+  transition: transform 0.24s ease;
+}
+
+.lesson-browser.is-open {
+  transform: translateY(0);
+}
+
+.browser-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.browser-close,
+.catalog-toggle,
+.catalog-entry {
+  border: none;
+  cursor: pointer;
+}
+
+.browser-close,
+.catalog-toggle {
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: rgba(53, 108, 255, 0.16);
+  color: #eef5ff;
+  border: 1px solid rgba(106, 150, 219, 0.24);
+}
+
+.browser-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  border: none;
+  background: rgba(6, 10, 16, 0.56);
 }
 
 .chapter-list {
@@ -341,6 +422,33 @@ h3 {
 .lesson-summary {
   display: grid;
   gap: 12px;
+}
+
+.reader-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.catalog-entry {
+  flex: 1 1 240px;
+  min-width: 0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  text-align: left;
+  background: rgba(39, 55, 77, 0.95);
+  color: #eef4fb;
+}
+
+.reader-progress {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: rgba(95, 123, 158, 0.18);
+  color: #dbe7f8;
+  font-size: 12px;
 }
 
 .summary-meta {
@@ -453,8 +561,44 @@ h3 {
     flex-direction: column;
   }
 
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   .reader-actions {
     grid-template-columns: 1fr;
+  }
+
+  .step-header {
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 861px) {
+  .mobile-body {
+    display: grid;
+    grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+    gap: 18px;
+    align-items: start;
+  }
+
+  .lesson-browser {
+    position: sticky;
+    top: 18px;
+    inset: auto;
+    max-height: calc(100vh - 36px);
+    border-radius: 18px;
+    transform: none;
+  }
+
+  .browser-header {
+    display: none;
+  }
+
+  .browser-backdrop,
+  .catalog-toggle {
+    display: none;
   }
 }
 </style>
