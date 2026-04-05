@@ -33,11 +33,22 @@ jobs:
       - name: Build Tauri bundle
         run: npm run tauri:bundle
 
-      - name: Upload Windows bundle
+      - name: Package portable Windows release
+        shell: pwsh
+        run: .\scripts\package-windows-release.ps1
+
+      - name: Upload Windows installers
         uses: actions/upload-artifact@v4
         with:
-          name: windows-bundle
+          name: windows-installers
           path: src-tauri/target/release/bundle/
+          if-no-files-found: error
+
+      - name: Upload Windows portable zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-portable
+          path: release/windows/*.zip
           if-no-files-found: error
 
   android:
