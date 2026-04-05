@@ -15,20 +15,37 @@
 # @step.type: text
 # @step.title: 认识 Python
 # @step.content:
-# Python 是一门高级、解释型、通用编程语言，适合初学者入门。
+# Python 是一门**高级、解释型、通用**的编程语言。
+# 
+# 它常被推荐给初学者，原因通常有三点：
+# - 语法接近自然语言，第一眼不容易被符号吓住
+# - 能很快写出能运行的小程序，反馈快
+# - 学会基础后，可以继续往自动化、数据分析、Web、AI 等方向走
+# 
+# ![Python ecosystem](/course-images/python-ecosystem.svg)
 
 # @step.id: s2
 # @step.type: text
 # @step.title: 应用场景
 # @step.content:
-# 常见方向包括 Web 开发、数据分析、自动化脚本和人工智能。
+# 在真实项目里，Python 经常出现在这些场景：
+# - **Web 开发**：快速搭建网站和接口
+# - **自动化脚本**：批量处理文件、整理数据、自动执行重复任务
+# - **数据分析**：读取表格、做清洗、画图
+# - **人工智能**：训练模型、调用现成 AI 工具链
+# 
+# 你现在学到的 `print`、变量、循环，看起来简单，但后面这些方向都要依赖这些基础。
 
 # @step.id: s3
 # @step.type: code
 # @step.title: 读懂示例
 # @step.content:
-# 看一下一个最小的 Python 程序是如何描述信息的。
+# 先看一个最小示例，感受 Python 代码的阅读方式。
+# 
+# 这段程序做了两件事：
+# 1. 把字符串 `"Python"` 放进变量 `language`
+# 2. 用 `print()` 把变量里的内容显示出来
 # @step.hint:
-# 先关注变量和 print 的作用。
+# 先不用记住所有术语，重点看“变量存值”和“print 输出”这两个动作。
 language = "Python"
 print(language)

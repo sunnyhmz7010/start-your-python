@@ -1,0 +1,6 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="28" fill="#0F1826"/>
+  <rect x="150" y="176" width="660" height="168" rx="24" fill="#172335" stroke="#263856"/>
+  <text x="480" y="154" fill="#EAF2FF" font-size="30" font-family="Arial" text-anchor="middle">Tuple keeps a fixed sequence</text>
+  <text x="480" y="272" fill="#EAF2FF" font-size="40" font-family="Courier New" text-anchor="middle">(1, 2, 3)</text>
+</svg>

@@ -1,7 +1,17 @@
 <template>
   <div class="editor-view" data-testid="editor-code-view">
     <div v-if="lesson" class="code-shell">
-      <div class="code-header">{{ lesson.fileName ?? `${lesson.title}.py` }}</div>
+      <div class="code-header">
+        <span>{{ lesson.fileName ?? `${lesson.title}.py` }}</span>
+        <button
+          data-testid="editor-run-button"
+          type="button"
+          class="run-button"
+          @click="$emit('runCode')"
+        >
+          Run Current File
+        </button>
+      </div>
       <textarea
         data-testid="editor-input"
         class="code-input"
@@ -24,6 +34,7 @@ defineProps<{
 
 defineEmits<{
   updateCode: [code: string]
+  runCode: []
 }>()
 </script>
 
@@ -45,6 +56,20 @@ defineEmits<{
   font-size: 12px;
   color: #8f98a5;
   border-bottom: 1px solid #2f3440;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.run-button {
+  border: 1px solid #3f7f53;
+  background: #2f5d3b;
+  color: #edf7ef;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 12px;
 }
 
 .code-input {

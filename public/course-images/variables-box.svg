@@ -1,0 +1,15 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="28" fill="#0F1826"/>
+  <rect x="40" y="40" width="880" height="440" rx="24" fill="#172335" stroke="#263856"/>
+  <rect x="146" y="146" width="300" height="228" rx="24" fill="#213552"/>
+  <rect x="514" y="146" width="300" height="228" rx="24" fill="#101824" stroke="#2A3E5C"/>
+  <text x="296" y="202" fill="#EAF2FF" font-size="34" font-family="Arial" text-anchor="middle">name</text>
+  <text x="296" y="244" fill="#9CB3D5" font-size="20" font-family="Arial" text-anchor="middle">variable label</text>
+  <text x="664" y="202" fill="#EAF2FF" font-size="34" font-family="Arial" text-anchor="middle">"Python"</text>
+  <text x="664" y="244" fill="#9CB3D5" font-size="20" font-family="Arial" text-anchor="middle">stored value</text>
+  <path d="M446 260H514" stroke="#4F8CFF" stroke-width="10" stroke-linecap="round"/>
+  <path d="M486 242L514 260L486 278" stroke="#4F8CFF" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="480" y="120" fill="#89A5CC" font-size="18" font-family="Arial" text-anchor="middle">Assignment links a variable name to a value</text>
+  <rect x="196" y="292" width="200" height="44" rx="12" fill="#294975"/>
+  <text x="296" y="320" fill="#FFFFFF" font-size="22" font-family="Courier New" text-anchor="middle">name = "Python"</text>
+</svg>

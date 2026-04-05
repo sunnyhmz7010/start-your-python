@@ -15,13 +15,17 @@
 # @step.type: text
 # @step.title: 为什么用函数
 # @step.content:
-# 函数让代码更清晰，也更容易复用。
+# 函数可以把重复逻辑收起来，写一次，后面反复使用。
+# 
+# 它能让代码更清晰，也更容易维护。
+# 
+# ![Function blueprint](/course-images/function-blueprint.svg)
 
 # @step.id: s2
 # @step.type: code
 # @step.title: 定义函数
 # @step.content:
-# 使用 def 关键字定义函数。
+# 使用 `def` 关键字定义函数，函数体需要缩进。
 def say_hello():
     print("hello")
 
@@ -29,5 +33,8 @@ def say_hello():
 # @step.type: code
 # @step.title: 调用函数
 # @step.content:
-# 定义后要调用函数才会执行。
+# 函数定义好之后，要调用它才会真正执行。
+def say_hello():
+    print("hello")
+
 say_hello()

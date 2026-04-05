@@ -15,13 +15,17 @@
 # @step.type: text
 # @step.title: 模块是什么
 # @step.content:
-# 模块就是别人写好的 Python 文件或库。
+# 模块可以理解成“别人已经写好的 Python 文件”。
+# 
+# 你导入模块后，就能直接使用里面的函数、变量和工具。
+# 
+# ![Import network](/course-images/import-network.svg)
 
 # @step.id: s2
 # @step.type: code
 # @step.title: 使用 import
 # @step.content:
-# 导入后就能使用模块里的功能。
+# 导入后，就能通过 `模块名.功能名` 的方式调用模块里的能力。
 import math
 print(math.sqrt(9))
 
@@ -29,4 +33,4 @@ print(math.sqrt(9))
 # @step.type: text
 # @step.title: 自己的模块
 # @step.content:
-# 你也可以把自己的代码拆到多个 .py 文件里。
+# 以后你也可以把自己的代码拆到多个 `.py` 文件里，让项目结构更清晰。

@@ -252,6 +252,8 @@ export function parseLessonFile(filePath: string, source: string): Lesson {
   return {
     id: metadata.id,
     title: metadata.title,
+    chapterTitle: metadata.chapterTitle,
+    chapterOrder: metadata.chapterOrder,
     fileName,
     description: metadata.description,
     difficulty: metadata.difficulty,
@@ -283,15 +285,16 @@ export function buildChaptersFromLessonSources(lessonSources: LessonSourceFile[]
     const lesson = parseLessonFile(filePath, source)
     const pathParts = filePath.split('/')
     const folderName = pathParts[pathParts.length - 2] ?? `第${lesson.chapter}章`
-    const existingChapter = chaptersMap.get(folderName)
+    const chapterId = `chapter_${lesson.chapter}`
+    const existingChapter = chaptersMap.get(chapterId)
 
     if (!existingChapter) {
-      chaptersMap.set(folderName, {
-        id: `chapter_${lesson.chapter}`,
-        title: `${folderName}`,
+      chaptersMap.set(chapterId, {
+        id: chapterId,
+        title: lesson.chapterTitle,
         folderName,
-        description: `${folderName} 课程目录`,
-        order: lesson.chapter,
+        description: `${lesson.chapterTitle} 课程目录`,
+        order: lesson.chapterOrder,
         lessons: [lesson]
       })
       continue

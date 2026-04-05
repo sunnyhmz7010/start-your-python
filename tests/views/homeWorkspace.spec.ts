@@ -103,6 +103,26 @@ describe('HomeView workspace', () => {
     expect((editor.element as HTMLTextAreaElement).value).toContain('edited')
   })
 
+  it('runs the edited lesson file from editor mode', async () => {
+    runtimeMock.detectPython.mockResolvedValue({ available: true, command: 'python' })
+    runtimeMock.startRun.mockResolvedValue({ sessionId: 'session-1', command: 'python -u -c <code>' })
+
+    const wrapper = mount(HomeView, {
+      global: {
+        plugins: [createPinia()]
+      }
+    })
+
+    await waitForWorkspace()
+    const editor = wrapper.get('[data-testid="editor-input"]')
+    await editor.setValue('print("edited from editor")')
+    await wrapper.get('[data-testid="editor-run-button"]').trigger('click')
+    await flushPromises()
+
+    expect(runtimeMock.startRun).toHaveBeenCalledWith('print("edited from editor")')
+    expect(wrapper.get('[data-testid="tool-tab-terminal"]').classes()).toContain('active')
+  })
+
   it('switches to lesson content without executing python when the main run button is clicked', async () => {
     runtimeMock.detectPython.mockResolvedValue({ available: true, command: 'python' })
 

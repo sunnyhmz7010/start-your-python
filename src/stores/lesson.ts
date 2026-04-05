@@ -51,10 +51,6 @@ export const useLessonStore = defineStore('lesson', {
       this.consoleOutput += `[Run] 当前步骤 ${this.currentStepIndex + 1}: ${this.currentStep?.title ?? '准备开始'}\n`
     },
 
-    runLesson() {
-      this.enterRunMode()
-    },
-
     nextStep() {
       if (!this.currentLesson) return
 
@@ -91,12 +87,6 @@ export const useLessonStore = defineStore('lesson', {
       this.workingCopies[this.currentLesson.id] = code
     },
 
-    resetEditorCode() {
-      if (!this.currentLesson) return
-      delete this.workingCopies[this.currentLesson.id]
-      this.currentEditorCode = this.currentLesson.pseudoCode
-    },
-
     completeLesson() {
       if (!this.currentLesson) return
 
@@ -108,17 +98,8 @@ export const useLessonStore = defineStore('lesson', {
       this.consoleOutput += output
     },
 
-    clearConsole() {
-      this.consoleOutput = ''
-    },
-
     getLessonById(id: string): Lesson | undefined {
       return this.allLessons.find(lesson => lesson.id === id)
-    },
-
-    getLessonsByChapter(chapterId: string): Lesson[] {
-      const chapter = this.chapters.find(ch => ch.id === chapterId)
-      return chapter?.lessons || []
     }
   }
 })

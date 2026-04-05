@@ -15,13 +15,17 @@
 # @step.type: text
 # @step.title: open 函数
 # @step.content:
-# open 用于打开文件。
+# `open()` 用来打开文件，是 Python 处理文件最基础的入口。
+# 
+# 读文件时，你通常需要告诉程序：文件名、打开模式，以及编码。
+# 
+# ![Files and folders](/course-images/files-folders.svg)
 
 # @step.id: s2
 # @step.type: code
 # @step.title: 读取内容
 # @step.content:
-# read 可以一次读完整个文件。
+# `read()` 可以一次把整个文件内容读出来。
 with open("notes.txt", "r", encoding="utf-8") as f:
     print(f.read())
 
@@ -29,4 +33,4 @@ with open("notes.txt", "r", encoding="utf-8") as f:
 # @step.type: text
 # @step.title: 编码
 # @step.content:
-# 处理中文文本时通常显式写 utf-8。
+# 处理中文文本时，通常显式写上 `encoding="utf-8"`，这样更稳定。

@@ -1,0 +1,11 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="28" fill="#111927"/>
+  <rect x="54" y="58" width="852" height="404" rx="24" fill="#172235" stroke="#263755"/>
+  <text x="116" y="122" fill="#EAF2FF" font-size="30" font-family="Arial">Common beginner errors</text>
+  <rect x="108" y="164" width="744" height="244" rx="18" fill="#0B1220"/>
+  <text x="138" y="224" fill="#FF8F8F" font-size="24" font-family="Courier New">print("Hello)</text>
+  <text x="138" y="268" fill="#FF8F8F" font-size="24" font-family="Courier New">if True:</text>
+  <text x="138" y="312" fill="#FF8F8F" font-size="24" font-family="Courier New">print("missing indent")</text>
+  <text x="138" y="368" fill="#EAF2FF" font-size="22" font-family="Courier New">SyntaxError: unterminated string literal</text>
+  <text x="138" y="402" fill="#EAF2FF" font-size="22" font-family="Courier New">IndentationError: expected an indented block</text>
+</svg>

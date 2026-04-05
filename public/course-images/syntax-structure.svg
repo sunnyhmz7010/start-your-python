@@ -1,0 +1,12 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="28" fill="#0F1826"/>
+  <rect x="58" y="58" width="844" height="404" rx="24" fill="#172335" stroke="#263856"/>
+  <text x="128" y="122" fill="#EAF2FF" font-size="28" font-family="Arial">Python structure</text>
+  <rect x="110" y="164" width="740" height="224" rx="18" fill="#0B1220"/>
+  <text x="142" y="218" fill="#87F0A5" font-size="24" font-family="Courier New"># 注释：帮助解释代码</text>
+  <text x="142" y="262" fill="#EAF2FF" font-size="24" font-family="Courier New">if is_ready:</text>
+  <text x="182" y="306" fill="#EAF2FF" font-size="24" font-family="Courier New">print("inside block")</text>
+  <text x="142" y="350" fill="#EAF2FF" font-size="24" font-family="Courier New">print("outside block")</text>
+  <rect x="176" y="280" width="260" height="38" rx="10" fill="#233C61" fill-opacity="0.7"/>
+  <text x="480" y="430" fill="#9CB3D5" font-size="18" font-family="Arial" text-anchor="middle">Comments explain code, indentation defines blocks</text>
+</svg>

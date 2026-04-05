@@ -1,0 +1,12 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="28" fill="#111927"/>
+  <rect x="44" y="68" width="872" height="384" rx="24" fill="#172335" stroke="#263754"/>
+  <text x="480" y="128" fill="#EAF2FF" font-size="32" font-family="Arial" text-anchor="middle">Strings are text</text>
+  <rect x="136" y="184" width="230" height="96" rx="18" fill="#203451"/>
+  <rect x="392" y="184" width="176" height="96" rx="18" fill="#1A2A40"/>
+  <rect x="594" y="184" width="230" height="96" rx="18" fill="#203451"/>
+  <text x="251" y="242" fill="#EAF2FF" font-size="30" font-family="Courier New" text-anchor="middle">"Hello"</text>
+  <text x="480" y="242" fill="#8AB4FF" font-size="32" font-family="Courier New" text-anchor="middle">+</text>
+  <text x="709" y="242" fill="#EAF2FF" font-size="30" font-family="Courier New" text-anchor="middle">"Python"</text>
+  <text x="480" y="356" fill="#9CB3D5" font-size="20" font-family="Arial" text-anchor="middle">Concatenation combines text into a new string</text>
+</svg>

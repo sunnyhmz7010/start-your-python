@@ -15,17 +15,24 @@
 # @step.type: text
 # @step.title: 写模式
 # @step.content:
-# "w" 表示写入模式。
+# `"w"` 表示写入模式。
+# 
+# 打开文件后，程序可以把新内容写进去。
+# 
+# ![Files and folders](/course-images/files-folders.svg)
 
 # @step.id: s2
 # @step.type: code
 # @step.title: 写入文本
 # @step.content:
-# 使用 write 保存内容。
-f.write("hello")
+# 使用 `write()` 可以把文本保存到文件中。
+with open("notes.txt", "w", encoding="utf-8") as f:
+    f.write("hello")
 
 # @step.id: s3
 # @step.type: text
 # @step.title: 覆盖风险
 # @step.content:
-# 写模式会覆盖原文件内容。
+# 写入模式会覆盖原文件内容。
+# 
+# 如果你想保留旧内容继续追加，后面会学到追加模式 `"a"`。

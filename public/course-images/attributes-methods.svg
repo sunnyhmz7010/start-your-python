@@ -1,0 +1,9 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="28" fill="#111927"/>
+  <rect x="258" y="108" width="444" height="304" rx="24" fill="#172235" stroke="#263754"/>
+  <text x="480" y="162" fill="#EAF2FF" font-size="30" font-family="Arial" text-anchor="middle">Dog object</text>
+  <text x="334" y="230" fill="#9CB3D5" font-size="24" font-family="Arial">属性</text>
+  <text x="334" y="274" fill="#EAF2FF" font-size="24" font-family="Courier New">name = "Milo"</text>
+  <text x="334" y="326" fill="#9CB3D5" font-size="24" font-family="Arial">方法</text>
+  <text x="334" y="370" fill="#EAF2FF" font-size="24" font-family="Courier New">bark()</text>
+</svg>

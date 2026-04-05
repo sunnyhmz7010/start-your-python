@@ -1,0 +1,11 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="28" fill="#101927"/>
+  <rect x="92" y="96" width="170" height="140" rx="20" fill="#203451"/>
+  <rect x="300" y="96" width="170" height="140" rx="20" fill="#203451"/>
+  <rect x="508" y="96" width="170" height="140" rx="20" fill="#203451"/>
+  <rect x="716" y="96" width="170" height="140" rx="20" fill="#203451"/>
+  <text x="177" y="178" fill="#EAF2FF" font-size="28" font-family="Arial" text-anchor="middle">列表</text>
+  <text x="385" y="178" fill="#EAF2FF" font-size="28" font-family="Arial" text-anchor="middle">元组</text>
+  <text x="593" y="178" fill="#EAF2FF" font-size="28" font-family="Arial" text-anchor="middle">字典</text>
+  <text x="801" y="178" fill="#EAF2FF" font-size="28" font-family="Arial" text-anchor="middle">集合</text>
+</svg>

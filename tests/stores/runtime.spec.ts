@@ -75,6 +75,19 @@ describe('runtime store', () => {
     expect(store.terminalOutput).toContain('> Sunny')
   })
 
+  it('allows submitting an empty line to a running python session', async () => {
+    const store = useRuntimeStore()
+
+    runtimeMock.detectPython.mockResolvedValue({ available: true, command: 'python' })
+    runtimeMock.startRun.mockResolvedValue({ sessionId: 'session-1', command: 'python -u -c <code>' })
+
+    await store.runCode('name = input()')
+    await store.submitInput('')
+
+    expect(runtimeMock.sendInput).toHaveBeenCalledWith('session-1', '')
+    expect(store.terminalOutput).toContain('> \n')
+  })
+
   it('enters python-missing state when no interpreter is available', async () => {
     const store = useRuntimeStore()
 

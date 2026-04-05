@@ -15,17 +15,29 @@
 # @step.type: text
 # @step.title: 变量是什么
 # @step.content:
-# 变量可以理解成一个带名字的盒子。
+# 可以先把变量想成一个**带标签的盒子**。
+# 
+# 盒子外面的标签是变量名，盒子里面装的是值。
+# 
+# ![Variable as a labeled box](/course-images/variables-box.svg)
 
 # @step.id: s2
 # @step.type: code
 # @step.title: 赋值
 # @step.content:
-# 等号右边的值会放进左边的变量名。
+# `=` 在这里不是数学里的“相等”，而是“把右边的值交给左边的变量名保存”。
+# 
+# 读这行代码时，可以直接念成：把字符串 `"Python"` 赋给变量 `name`。
 name = "Python"
 
 # @step.id: s3
 # @step.type: text
 # @step.title: 命名规则
 # @step.content:
-# 变量名建议见名知意，不要用空格开头。
+# 变量名尽量做到**见名知意**。
+# 
+# 初学阶段先记住这几条就够了：
+# - 用字母、数字、下划线组成
+# - 不要以数字开头
+# - 不要和 `if`、`for`、`class` 这样的关键字重名
+# - 名字尽量表达用途，例如 `user_name`、`total_score`

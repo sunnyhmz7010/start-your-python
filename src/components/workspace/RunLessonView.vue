@@ -10,7 +10,7 @@
       <div class="run-card">
         <p class="label">当前步骤</p>
         <h3>{{ step?.title ?? '准备开始' }}</h3>
-        <p class="content">{{ step?.content ?? '点击右侧步骤开始学习。' }}</p>
+        <MarkdownContent class="content" :source="step?.content ?? '点击右侧步骤开始学习。'" />
       </div>
 
       <div v-if="step?.code" class="run-card code">
@@ -32,6 +32,7 @@
 </template>
 
 <script setup lang="ts">
+import MarkdownContent from '@/components/content/MarkdownContent.vue'
 import type { Lesson, LessonStep } from '@/types/lesson'
 
 defineProps<{

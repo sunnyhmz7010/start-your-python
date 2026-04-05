@@ -15,13 +15,19 @@
 # @step.type: text
 # @step.title: 字符串定义
 # @step.content:
-# 字符串表示文本。
+# 字符串用于表示文本，也就是程序里的文字内容。
+# 
+# 常见写法是用单引号或双引号包起来，例如 `"hello"`、`'Python'`。
+# 
+# ![Strings as pieces of text](/course-images/strings-pieces.svg)
 
 # @step.id: s2
 # @step.type: code
 # @step.title: 拼接
 # @step.content:
-# 字符串可以拼接成新的文本。
+# 字符串之间可以用 `+` 拼接成新的文本。
+# 
+# 拼接时要自己决定是否加入空格，否则两个单词会直接连在一起。
 first = "Hello"
 second = "Python"
 print(first + " " + second)
@@ -30,4 +36,6 @@ print(first + " " + second)
 # @step.type: text
 # @step.title: 长度
 # @step.content:
-# 可以用 len 计算字符数量。
+# `len()` 可以计算字符串长度，也就是一共有多少个字符。
+# 
+# 例如 `len("Python")` 的结果是 `6`。

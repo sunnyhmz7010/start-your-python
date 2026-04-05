@@ -15,13 +15,18 @@
 # @step.type: text
 # @step.title: 基本结构
 # @step.content:
-# if 后面写条件，下一行缩进写要执行的代码。
+# `if` 后面写条件，下一行缩进写要执行的代码。
+# 
+# 你可以把它理解成：“如果条件成立，就执行下面这段代码。”
+# 
+# ![If flow](/course-images/if-flow.svg)
 
 # @step.id: s2
 # @step.type: code
 # @step.title: 加入 else
 # @step.content:
-# 条件不满足时可以执行另一段逻辑。
+# 条件不满足时，可以让程序执行另一段逻辑。
+score = 75
 if score >= 60:
     print("及格")
 else:
@@ -31,4 +36,6 @@ else:
 # @step.type: text
 # @step.title: 多分支
 # @step.content:
-# 更复杂时可以继续加 elif。
+# 更复杂的情况可以继续加 `elif`。
+# 
+# 例如分数分成优秀、良好、及格、不及格，就适合用多分支来表达。

@@ -1,0 +1,17 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="28" fill="#111927"/>
+  <rect x="60" y="60" width="840" height="400" rx="24" fill="#172235" stroke="#263754"/>
+  <text x="480" y="124" fill="#EAF2FF" font-size="32" font-family="Arial" text-anchor="middle">Arithmetic operators</text>
+  <text x="180" y="214" fill="#DCE8FF" font-size="28" font-family="Courier New" text-anchor="middle">+</text>
+  <text x="300" y="214" fill="#DCE8FF" font-size="28" font-family="Courier New" text-anchor="middle">-</text>
+  <text x="420" y="214" fill="#DCE8FF" font-size="28" font-family="Courier New" text-anchor="middle">*</text>
+  <text x="540" y="214" fill="#DCE8FF" font-size="28" font-family="Courier New" text-anchor="middle">/</text>
+  <text x="660" y="214" fill="#DCE8FF" font-size="28" font-family="Courier New" text-anchor="middle">//</text>
+  <text x="780" y="214" fill="#DCE8FF" font-size="28" font-family="Courier New" text-anchor="middle">%</text>
+  <text x="180" y="260" fill="#9CB3D5" font-size="18" font-family="Arial" text-anchor="middle">加法</text>
+  <text x="300" y="260" fill="#9CB3D5" font-size="18" font-family="Arial" text-anchor="middle">减法</text>
+  <text x="420" y="260" fill="#9CB3D5" font-size="18" font-family="Arial" text-anchor="middle">乘法</text>
+  <text x="540" y="260" fill="#9CB3D5" font-size="18" font-family="Arial" text-anchor="middle">除法</text>
+  <text x="660" y="260" fill="#9CB3D5" font-size="18" font-family="Arial" text-anchor="middle">整除</text>
+  <text x="780" y="260" fill="#9CB3D5" font-size="18" font-family="Arial" text-anchor="middle">取余</text>
+</svg>

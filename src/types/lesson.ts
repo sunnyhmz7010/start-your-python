@@ -19,6 +19,8 @@ export interface QuizOption {
 export interface Lesson {
   id: string
   title: string
+  chapterTitle: string
+  chapterOrder: number
   fileName?: string
   description: string
   difficulty: 'beginner' | 'intermediate' | 'advanced'
@@ -54,9 +56,4 @@ export interface UserProgress {
   totalCompleted: number
   totalTimeSpent: number
   recentLessonId: string | null
-}
-
-export interface ContentProvider {
-  getChapters(): Promise<Chapter[]>
-  getLessonById(id: string): Promise<Lesson | null>
 }

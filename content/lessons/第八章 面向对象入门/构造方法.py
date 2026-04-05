@@ -15,17 +15,29 @@
 # @step.type: text
 # @step.title: 初始化
 # @step.content:
-# __init__ 会在创建对象时自动执行。
+# `__init__` 会在创建对象时自动执行。
+# 
+# 它常用来给对象设置初始状态。
+# 
+# ![Attributes and methods](/course-images/attributes-methods.svg)
 
 # @step.id: s2
 # @step.type: code
 # @step.title: 保存属性
 # @step.content:
-# 把传入参数保存到 self 上。
-self.name = name
+# 构造方法里通常会把传入参数保存到 `self` 上。
+class Dog:
+    def __init__(self, name):
+        self.name = name
 
 # @step.id: s3
-# @step.type: text
+# @step.type: code
 # @step.title: 实例化
 # @step.content:
-# 创建对象时把参数传进去。
+# 创建对象时，把需要的初始参数传进去。
+class Dog:
+    def __init__(self, name):
+        self.name = name
+
+dog = Dog("Milo")
+print(dog.name)

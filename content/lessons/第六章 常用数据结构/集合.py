@@ -15,17 +15,22 @@
 # @step.type: text
 # @step.title: 集合特点
 # @step.content:
-# 集合中的元素不重复。
+# 集合中的元素不重复，也不强调顺序。
+# 
+# 它特别适合做“去重”和“快速判断某个值是否存在”。
+# 
+# ![Set unique values](/course-images/set-unique.svg)
 
 # @step.id: s2
 # @step.type: code
 # @step.title: 自动去重
 # @step.content:
-# 重复值放入集合后只会保留一份。
-set([1, 1, 2])
+# 重复值放入集合后，只会保留一份。
+numbers = {1, 1, 2, 3, 3}
+print(numbers)
 
 # @step.id: s3
 # @step.type: text
 # @step.title: 常见场景
 # @step.content:
-# 判断成员、去重都很常用。
+# 如果你有一串名字、标签或编号，想去掉重复项，集合会很方便。

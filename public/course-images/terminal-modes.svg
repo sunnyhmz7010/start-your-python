@@ -1,0 +1,19 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="28" fill="#101927"/>
+  <rect x="54" y="72" width="378" height="376" rx="20" fill="#121C2B" stroke="#263656"/>
+  <rect x="528" y="72" width="378" height="376" rx="20" fill="#121C2B" stroke="#263656"/>
+  <text x="243" y="124" fill="#EAF2FF" font-size="30" font-family="Arial" text-anchor="middle">交互模式</text>
+  <text x="243" y="162" fill="#9CB3D5" font-size="18" font-family="Arial" text-anchor="middle">适合一行一行试验</text>
+  <rect x="92" y="196" width="300" height="182" rx="14" fill="#0B1220"/>
+  <text x="118" y="244" fill="#84F0A3" font-size="22" font-family="Courier New">&gt;&gt;&gt; print("hi")</text>
+  <text x="118" y="286" fill="#EAF2FF" font-size="22" font-family="Courier New">hi</text>
+  <text x="118" y="328" fill="#84F0A3" font-size="22" font-family="Courier New">&gt;&gt;&gt; 1 + 2</text>
+  <text x="118" y="370" fill="#EAF2FF" font-size="22" font-family="Courier New">3</text>
+  <text x="717" y="124" fill="#EAF2FF" font-size="30" font-family="Arial" text-anchor="middle">脚本模式</text>
+  <text x="717" y="162" fill="#9CB3D5" font-size="18" font-family="Arial" text-anchor="middle">适合保存成完整程序</text>
+  <rect x="566" y="196" width="300" height="182" rx="14" fill="#0B1220"/>
+  <text x="592" y="244" fill="#84F0A3" font-size="22" font-family="Courier New">print("hello")</text>
+  <text x="592" y="286" fill="#84F0A3" font-size="22" font-family="Courier New">print("python")</text>
+  <text x="592" y="340" fill="#EAF2FF" font-size="20" font-family="Arial">hello</text>
+  <text x="592" y="370" fill="#EAF2FF" font-size="20" font-family="Arial">python</text>
+</svg>

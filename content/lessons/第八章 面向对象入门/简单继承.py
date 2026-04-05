@@ -16,17 +16,34 @@
 # @step.title: 继承概念
 # @step.content:
 # 子类可以继承父类已有的属性和方法。
+# 
+# 这能减少重复代码，让“相似对象”共享基础能力。
+# 
+# ![Inheritance branches](/course-images/inheritance-branches.svg)
 
 # @step.id: s2
 # @step.type: code
 # @step.title: 写法
 # @step.content:
-# 在类名括号里写父类名。
+# 在类名括号里写父类名，就表示子类继承父类。
+class Animal:
+    def eat(self):
+        print("eat")
+
 class Dog(Animal):
     pass
 
 # @step.id: s3
-# @step.type: text
+# @step.type: code
 # @step.title: 适用场景
 # @step.content:
-# 当多个类有共同特征时可以考虑继承。
+# 当多个类有共同特征时，可以把共性放到父类里。
+class Animal:
+    def eat(self):
+        print("eat")
+
+class Dog(Animal):
+    pass
+
+dog = Dog()
+dog.eat()

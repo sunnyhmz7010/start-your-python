@@ -15,13 +15,17 @@
 # @step.type: text
 # @step.title: 遍历
 # @step.content:
-# for 适合按顺序访问集合里的元素。
+# `for` 更适合按顺序访问一组数据里的每个元素。
+# 
+# 当你已经知道“要遍历谁”时，`for` 通常比 `while` 更自然。
+# 
+# ![Looping road](/course-images/loops-road.svg)
 
 # @step.id: s2
 # @step.type: code
 # @step.title: range
 # @step.content:
-# range 常用来生成一串数字。
+# `range()` 常用来生成一串连续数字，适合做固定次数循环。
 for i in range(3):
     print(i)
 
@@ -29,4 +33,6 @@ for i in range(3):
 # @step.type: text
 # @step.title: 和 while 的区别
 # @step.content:
-# for 更适合“遍历”，while 更适合“条件控制”。
+# `for` 更适合“遍历”，`while` 更适合“条件控制”。
+# 
+# 看到列表、字符串、`range()` 这类可遍历对象时，优先想到 `for`。

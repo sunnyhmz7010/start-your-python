@@ -18,6 +18,7 @@
           :workspace-mode="workspaceMode"
           :editor-code="editorCode"
           @update-code="lessonStore.updateEditorCode"
+          @run-editor-code="handleRunEditorCode"
           @run-step-code="handleRunStepCode"
         />
         <LessonBottomPanel
@@ -61,59 +62,29 @@ import LessonStepsPanel from '@/components/workspace/LessonStepsPanel.vue'
 import LessonTree from '@/components/workspace/LessonTree.vue'
 import ProjectToolWindow from '@/components/workspace/ProjectToolWindow.vue'
 import StatusBar from '@/components/workspace/StatusBar.vue'
-import { useLessonStore } from '@/stores/lesson'
-import { useProgressStore } from '@/stores/progress'
+import { useLessonCatalog } from '@/composables/useLessonCatalog'
 import { useRuntimeStore } from '@/stores/runtime'
 import type { Lesson } from '@/types/lesson'
 
-const lessonStore = useLessonStore()
-const progressStore = useProgressStore()
+const {
+  lessonStore,
+  progressStore,
+  chapters,
+  currentLesson,
+  currentStepIndex,
+  currentStep,
+  editorCode,
+  completedLessonIds,
+  completedStepIds,
+  bootstrap,
+  selectLesson
+} = useLessonCatalog()
 const runtimeStore = useRuntimeStore()
-
-const chapters = computed(() => lessonStore.chapters)
-const currentLesson = computed(() => lessonStore.currentLesson)
-const currentStepIndex = computed(() => lessonStore.currentStepIndex)
-const currentStep = computed(() => lessonStore.currentStep)
 const workspaceMode = computed(() => lessonStore.workspaceMode)
 const activeBottomTab = computed(() => lessonStore.activeBottomTab)
-const editorCode = computed(() => lessonStore.currentEditorCode)
-
-const completedLessonIds = computed(() =>
-  Object.values(progressStore.progress.lessons)
-    .filter((item) => item.completed)
-    .map((item) => item.lessonId)
-)
-
-const completedStepIds = computed(() => {
-  if (!currentLesson.value) {
-    return []
-  }
-
-  const stepStates = progressStore.getProgress(currentLesson.value.id)?.stepStates ?? {}
-  return Object.entries(stepStates)
-    .filter(([, completed]) => completed)
-    .map(([stepId]) => stepId)
-})
-
-function selectInitialLesson() {
-  const recentLessonId = progressStore.progress.recentLessonId
-  const recentLesson = recentLessonId ? lessonStore.getLessonById(recentLessonId) : null
-  const selected = recentLesson ?? lessonStore.allLessons[0] ?? null
-
-  if (!selected) {
-    return
-  }
-
-  lessonStore.selectLesson(selected)
-  const savedStep = progressStore.getProgress(selected.id)?.currentStep ?? 0
-  lessonStore.setCurrentStep(savedStep)
-}
 
 function handleSelectLesson(lesson: Lesson) {
-  lessonStore.selectLesson(lesson)
-  const savedStep = progressStore.getProgress(lesson.id)?.currentStep ?? 0
-  lessonStore.setCurrentStep(savedStep)
-  progressStore.setRecentLesson(lesson.id)
+  selectLesson(lesson)
 }
 
 function handleRunLesson() {
@@ -139,6 +110,16 @@ async function handleRunStepCode(step: Lesson['steps'][number]) {
   lessonStore.setActiveBottomTab('terminal')
   progressStore.setRecentLesson(currentLesson.value.id)
   await runtimeStore.runCode(code)
+}
+
+async function handleRunEditorCode() {
+  if (!currentLesson.value) {
+    return
+  }
+
+  lessonStore.setActiveBottomTab('terminal')
+  progressStore.setRecentLesson(currentLesson.value.id)
+  await runtimeStore.runCode(editorCode.value)
 }
 
 function handleGotoStep(index: number) {
@@ -245,10 +226,8 @@ function handleOpenInstallPythonLesson() {
 }
 
 onMounted(async () => {
-  progressStore.loadProgress()
   await runtimeStore.initialize()
-  await lessonStore.loadLessons()
-  selectInitialLesson()
+  await bootstrap()
 })
 </script>
 

@@ -1,0 +1,11 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="28" fill="#0F1826"/>
+  <rect x="100" y="180" width="220" height="120" rx="20" fill="#213451"/>
+  <rect x="370" y="180" width="220" height="120" rx="20" fill="#24406A"/>
+  <rect x="640" y="180" width="220" height="120" rx="20" fill="#213451"/>
+  <text x="210" y="248" fill="#EAF2FF" font-size="28" font-family="Arial" text-anchor="middle">参数</text>
+  <text x="480" y="248" fill="#EAF2FF" font-size="28" font-family="Arial" text-anchor="middle">函数处理</text>
+  <text x="750" y="248" fill="#EAF2FF" font-size="28" font-family="Arial" text-anchor="middle">返回值</text>
+  <path d="M320 240H370" stroke="#4F8CFF" stroke-width="8" stroke-linecap="round"/>
+  <path d="M590 240H640" stroke="#4F8CFF" stroke-width="8" stroke-linecap="round"/>
+</svg>

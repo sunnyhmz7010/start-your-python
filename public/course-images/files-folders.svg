@@ -1,0 +1,9 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="28" fill="#0F1826"/>
+  <rect x="94" y="124" width="772" height="272" rx="24" fill="#172335" stroke="#263856"/>
+  <rect x="154" y="182" width="210" height="156" rx="18" fill="#203451"/>
+  <rect x="416" y="182" width="390" height="156" rx="18" fill="#0B1220"/>
+  <text x="259" y="270" fill="#EAF2FF" font-size="28" font-family="Arial" text-anchor="middle">notes.txt</text>
+  <text x="450" y="236" fill="#84F0A3" font-size="22" font-family="Courier New">with open("notes.txt") as f:</text>
+  <text x="450" y="274" fill="#EAF2FF" font-size="22" font-family="Courier New">    content = f.read()</text>
+</svg>

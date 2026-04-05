@@ -1,0 +1,12 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="28" fill="#111927"/>
+  <rect x="64" y="88" width="256" height="300" rx="24" fill="#1D314E"/>
+  <rect x="352" y="88" width="256" height="300" rx="24" fill="#1D314E"/>
+  <rect x="640" y="88" width="256" height="300" rx="24" fill="#1D314E"/>
+  <text x="192" y="154" fill="#EAF2FF" font-size="36" font-family="Arial" text-anchor="middle">and</text>
+  <text x="480" y="154" fill="#EAF2FF" font-size="36" font-family="Arial" text-anchor="middle">or</text>
+  <text x="768" y="154" fill="#EAF2FF" font-size="36" font-family="Arial" text-anchor="middle">not</text>
+  <text x="192" y="232" fill="#9CB3D5" font-size="20" font-family="Arial" text-anchor="middle">两个条件都要成立</text>
+  <text x="480" y="232" fill="#9CB3D5" font-size="20" font-family="Arial" text-anchor="middle">至少一个条件成立</text>
+  <text x="768" y="232" fill="#9CB3D5" font-size="20" font-family="Arial" text-anchor="middle">把结果取反</text>
+</svg>

@@ -12,23 +12,29 @@
 # @lesson.tags: 
 
 # @step.id: s1
-# @step.type: code
+# @step.type: text
 # @step.title: 加减乘除
 # @step.content:
-# 最常见的算术运算。
-1 + 2
-3 * 4
-10 / 2
+# Python 里最常见的算术运算包括加法、减法、乘法和除法。
+# 
+# 这些运算和数学里的直觉基本一致，只是写成代码时要用符号表达。
+# 
+# ![Arithmetic operators](/course-images/arithmetic-board.svg)
 
 # @step.id: s2
-# @step.type: text
+# @step.type: code
 # @step.title: 整除和取余
 # @step.content:
-# 还有 // 和 % 两个常用运算符。
+# 除了普通除法 `/`，还有两个特别常见的运算：
+# - `//`：整除，只保留整数部分
+# - `%`：取余，得到余数
+print(7 // 3)
+print(7 % 3)
 
 # @step.id: s3
 # @step.type: code
 # @step.title: 组合计算
 # @step.content:
-# 表达式可以写得更复杂。
+# 表达式可以组合起来计算，括号会改变运算顺序。
 total = (2 + 3) * 4
+print(total)

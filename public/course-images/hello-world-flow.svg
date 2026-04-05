@@ -1,0 +1,20 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="28" fill="#111927"/>
+  <rect x="40" y="40" width="880" height="440" rx="24" fill="#172335" stroke="#263754"/>
+  <rect x="86" y="120" width="260" height="280" rx="20" fill="#0E1623"/>
+  <rect x="396" y="120" width="168" height="280" rx="20" fill="#203451"/>
+  <rect x="614" y="120" width="260" height="280" rx="20" fill="#0E1623"/>
+  <text x="216" y="160" fill="#EAF2FF" font-size="28" font-family="Arial" text-anchor="middle">Source code</text>
+  <text x="216" y="220" fill="#84F0A3" font-size="24" font-family="Courier New" text-anchor="middle">print("Hello, World!")</text>
+  <text x="480" y="182" fill="#EAF2FF" font-size="28" font-family="Arial" text-anchor="middle">Python</text>
+  <text x="480" y="220" fill="#9CB3D5" font-size="18" font-family="Arial" text-anchor="middle">reads the command</text>
+  <text x="480" y="248" fill="#9CB3D5" font-size="18" font-family="Arial" text-anchor="middle">and sends text to</text>
+  <text x="480" y="276" fill="#9CB3D5" font-size="18" font-family="Arial" text-anchor="middle">standard output</text>
+  <text x="744" y="160" fill="#EAF2FF" font-size="28" font-family="Arial" text-anchor="middle">Terminal</text>
+  <text x="744" y="238" fill="#EAF2FF" font-size="26" font-family="Courier New" text-anchor="middle">Hello, World!</text>
+  <path d="M346 260H396" stroke="#3F78D6" stroke-width="8" stroke-linecap="round"/>
+  <path d="M564 260H614" stroke="#3F78D6" stroke-width="8" stroke-linecap="round"/>
+  <path d="M378 246L396 260L378 274" stroke="#3F78D6" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M596 246L614 260L596 274" stroke="#3F78D6" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="480" y="444" fill="#89A5CC" font-size="18" font-family="Arial" text-anchor="middle">The program writes text to the screen through print()</text>
+</svg>

@@ -95,10 +95,7 @@ const terminalOutput = computed(() => {
 })
 
 function submitInput() {
-  const value = inputValue.value.trim()
-  if (!value) {
-    return
-  }
+  const value = inputValue.value
 
   emit('submitInput', value)
   inputValue.value = ''

@@ -1,0 +1,11 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="28" fill="#0F1826"/>
+  <rect x="68" y="82" width="350" height="356" rx="24" fill="#1D314E"/>
+  <rect x="542" y="82" width="350" height="356" rx="24" fill="#132133" stroke="#263757"/>
+  <text x="243" y="144" fill="#EAF2FF" font-size="32" font-family="Arial" text-anchor="middle">整数 int</text>
+  <text x="243" y="196" fill="#D8E6FF" font-size="56" font-family="Courier New" text-anchor="middle">7</text>
+  <text x="243" y="248" fill="#9CB3D5" font-size="20" font-family="Arial" text-anchor="middle">没有小数部分</text>
+  <text x="717" y="144" fill="#EAF2FF" font-size="32" font-family="Arial" text-anchor="middle">浮点数 float</text>
+  <text x="717" y="196" fill="#D8E6FF" font-size="56" font-family="Courier New" text-anchor="middle">7.5</text>
+  <text x="717" y="248" fill="#9CB3D5" font-size="20" font-family="Arial" text-anchor="middle">带小数部分</text>
+</svg>

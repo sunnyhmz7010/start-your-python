@@ -1,0 +1,8 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="28" fill="#101927"/>
+  <path d="M180 360C180 210 300 140 480 140C660 140 780 210 780 360" stroke="#4F8CFF" stroke-width="26" stroke-linecap="round"/>
+  <path d="M780 360C780 430 730 458 666 458" stroke="#4F8CFF" stroke-width="26" stroke-linecap="round"/>
+  <text x="250" y="320" fill="#EAF2FF" font-size="28" font-family="Arial">开始</text>
+  <text x="480" y="110" fill="#EAF2FF" font-size="28" font-family="Arial" text-anchor="middle">重复执行</text>
+  <text x="720" y="460" fill="#EAF2FF" font-size="28" font-family="Arial" text-anchor="middle">结束</text>
+</svg>

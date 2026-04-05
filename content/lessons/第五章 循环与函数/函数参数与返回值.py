@@ -15,19 +15,29 @@
 # @step.type: text
 # @step.title: 参数
 # @step.content:
-# 参数让函数更灵活。
+# 参数让函数更灵活，因为不同输入可以得到不同结果。
+# 
+# 你可以把参数理解成“函数工作前拿到的材料”。
+# 
+# ![Parameters and return](/course-images/params-return.svg)
 
 # @step.id: s2
 # @step.type: code
 # @step.title: 返回值
 # @step.content:
-# return 用来把结果带回调用处。
+# `return` 用来把计算结果带回调用处。
 def add(a, b):
     return a + b
+
+print(add(1, 2))
 
 # @step.id: s3
 # @step.type: code
 # @step.title: 使用结果
 # @step.content:
-# 可以把返回值保存到变量里。
+# 函数的返回值可以先保存到变量里，后面继续使用。
+def add(a, b):
+    return a + b
+
 result = add(1, 2)
+print(result * 10)

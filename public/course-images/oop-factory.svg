@@ -1,0 +1,10 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="28" fill="#0F1826"/>
+  <rect x="118" y="144" width="260" height="220" rx="24" fill="#203451"/>
+  <rect x="542" y="144" width="260" height="220" rx="24" fill="#172335" stroke="#263856"/>
+  <text x="248" y="214" fill="#EAF2FF" font-size="32" font-family="Arial" text-anchor="middle">类</text>
+  <text x="248" y="254" fill="#9CB3D5" font-size="20" font-family="Arial" text-anchor="middle">模板 / blueprint</text>
+  <text x="672" y="214" fill="#EAF2FF" font-size="32" font-family="Arial" text-anchor="middle">对象</text>
+  <text x="672" y="254" fill="#9CB3D5" font-size="20" font-family="Arial" text-anchor="middle">实例 / instance</text>
+  <path d="M378 254H542" stroke="#4F8CFF" stroke-width="8" stroke-linecap="round"/>
+</svg>

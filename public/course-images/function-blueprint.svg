@@ -1,0 +1,8 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="28" fill="#111927"/>
+  <rect x="102" y="116" width="756" height="288" rx="24" fill="#172335" stroke="#263754"/>
+  <text x="480" y="174" fill="#EAF2FF" font-size="32" font-family="Arial" text-anchor="middle">Function = reusable instructions</text>
+  <rect x="186" y="222" width="588" height="104" rx="18" fill="#0B1220"/>
+  <text x="226" y="285" fill="#84F0A3" font-size="24" font-family="Courier New">def greet():</text>
+  <text x="226" y="322" fill="#EAF2FF" font-size="24" font-family="Courier New">    print("hello")</text>
+</svg>

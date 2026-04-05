@@ -147,7 +147,10 @@ fn try_python_command(spec: &PythonCommandSpec) -> bool {
   }
   command.arg("--version");
 
-  command.output().is_ok()
+  command
+    .output()
+    .map(|output| output.status.success())
+    .unwrap_or(false)
 }
 
 fn detect_python_command_spec() -> Option<PythonCommandSpec> {

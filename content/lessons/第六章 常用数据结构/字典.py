@@ -15,18 +15,25 @@
 # @step.type: text
 # @step.title: 键值对
 # @step.content:
-# 字典通过 key 找到 value。
+# 字典通过 `key -> value` 的方式保存数据。
+# 
+# 当你想用“名字”去找内容，而不是靠位置编号时，字典非常适合。
+# 
+# ![Dictionary mapping](/course-images/dict-map.svg)
 
 # @step.id: s2
 # @step.type: code
 # @step.title: 读取数据
 # @step.content:
-# 通过键读取对应值。
-user["name"]
+# 通过键读取对应的值。
+user = {"name": "Sunny", "city": "Shanghai"}
+print(user["name"])
 
 # @step.id: s3
 # @step.type: code
 # @step.title: 新增键值
 # @step.content:
-# 可以为字典增加新字段。
+# 字典可以随时增加新字段。
+user = {"name": "Sunny"}
 user["city"] = "Shanghai"
+print(user)

@@ -1,0 +1,18 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="28" fill="#101928"/>
+  <rect x="40" y="40" width="880" height="440" rx="24" fill="#172337" stroke="#243757"/>
+  <circle cx="240" cy="260" r="96" fill="#1E3555"/>
+  <circle cx="480" cy="260" r="96" fill="#2A4F86"/>
+  <circle cx="720" cy="260" r="96" fill="#1E3555"/>
+  <text x="240" y="250" fill="#EAF2FF" font-size="30" font-family="Arial" text-anchor="middle">User</text>
+  <text x="240" y="286" fill="#9CB3D5" font-size="18" font-family="Arial" text-anchor="middle">types on keyboard</text>
+  <text x="480" y="250" fill="#EAF2FF" font-size="30" font-family="Arial" text-anchor="middle">input()</text>
+  <text x="480" y="286" fill="#9CB3D5" font-size="18" font-family="Arial" text-anchor="middle">stores text in a variable</text>
+  <text x="720" y="250" fill="#EAF2FF" font-size="30" font-family="Arial" text-anchor="middle">print()</text>
+  <text x="720" y="286" fill="#9CB3D5" font-size="18" font-family="Arial" text-anchor="middle">shows a response</text>
+  <path d="M336 260H384" stroke="#4F8CFF" stroke-width="8" stroke-linecap="round"/>
+  <path d="M576 260H624" stroke="#4F8CFF" stroke-width="8" stroke-linecap="round"/>
+  <path d="M366 246L384 260L366 274" stroke="#4F8CFF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M606 246L624 260L606 274" stroke="#4F8CFF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="480" y="430" fill="#89A5CC" font-size="18" font-family="Arial" text-anchor="middle">Programs often follow a simple loop: ask, receive, then answer</text>
+</svg>

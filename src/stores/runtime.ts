@@ -65,7 +65,7 @@ export const useRuntimeStore = defineStore('runtime', {
     },
 
     async submitInput(input: string) {
-      if (!this.sessionId || !input.trim()) {
+      if (!this.sessionId) {
         return
       }
 

@@ -7,6 +7,8 @@ function makeLesson(overrides: Partial<Lesson> = {}): Lesson {
   return {
     id: 'lesson-1',
     title: 'Test Lesson',
+    chapterTitle: '第一章',
+    chapterOrder: 1,
     fileName: 'Test Lesson.py',
     description: 'desc',
     difficulty: 'beginner',

@@ -1,0 +1,11 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="28" fill="#101927"/>
+  <rect x="118" y="128" width="240" height="264" rx="22" fill="#203451"/>
+  <rect x="602" y="128" width="240" height="264" rx="22" fill="#203451"/>
+  <text x="238" y="190" fill="#EAF2FF" font-size="26" font-family="Courier New" text-anchor="middle">"name"</text>
+  <text x="238" y="246" fill="#EAF2FF" font-size="26" font-family="Courier New" text-anchor="middle">"city"</text>
+  <text x="722" y="190" fill="#EAF2FF" font-size="26" font-family="Courier New" text-anchor="middle">"Sunny"</text>
+  <text x="722" y="246" fill="#EAF2FF" font-size="26" font-family="Courier New" text-anchor="middle">"Shanghai"</text>
+  <path d="M358 182H602" stroke="#4F8CFF" stroke-width="8" stroke-linecap="round"/>
+  <path d="M358 238H602" stroke="#4F8CFF" stroke-width="8" stroke-linecap="round"/>
+</svg>

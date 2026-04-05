@@ -1,0 +1,9 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="520" rx="28" fill="#0F1826"/>
+  <rect x="90" y="126" width="300" height="268" rx="28" fill="#1F3657"/>
+  <rect x="570" y="126" width="300" height="268" rx="28" fill="#341C22"/>
+  <text x="240" y="222" fill="#EAF2FF" font-size="50" font-family="Arial" text-anchor="middle">True</text>
+  <text x="240" y="274" fill="#CDE3FF" font-size="20" font-family="Arial" text-anchor="middle">条件成立</text>
+  <text x="720" y="222" fill="#FFE8EC" font-size="50" font-family="Arial" text-anchor="middle">False</text>
+  <text x="720" y="274" fill="#FFD4DD" font-size="20" font-family="Arial" text-anchor="middle">条件不成立</text>
+</svg>

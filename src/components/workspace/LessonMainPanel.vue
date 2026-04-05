@@ -5,6 +5,7 @@
       :lesson="lesson"
       :code="editorCode"
       @update-code="$emit('updateCode', $event)"
+      @run-code="$emit('runEditorCode')"
     />
     <RunLessonView
       v-else
@@ -30,6 +31,7 @@ defineProps<{
 
 defineEmits<{
   updateCode: [code: string]
+  runEditorCode: []
   runStepCode: [step: LessonStep]
 }>()
 </script>
