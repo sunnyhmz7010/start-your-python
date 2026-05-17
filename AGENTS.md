@@ -163,7 +163,12 @@ This repository is `start-your-python`, a desktop learning app for Python beginn
 - Release history is maintained in GitHub Releases. Do not add a committed `CHANGELOG.md` unless explicitly requested.
 - GitHub Actions CI is defined in `.github/workflows/ci.yaml` and runs on pushes and pull requests to `main`.
 - GitHub Actions CD is defined in `.github/workflows/cd.yaml` and runs on the `Release published` event.
-- CD uploads Windows installer/bundle outputs, the portable Windows zip, and the Android debug APK to the GitHub Release.
+- CD uploads Windows installer/bundle outputs, the portable Windows zip, and the signed Android release APK to the GitHub Release.
+- Windows portable zip filenames must include version and platform, for example `StartYourPython-v1.2.0-win-x64.zip`.
+- Windows portable zip contents must be rooted directly at `Start Your Python.exe` plus `content/`; do not wrap them in an extra top-level folder.
+- The executable inside the Windows portable zip must keep the fixed product name `Start Your Python.exe`, without a version in the executable filename.
+- Android APK filenames must include the version tag, for example `StartYourPython-v1.2.0-android-release.apk`.
+- Android release signing in CD requires GitHub Secrets named `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, and `ANDROID_KEY_PASSWORD`.
 
 ## Local Agent Note
 
