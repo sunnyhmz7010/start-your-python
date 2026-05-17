@@ -52,7 +52,7 @@ Python 入门最容易卡在“看懂教程”和“真的跑起来”之间。S
 
 ## 快速开始
 
-从 [Releases](https://github.com/sunnyhmz7010/start-your-python/releases) 下载 `StartYourPython-vX.Y.Z-win-x64.zip`，解压后直接运行根目录里的 `Start Your Python.exe`。压缩包根目录同时包含课程文件目录 `content/`。
+从 [Releases](https://github.com/sunnyhmz7010/start-your-python/releases) 下载对应架构的 Windows 便携包，例如 `StartYourPython-vX.Y.Z-win-x64.zip` 或 `StartYourPython-vX.Y.Z-win-x86.zip`。解压后直接运行根目录里的 `Start Your Python.exe`，压缩包根目录同时包含课程文件目录 `content/`。
 
 桌面端运行课程代码前，请先确认系统已安装 Python：
 

@@ -7,10 +7,18 @@ on:
 
 jobs:
   windows:
-    name: Windows Release
+    name: Windows Release (${{ matrix.arch }})
     runs-on: windows-latest
     permissions:
       contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x64
+            target: x86_64-pc-windows-msvc
+          - arch: x86
+            target: i686-pc-windows-msvc
 
     steps:
       - name: Checkout
@@ -24,14 +32,19 @@ jobs:
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build Tauri bundle
-        run: npm run tauri:bundle
+        run: npx tauri build --target ${{ matrix.target }}
 
       - name: Package portable Windows release
+        env:
+          WINDOWS_TARGET: ${{ matrix.target }}
+          WINDOWS_ARCH: ${{ matrix.arch }}
         shell: pwsh
         run: .\scripts\package-windows-release.ps1
 
@@ -48,7 +61,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh
-        run: gh release upload "${{ github.event.release.tag_name }}" release/windows/*.zip --clobber
+        run: gh release upload "${{ github.event.release.tag_name }}" release/windows/StartYourPython-${{ github.event.release.tag_name }}-win-${{ matrix.arch }}.zip --clobber
 
   android:
     name: Android Release
@@ -109,7 +122,7 @@ jobs:
           BUILD_TOOLS_DIR="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -n 1)"
           UNSIGNED_APK="android/app/build/outputs/apk/release/app-release-unsigned.apk"
           ALIGNED_APK="android/app/build/outputs/apk/release/app-release-aligned.apk"
-          SIGNED_APK="android/app/build/outputs/apk/release/StartYourPython-${{ github.event.release.tag_name }}-android-release.apk"
+          SIGNED_APK="android/app/build/outputs/apk/release/StartYourPython-${{ github.event.release.tag_name }}-android-universal-release.apk"
 
           "$BUILD_TOOLS_DIR/zipalign" -f -p 4 "$UNSIGNED_APK" "$ALIGNED_APK"
           "$BUILD_TOOLS_DIR/apksigner" sign \
@@ -124,4 +137,4 @@ jobs:
       - name: Upload Android APK to release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload "${{ github.event.release.tag_name }}" android/app/build/outputs/apk/release/StartYourPython-${{ github.event.release.tag_name }}-android-release.apk --clobber
+        run: gh release upload "${{ github.event.release.tag_name }}" android/app/build/outputs/apk/release/StartYourPython-${{ github.event.release.tag_name }}-android-universal-release.apk --clobber
