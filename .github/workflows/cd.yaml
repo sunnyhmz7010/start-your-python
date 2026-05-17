@@ -7,10 +7,18 @@ on:
 
 jobs:
   windows:
-    name: Windows Release
+    name: Windows Release (${{ matrix.arch }})
     runs-on: windows-latest
     permissions:
       contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x64
+            target: x86_64-pc-windows-msvc
+          - arch: arm64
+            target: aarch64-pc-windows-msvc
 
     steps:
       - name: Checkout
@@ -25,18 +33,18 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: x86_64-pc-windows-msvc
+          targets: ${{ matrix.target }}
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build Tauri bundle
-        run: npx tauri build --target x86_64-pc-windows-msvc
+        run: npx tauri build --target ${{ matrix.target }}
 
       - name: Package portable Windows release
         env:
-          WINDOWS_TARGET: x86_64-pc-windows-msvc
-          WINDOWS_ARCH: x64
+          WINDOWS_TARGET: ${{ matrix.target }}
+          WINDOWS_ARCH: ${{ matrix.arch }}
         shell: pwsh
         run: .\scripts\package-windows-release.ps1
 
@@ -53,7 +61,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh
-        run: gh release upload "${{ github.event.release.tag_name }}" release/windows/StartYourPython-${{ github.event.release.tag_name }}-win-x64.zip --clobber
+        run: gh release upload "${{ github.event.release.tag_name }}" release/windows/StartYourPython-${{ github.event.release.tag_name }}-win-${{ matrix.arch }}.zip --clobber
 
   android:
     name: Android Release
@@ -101,7 +109,7 @@ jobs:
                   abi {
                       enable true
                       reset()
-                      include 'armeabi-v7a', 'arm64-v8a'
+                      include 'arm64-v8a', 'x86_64'
                       universalApk false
                   }
               }
