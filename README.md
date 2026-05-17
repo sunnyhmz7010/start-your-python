@@ -12,7 +12,6 @@
 
 <p align="center">
   <a href="https://github.com/sunnyhmz7010/start-your-python/releases">下载发布包</a> ·
-  <a href="https://github.com/sunnyhmz7010/start-your-python/tree/main/content/lessons">查看课程</a> ·
   <a href="https://github.com/sunnyhmz7010/start-your-python/issues">反馈问题</a>
 </p>
 
@@ -30,7 +29,7 @@ Python 入门最容易卡在“看懂教程”和“真的跑起来”之间。S
 ## 📸 截图预览
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/sunnyhmz7010/start-your-python/refs/heads/main/public/course-images/terminal-modes.svg" alt="Start Your Python 终端学习流程预览" />
+  截图占位
 </p>
 
 ## 🚀 核心能力
@@ -200,7 +199,7 @@ npm run test
 
 ## 🔐 安全报告
 
-如果你发现了安全问题，请不要在公开 Issue 中直接披露细节。请优先参考仓库中的 [SECURITY.md](./SECURITY.md) 提交安全报告。
+如果发现安全问题，请不要公开披露细节。请优先参考仓库中的 [SECURITY.md](./SECURITY.md) 提交安全报告。
 
 ## 📄 许可证
 
