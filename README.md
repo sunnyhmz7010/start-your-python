@@ -156,6 +156,40 @@ public/course-images/
 - 学习状态保存在本机
 - 适合离线学习和本地课程维护
 
+## 🧱 技术栈
+
+- 前端框架：Vue 3、TypeScript
+- 构建工具：Vite
+- 状态管理：Pinia
+- 桌面端：Tauri 2、Rust
+- 移动端：Capacitor 7、Android
+- 内容渲染：Marked、课程文件解析、HTML 清理
+- 测试与类型检查：Vitest、Vue Test Utils、vue-tsc
+
+## 🗂️ 项目架构
+
+```text
+start-your-python/
+├─ src/                         # Vue 应用源码
+│  ├─ components/                # 工作区、课程内容等 UI 组件
+│  │  ├─ content/                # Markdown 和课程内容渲染
+│  │  └─ workspace/              # PyCharm 风格学习工作区
+│  ├─ services/                  # 课程加载、内容解析、Python 运行时检测与执行
+│  ├─ stores/                    # 学习进度、终端状态等 Pinia store
+│  ├─ router/                    # 页面路由
+│  ├─ views/                     # 桌面端和移动端页面视图
+│  └─ utils/                     # HTML 清理等通用工具
+├─ src-tauri/                    # Tauri 桌面壳、Rust 命令和应用配置
+├─ content/lessons/              # 中文 Python 课程源码与步骤内容
+├─ public/course-images/         # 课程图片资源
+├─ resources/                    # 应用图标等打包资源
+├─ scripts/                      # 发布和打包脚本
+├─ tests/                        # Vitest 测试
+├─ capacitor.config.ts           # Capacitor 移动端配置
+├─ vite.config.ts                # Vite 构建配置
+└─ package.json                  # npm 脚本、依赖和版本信息
+```
+
 ## 👨‍💻 本地开发
 
 ### 🧰 环境
