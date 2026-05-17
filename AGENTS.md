@@ -60,6 +60,12 @@ These rules are intentionally written in a reusable way so they can be copied in
 - If replacing or deleting an older release in favor of a newer one, compare the old tag, the new tag, and the default branch separately so unreleased work is not accidentally documented.
 - Do not promote a prerelease to a stable `vX.Y.Z` release unless the user explicitly asks for that exact stable release.
 - GitHub release titles should default to the bare tag name such as `v0.1.0` or `v0.1.0-beta.1`, not `ProjectName v0.1.0`, unless the user explicitly asks for a product-prefixed title.
+- Treat release signing assets as product-critical state. Before generating or replacing a mobile/desktop release signing key, ask the user for all identity fields the tool will embed, alias/key naming, password policy, storage location, and whether the key is intended for long-term upgrades.
+- Do not treat a successful release-mode build as proof that an artifact is properly signed. Verify the final artifact with the platform verifier whenever one exists, such as `apksigner verify --print-certs` for Android APKs.
+- Never commit private signing material, keystores, provisioning profiles, passwords, or generated local signing property files. Commit only non-sensitive examples or documentation, and ensure `.gitignore` covers the real local files before generating them.
+- If a release signing key is lost or replaced, existing users may lose the normal upgrade path. Surface that risk explicitly before changing keys.
+- Keep release architecture/package allowlists explicit. When the allowed architectures change, update every related build surface in the same task: native build config, packaging/copy scripts, package-manager scripts, release docs, and generated artifact cleanup.
+- After changing release architecture/package rules, scan for removed architecture names and delete stale artifacts from local release output directories before handoff.
 
 ## Repository-Specific Rules
 
@@ -177,14 +183,15 @@ This repository is `start-your-python`, a desktop learning app for Python beginn
 - Release history is maintained in GitHub Releases. Do not add a committed `CHANGELOG.md` unless explicitly requested.
 - GitHub Actions CI is defined in `.github/workflows/ci.yaml` and runs on pushes and pull requests to `main`.
 - GitHub Actions CD is defined in `.github/workflows/cd.yaml` and runs on the `Release published` event.
-- CD uploads Windows installer/bundle outputs, the portable Windows zip, and the signed Android release APK to the GitHub Release.
+- CD uploads Windows installer/bundle outputs, portable Windows zips, and signed Android release APKs to the GitHub Release.
 - Windows portable zip filenames must include version and platform, for example `StartYourPython-v1.2.0-win-x64.zip`.
-- Windows CD publishes only the x64 portable zip:
+- Windows CD publishes only the x64 and arm64 portable zips:
   - `StartYourPython-v1.2.0-win-x64.zip`
+  - `StartYourPython-v1.2.0-win-arm64.zip`
 - Windows portable zip contents must be rooted directly at `Start Your Python.exe` plus `content/`; do not wrap them in an extra top-level folder.
 - The executable inside the Windows portable zip must keep the fixed product name `Start Your Python.exe`, without a version in the executable filename.
 - Android APK filenames must include the version tag and ABI, for example `StartYourPython-v1.2.0-android-arm64-v8a-release.apk`.
-- Android CD builds separate signed release APKs for `armeabi-v7a` and `arm64-v8a` instead of a debug APK or universal APK.
+- Android CD builds separate signed release APKs only for `arm64-v8a` and `x86_64` instead of a debug APK or universal APK.
 - Android release signing in CD requires GitHub Secrets named `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, and `ANDROID_KEY_PASSWORD`.
 - Android package name is `com.sunny.startyourpython`.
 - The Android release keystore is kept in the project-local ignored `release-signing/` directory and must not be committed. Keep this private local backup plus the matching GitHub Actions secrets so future APK updates can use the same signing identity.
