@@ -5,6 +5,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { marked } from 'marked'
+import { sanitizeHtml } from '@/utils/sanitizeHtml'
 
 const props = defineProps<{
   source: string
@@ -15,7 +16,7 @@ marked.setOptions({
   breaks: true
 })
 
-const html = computed(() => marked.parse(props.source) as string)
+const html = computed(() => sanitizeHtml(marked.parse(props.source) as string))
 </script>
 
 <style scoped>

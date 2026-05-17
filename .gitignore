@@ -3,7 +3,6 @@ dist/
 build/
 coverage/
 .tmp/
-.trae/
 release/
 src-tauri/target/
 *.log
@@ -23,5 +22,5 @@ patch_css2.py
 replace_styles.py
 PROJECT_CONTEXT.md
 NEXT_TASKS.md
+AGENTS.md
 release-notes-*.md
-docs/superpowers/
