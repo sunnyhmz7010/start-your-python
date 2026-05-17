@@ -40,9 +40,16 @@ vi.mock('@/services/runtime/pythonRuntime', () => ({
 
 async function waitForWorkspace() {
   await flushPromises()
-  await flushPromises()
-  await flushPromises()
-  await new Promise((resolve) => setTimeout(resolve, 40))
+}
+
+async function waitForEditor(wrapper: ReturnType<typeof mount>) {
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    await flushPromises()
+    if (wrapper.find('[data-testid="editor-input"]').exists()) {
+      return
+    }
+    await new Promise((resolve) => setTimeout(resolve, 20))
+  }
 }
 
 describe('HomeView workspace', () => {
@@ -79,6 +86,7 @@ describe('HomeView workspace', () => {
     })
 
     await waitForWorkspace()
+    await waitForEditor(wrapper)
 
     expect(wrapper.get('[data-testid="editor-input"]').element).toBeTruthy()
     expect(wrapper.text()).toContain('Project')
@@ -96,6 +104,7 @@ describe('HomeView workspace', () => {
     })
 
     await waitForWorkspace()
+    await waitForEditor(wrapper)
 
     const editor = wrapper.get('[data-testid="editor-input"]')
     await editor.setValue('print("edited")')
@@ -114,6 +123,7 @@ describe('HomeView workspace', () => {
     })
 
     await waitForWorkspace()
+    await waitForEditor(wrapper)
     const editor = wrapper.get('[data-testid="editor-input"]')
     await editor.setValue('print("edited from editor")')
     await wrapper.get('[data-testid="editor-run-button"]').trigger('click')

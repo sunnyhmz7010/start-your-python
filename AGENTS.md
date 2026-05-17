@@ -90,7 +90,6 @@ This repository is `start-your-python`, a desktop learning app for Python beginn
 - Course images: `public/course-images/`
 - Tests: `tests/`
 - Scripts: `scripts/`
-- Roadmap: `docs/ROADMAP.md`
 - User docs: `README.md`
 
 ## Product Constraints
@@ -170,8 +169,8 @@ This repository is `start-your-python`, a desktop learning app for Python beginn
   - `StartYourPython-v1.2.0-win-x86.zip`
 - Windows portable zip contents must be rooted directly at `Start Your Python.exe` plus `content/`; do not wrap them in an extra top-level folder.
 - The executable inside the Windows portable zip must keep the fixed product name `Start Your Python.exe`, without a version in the executable filename.
-- Android APK filenames must include the version tag, for example `StartYourPython-v1.2.0-android-universal-release.apk`.
-- Android CD builds a universal release APK containing all generated Android ABIs instead of a debug APK.
+- Android APK filenames must include the version tag and ABI, for example `StartYourPython-v1.2.0-android-arm64-v8a-release.apk`.
+- Android CD builds separate signed release APKs for `armeabi-v7a`, `arm64-v8a`, `x86`, and `x86_64` instead of a debug APK or universal APK.
 - Android release signing in CD requires GitHub Secrets named `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, and `ANDROID_KEY_PASSWORD`.
 
 ## Local Agent Note

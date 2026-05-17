@@ -100,11 +100,27 @@ jobs:
       - name: Sync Capacitor Android project
         run: npm run android:sync
 
+      - name: Enable Android ABI split APKs
+        run: |
+          cat >> android/app/build.gradle <<'EOF'
+
+          android {
+              splits {
+                  abi {
+                      enable true
+                      reset()
+                      include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+                      universalApk false
+                  }
+              }
+          }
+          EOF
+
       - name: Build release APK
         working-directory: android
         run: ./gradlew assembleRelease
 
-      - name: Sign release APK
+      - name: Sign release APKs
         env:
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
@@ -120,21 +136,28 @@ jobs:
           echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$KEYSTORE_PATH"
 
           BUILD_TOOLS_DIR="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -n 1)"
-          UNSIGNED_APK="android/app/build/outputs/apk/release/app-release-unsigned.apk"
-          ALIGNED_APK="android/app/build/outputs/apk/release/app-release-aligned.apk"
-          SIGNED_APK="android/app/build/outputs/apk/release/StartYourPython-${{ github.event.release.tag_name }}-android-universal-release.apk"
+          OUTPUT_DIR="android/app/build/outputs/apk/release/signed"
+          mkdir -p "$OUTPUT_DIR"
 
-          "$BUILD_TOOLS_DIR/zipalign" -f -p 4 "$UNSIGNED_APK" "$ALIGNED_APK"
-          "$BUILD_TOOLS_DIR/apksigner" sign \
-            --ks "$KEYSTORE_PATH" \
-            --ks-key-alias "$ANDROID_KEY_ALIAS" \
-            --ks-pass "pass:$ANDROID_KEYSTORE_PASSWORD" \
-            --key-pass "pass:$ANDROID_KEY_PASSWORD" \
-            --out "$SIGNED_APK" \
-            "$ALIGNED_APK"
-          "$BUILD_TOOLS_DIR/apksigner" verify "$SIGNED_APK"
+          find android/app/build/outputs/apk/release -maxdepth 1 -name 'app-*-release-unsigned.apk' -print | while read -r unsigned_apk; do
+            abi="$(basename "$unsigned_apk" | sed -E 's/^app-(.*)-release-unsigned\.apk$/\1/')"
+            aligned_apk="$RUNNER_TEMP/app-${abi}-release-aligned.apk"
+            signed_apk="$OUTPUT_DIR/StartYourPython-${{ github.event.release.tag_name }}-android-${abi}-release.apk"
 
-      - name: Upload Android APK to release
+            "$BUILD_TOOLS_DIR/zipalign" -f -p 4 "$unsigned_apk" "$aligned_apk"
+            "$BUILD_TOOLS_DIR/apksigner" sign \
+              --ks "$KEYSTORE_PATH" \
+              --ks-key-alias "$ANDROID_KEY_ALIAS" \
+              --ks-pass "pass:$ANDROID_KEYSTORE_PASSWORD" \
+              --key-pass "pass:$ANDROID_KEY_PASSWORD" \
+              --out "$signed_apk" \
+              "$aligned_apk"
+            "$BUILD_TOOLS_DIR/apksigner" verify "$signed_apk"
+          done
+
+          test "$(find "$OUTPUT_DIR" -name '*.apk' | wc -l)" -ge 4
+
+      - name: Upload Android APKs to release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload "${{ github.event.release.tag_name }}" android/app/build/outputs/apk/release/StartYourPython-${{ github.event.release.tag_name }}-android-universal-release.apk --clobber
+        run: gh release upload "${{ github.event.release.tag_name }}" android/app/build/outputs/apk/release/signed/*.apk --clobber
