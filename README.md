@@ -6,7 +6,7 @@
   <p>
     <a href="https://github.com/sunnyhmz7010/start-your-python/releases"><img alt="Release" src="https://img.shields.io/github/v/release/sunnyhmz7010/start-your-python"></a>
     <a href="LICENSE"><img alt="License" src="https://img.shields.io/github/license/sunnyhmz7010/start-your-python"></a>
-    <a href="https://github.com/sunnyhmz7010/start-your-python/actions/workflows/build-artifacts.yml"><img alt="Build Artifacts" src="https://img.shields.io/github/actions/workflow/status/sunnyhmz7010/start-your-python/build-artifacts.yml?label=build"></a>
+    <a href="https://github.com/sunnyhmz7010/start-your-python/actions/workflows/ci.yaml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/sunnyhmz7010/start-your-python/ci.yaml?label=ci"></a>
   </p>
 
   <p>

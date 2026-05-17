@@ -161,6 +161,9 @@ This repository is `start-your-python`, a desktop learning app for Python beginn
 - GitHub release titles should follow the reusable rule and use bare tag names.
 - Release notes should use the heading `## 更新内容`.
 - Release history is maintained in GitHub Releases. Do not add a committed `CHANGELOG.md` unless explicitly requested.
+- GitHub Actions CI is defined in `.github/workflows/ci.yaml` and runs on pushes and pull requests to `main`.
+- GitHub Actions CD is defined in `.github/workflows/cd.yaml` and runs on the `Release published` event.
+- CD uploads Windows installer/bundle outputs, the portable Windows zip, and the Android debug APK to the GitHub Release.
 
 ## Local Agent Note
 
