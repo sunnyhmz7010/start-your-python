@@ -92,6 +92,21 @@ This repository is `start-your-python`, a desktop learning app for Python beginn
 - Scripts: `scripts/`
 - User docs: `README.md`
 
+## README Rules
+
+- Keep the README aligned with the Halo plugin family style:
+  - centered logo/title/value summary
+  - centered Release, License, and CI badges with color parameters
+  - centered primary links
+  - `---` divider after the hero block
+  - emoji section headings
+  - screenshot preview
+  - GPL-3.0 license section
+  - Star History chart
+  - centered `Built with ❤️ by Sunny` footer
+- The README license text must match the repository `LICENSE` file and package metadata.
+- If the README structure changes, preserve the same public-facing order used by the Halo plugin family unless the user explicitly requests a different format.
+
 ## Product Constraints
 
 - This app is not a cloud IDE.
@@ -173,3 +188,4 @@ This repository is `start-your-python`, a desktop learning app for Python beginn
 - Android release signing in CD requires GitHub Secrets named `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, and `ANDROID_KEY_PASSWORD`.
 - Android package name is `com.sunny.startyourpython`.
 - The Android release keystore is kept in the project-local ignored `release-signing/` directory and must not be committed. Keep this private local backup plus the matching GitHub Actions secrets so future APK updates can use the same signing identity.
+
