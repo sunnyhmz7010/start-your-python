@@ -7,18 +7,10 @@ on:
 
 jobs:
   windows:
-    name: Windows Release (${{ matrix.arch }})
+    name: Windows Release
     runs-on: windows-latest
     permissions:
       contents: write
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - arch: x64
-            target: x86_64-pc-windows-msvc
-          - arch: x86
-            target: i686-pc-windows-msvc
 
     steps:
       - name: Checkout
@@ -33,18 +25,18 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.target }}
+          targets: x86_64-pc-windows-msvc
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build Tauri bundle
-        run: npx tauri build --target ${{ matrix.target }}
+        run: npx tauri build --target x86_64-pc-windows-msvc
 
       - name: Package portable Windows release
         env:
-          WINDOWS_TARGET: ${{ matrix.target }}
-          WINDOWS_ARCH: ${{ matrix.arch }}
+          WINDOWS_TARGET: x86_64-pc-windows-msvc
+          WINDOWS_ARCH: x64
         shell: pwsh
         run: .\scripts\package-windows-release.ps1
 
@@ -61,7 +53,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh
-        run: gh release upload "${{ github.event.release.tag_name }}" release/windows/StartYourPython-${{ github.event.release.tag_name }}-win-${{ matrix.arch }}.zip --clobber
+        run: gh release upload "${{ github.event.release.tag_name }}" release/windows/StartYourPython-${{ github.event.release.tag_name }}-win-x64.zip --clobber
 
   android:
     name: Android Release
@@ -109,7 +101,7 @@ jobs:
                   abi {
                       enable true
                       reset()
-                      include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+                      include 'armeabi-v7a', 'arm64-v8a'
                       universalApk false
                   }
               }
@@ -155,7 +147,7 @@ jobs:
             "$BUILD_TOOLS_DIR/apksigner" verify "$signed_apk"
           done
 
-          test "$(find "$OUTPUT_DIR" -name '*.apk' | wc -l)" -ge 4
+          test "$(find "$OUTPUT_DIR" -name '*.apk' | wc -l)" -eq 2
 
       - name: Upload Android APKs to release
         env:

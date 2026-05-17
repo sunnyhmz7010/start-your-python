@@ -164,16 +164,12 @@ This repository is `start-your-python`, a desktop learning app for Python beginn
 - GitHub Actions CD is defined in `.github/workflows/cd.yaml` and runs on the `Release published` event.
 - CD uploads Windows installer/bundle outputs, the portable Windows zip, and the signed Android release APK to the GitHub Release.
 - Windows portable zip filenames must include version and platform, for example `StartYourPython-v1.2.0-win-x64.zip`.
-- Windows CD must publish both x64 and x86 portable zips:
+- Windows CD publishes only the x64 portable zip:
   - `StartYourPython-v1.2.0-win-x64.zip`
-  - `StartYourPython-v1.2.0-win-x86.zip`
 - Windows portable zip contents must be rooted directly at `Start Your Python.exe` plus `content/`; do not wrap them in an extra top-level folder.
 - The executable inside the Windows portable zip must keep the fixed product name `Start Your Python.exe`, without a version in the executable filename.
 - Android APK filenames must include the version tag and ABI, for example `StartYourPython-v1.2.0-android-arm64-v8a-release.apk`.
-- Android CD builds separate signed release APKs for `armeabi-v7a`, `arm64-v8a`, `x86`, and `x86_64` instead of a debug APK or universal APK.
+- Android CD builds separate signed release APKs for `armeabi-v7a` and `arm64-v8a` instead of a debug APK or universal APK.
 - Android release signing in CD requires GitHub Secrets named `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, and `ANDROID_KEY_PASSWORD`.
-
-## Local Agent Note
-
-- This file is intended as local session context for future AI/coding-agent conversations.
-- It is ignored by git and should remain local unless the user explicitly asks to commit it.
+- Android package name is `com.sunny.startyourpython`.
+- The Android release keystore is kept in the project-local ignored `release-signing/` directory and must not be committed. Keep this private local backup plus the matching GitHub Actions secrets so future APK updates can use the same signing identity.
