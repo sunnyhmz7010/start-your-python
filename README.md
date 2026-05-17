@@ -81,7 +81,7 @@ py -3 --version
 
 ### 📦 安装
 
-1. 从 [Releases](https://github.com/sunnyhmz7010/start-your-python/releases) 下载对应架构的 Windows 便携包，例如 `StartYourPython-vX.Y.Z-win-x64.zip` 或 `StartYourPython-vX.Y.Z-win-arm64.zip`
+1. 从 [Releases](https://github.com/sunnyhmz7010/start-your-python/releases) 下载对应架构的 Windows 便携包，例如 `StartYourPython-vX.Y.Z-win-amd64.zip` 或 `StartYourPython-vX.Y.Z-win-arm64.zip`
 2. 解压后直接运行根目录里的 `Start Your Python.exe`
 3. 压缩包根目录会同时包含课程文件目录 `content/`
 

@@ -5,7 +5,10 @@ $packageJsonPath = Join-Path $projectRoot "package.json"
 $packageJson = Get-Content $packageJsonPath -Raw | ConvertFrom-Json
 
 $target = if ($env:WINDOWS_TARGET) { $env:WINDOWS_TARGET } else { "x86_64-pc-windows-msvc" }
-$arch = if ($env:WINDOWS_ARCH) { $env:WINDOWS_ARCH } else { "x64" }
+$arch = if ($env:WINDOWS_ARCH) { $env:WINDOWS_ARCH } else { "amd64" }
+if ($arch -notin @("amd64", "arm64")) {
+  throw "Unsupported Windows arch '$arch'. Use amd64 or arm64."
+}
 $version = $packageJson.version
 $sourceExe = Join-Path $projectRoot "src-tauri\target\$target\release\start-your-python.exe"
 $sourceContent = Join-Path $projectRoot "content"
