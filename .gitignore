@@ -1,26 +1,50 @@
-node_modules/
-dist/
-build/
-coverage/
-.tmp/
-release/
-src-tauri/target/
-*.log
-*.exe
+### OS
+.DS_Store
+Thumbs.db
+Desktop.ini
 
+### Editors
 .idea/
 .vscode/
 *.iml
 
-current_styles.css
-new_styles.css
-new_styles_fixed.css
-fix_css.py
-fix_bottom_bar.py
-patch_css.py
-patch_css2.py
-replace_styles.py
-PROJECT_CONTEXT.md
-NEXT_TASKS.md
-AGENTS.md
-release-notes-*.md
+### Dependencies
+node_modules/
+
+### Environment
+.env
+.env.*
+!.env.example
+!.env.mobile
+
+### Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+### Vue / Vite / TypeScript
+dist/
+build/
+coverage/
+.vite/
+*.tsbuildinfo
+
+### Tauri / Rust
+target/
+src-tauri/target/
+
+### Capacitor / Android
+android/
+
+### Release artifacts
+release/
+*.exe
+*.msi
+*.dmg
+*.AppImage
+*.apk
+*.aab
+*.zip
+*.tar.gz

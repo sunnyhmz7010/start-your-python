@@ -1,79 +1,74 @@
-# Start Your Python
+<div align="center">
+  <img src="resources/icons/appIcon.svg" alt="Start Your Python logo" width="72" height="72">
+  <h1>Start Your Python</h1>
+  <p>面向 Python 初学者的本地学习工作区，把中文课程、示例代码和真实终端运行放在一个 PyCharm 风格界面里。</p>
 
-`Start Your Python` 是一个面向 Python 初学者的桌面学习应用。它不是通用 IDE，而是一个用 `PyCharm` 风格工作区承载课程、示例代码和真实终端运行体验的本地学习器。
+  <p>
+    <a href="https://github.com/sunnyhmz7010/start-your-python/releases"><img alt="Release" src="https://img.shields.io/github/v/release/sunnyhmz7010/start-your-python"></a>
+    <a href="LICENSE"><img alt="License" src="https://img.shields.io/github/license/sunnyhmz7010/start-your-python"></a>
+    <a href="https://github.com/sunnyhmz7010/start-your-python/actions/workflows/build-artifacts.yml"><img alt="Build Artifacts" src="https://img.shields.io/github/actions/workflow/status/sunnyhmz7010/start-your-python/build-artifacts.yml?label=build"></a>
+  </p>
 
-当前技术栈：
-- `Vue 3 + Vite`
-- `Tauri`
-- `Pinia`
-- `Vitest`
+  <p>
+    <a href="https://github.com/sunnyhmz7010/start-your-python/releases">下载版本</a>
+    ·
+    <a href="content/lessons">查看课程</a>
+    ·
+    <a href="SECURITY.md">安全反馈</a>
+  </p>
+</div>
 
-## 当前能力
+## 为什么做它
 
-- PyCharm 风格工作区布局
-- 中文章节目录 + `.py` 课程文件树
-- 中间编辑区与课程内容双态切换
-- 课程内容代码块可调用系统 Python 运行
-- 底部 `Terminal` 支持真实输出、错误输出和 `input()` 交互
-- 没检测到 Python 时，可直接跳转到安装课程并重新检测
-- 本地学习进度记录和最近学习
-- 真实课程文件目录，课程源位于 [content/lessons](content/lessons)
+Python 入门最容易卡在“看懂教程”和“真的跑起来”之间。Start Your Python 用接近桌面 IDE 的工作区组织课程，让初学者在同一个界面里阅读中文步骤、查看 `.py` 课程文件、运行示例代码，并在终端里看到标准输出、错误输出和 `input()` 交互。
 
-## 当前不做
+它不是通用 IDE，也不捆绑 Python 解释器；它专注于把本机 Python 学习流程做得清楚、稳定、可继续。
 
-- 内置 Python 运行时
-- 云同步和账号体系
-- AI 导师聊天
-- 自动判题和复杂练习系统
+## 预览
 
-## 开发与构建
+<div align="center">
+  <img src="public/course-images/terminal-modes.svg" alt="Terminal learning flow preview" width="720">
+</div>
 
-安装依赖：
+## 核心能力
 
-```bash
-npm install
-```
+### 学习工作区
 
-Web 开发：
+- PyCharm 风格布局：课程树、编辑区、步骤内容和底部工具窗口
+- 中文章节目录直接来自 `content/lessons/` 下的真实 `.py` 文件
+- 编辑态用于查看课程源码，学习态用于按步骤阅读讲解和示例
 
-```bash
-npm run dev
-```
+### 真实运行
 
-桌面开发：
+- 桌面端课程代码块可调用本机 Python 解释器运行
+- 底部 Terminal 支持 stdout、stderr 和 `input()` 输入
+- 未检测到 Python 时，可跳转到安装课程并重新检测
 
-```bash
-npm run tauri:dev
-```
+### 本地学习
 
-桌面构建：
+- 学习进度保存在本机设备
+- 支持最近学习状态，重新打开后继续进入课程
+- Android 构建提供课程阅读体验，适合移动端复习
 
-```bash
-npm run tauri:build
-```
+## 快速开始
 
-发布目录整理：
+从 [Releases](https://github.com/sunnyhmz7010/start-your-python/releases) 下载 Windows 版本，解压后运行 `StartYourPython.exe`。
 
-```bash
-npm run tauri:release
-```
-
-质量校验：
+桌面端运行课程代码前，请先确认系统已安装 Python：
 
 ```bash
-npm run typecheck
-npm run test
-npm run build
-npm run tauri:build
+python --version
 ```
 
-Windows 构建前置环境：
-- Rust toolchain
-- Visual Studio Build Tools 的 C++ 构建组件
+Windows 也可以使用：
 
-## 课程目录
+```bash
+py -3 --version
+```
 
-课程内容来自真实文件目录：
+## 课程内容
+
+课程使用 `.py` 文件承载注解、讲解和示例代码，应用会读取这些文件生成课程树和步骤内容。
 
 ```text
 content/lessons/
@@ -90,26 +85,61 @@ content/lessons/
 ...
 ```
 
-应用启动后会直接读取这些 `.py` 文件来生成左侧项目树和课程内容，课程中的代码块可调用系统 Python 解释器执行。
+课程图片放在 `public/course-images/`，可在课程 Markdown 中用 `/course-images/name.svg` 引用。
 
-## 项目结构
+## 本地开发
 
-```text
-content/lessons/          真实课程文件目录
-src/
-  components/workspace/   PyCharm 风格工作区组件
-  services/content/       本地内容读取与解析
-  services/runtime/       系统 Python 运行时接入
-  stores/                 学习状态、进度与终端状态
-  views/                  页面入口
-src-tauri/                Tauri 桌面壳
-tests/                    Vitest 测试
-docs/ROADMAP.md           后续路线图
+安装依赖：
+
+```bash
+npm install
 ```
 
-## 路线图
+启动 Web 开发服务：
 
-见 [docs/ROADMAP.md](docs/ROADMAP.md)。
+```bash
+npm run dev
+```
+
+运行桌面开发版：
+
+```bash
+npm run tauri:dev
+```
+
+运行质量检查：
+
+```bash
+npm run typecheck
+npm run test
+npm run build
+```
+
+构建桌面应用：
+
+```bash
+npm run tauri:build
+```
+
+构建移动 Web 资源并同步 Android：
+
+```bash
+npm run build:mobile
+npm run android:sync
+```
+
+## 技术栈
+
+- Vue 3 + Vite
+- Pinia
+- Tauri 2
+- Capacitor
+- Vitest
+- TypeScript
+
+## 安全反馈
+
+如果发现安全问题，请不要公开提交可利用细节。请按 [Security Policy](SECURITY.md) 私下反馈。
 
 ## 许可证
 
