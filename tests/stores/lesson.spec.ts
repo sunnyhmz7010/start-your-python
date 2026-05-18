@@ -1,7 +1,15 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { useLessonStore } from '@/stores/lesson'
 import type { Lesson } from '@/types/lesson'
+
+const contentProviderMock = vi.hoisted(() => ({
+  getChaptersWithStatus: vi.fn()
+}))
+
+vi.mock('@/services/content/localContentProvider', () => ({
+  localContentProvider: contentProviderMock
+}))
 
 function makeLesson(overrides: Partial<Lesson> = {}): Lesson {
   return {
@@ -26,6 +34,7 @@ function makeLesson(overrides: Partial<Lesson> = {}): Lesson {
 describe('lesson store', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
+    contentProviderMock.getChaptersWithStatus.mockReset()
   })
 
   it('stores an editable working copy separate from lesson source', () => {
@@ -48,5 +57,35 @@ describe('lesson store', () => {
     store.selectLesson(lesson)
 
     expect(store.currentEditorCode).toBe('print("changed")')
+  })
+
+  it('stores content loading status from the content provider', async () => {
+    const store = useLessonStore()
+
+    contentProviderMock.getChaptersWithStatus.mockResolvedValue({
+      chapters: [
+        {
+          id: 'chapter-1',
+          title: '第一章',
+          folderName: '第一章',
+          description: 'desc',
+          order: 1,
+          lessons: [makeLesson()]
+        }
+      ],
+      status: {
+        source: 'bundled',
+        warning: {
+          message: '外部课程目录加载失败，已切换到内置课程。',
+          detail: 'missing content/lessons'
+        }
+      }
+    })
+
+    await store.loadLessons()
+
+    expect(store.chapters).toHaveLength(1)
+    expect(store.contentStatus.source).toBe('bundled')
+    expect(store.contentStatus.warning?.detail).toBe('missing content/lessons')
   })
 })

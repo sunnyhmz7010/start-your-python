@@ -30,6 +30,23 @@ export function useLessonCatalog() {
       .map(([stepId]) => stepId)
   })
 
+  const completedStepCount = computed(() => {
+    if (!currentLesson.value) {
+      return 0
+    }
+
+    const lessonStepIds = new Set(currentLesson.value.steps.map((step) => step.id))
+    return completedStepIds.value.filter((stepId) => lessonStepIds.has(stepId)).length
+  })
+
+  const completionPercent = computed(() => {
+    if (!currentLesson.value?.steps.length) {
+      return 0
+    }
+
+    return Math.round((completedStepCount.value / currentLesson.value.steps.length) * 100)
+  })
+
   function restoreSavedStep(lessonId: string) {
     const savedStep = progressStore.getProgress(lessonId)?.currentStep ?? 0
     lessonStore.setCurrentStep(savedStep)
@@ -57,6 +74,47 @@ export function useLessonCatalog() {
     progressStore.setRecentLesson(lesson.id)
   }
 
+  function markStepCompleted(lessonId: string, stepId: string, totalSteps: number) {
+    const wasLessonCompleted = progressStore.isLessonCompleted(lessonId)
+    progressStore.setStepCompleted(lessonId, stepId, true, totalSteps)
+
+    if (
+      lessonStore.isLessonRunning &&
+      currentLesson.value?.id === lessonId &&
+      !wasLessonCompleted &&
+      progressStore.isLessonCompleted(lessonId)
+    ) {
+      lessonStore.completeLesson()
+    }
+  }
+
+  function markCurrentStepCompleted() {
+    if (!currentLesson.value || !currentStep.value) {
+      return false
+    }
+
+    markStepCompleted(
+      currentLesson.value.id,
+      currentStep.value.id,
+      currentLesson.value.steps.length
+    )
+    return true
+  }
+
+  function toggleCurrentStepCompleted() {
+    if (!currentLesson.value || !currentStep.value) {
+      return
+    }
+
+    const isCompleted = progressStore.isStepCompleted(currentLesson.value.id, currentStep.value.id)
+    progressStore.setStepCompleted(
+      currentLesson.value.id,
+      currentStep.value.id,
+      !isCompleted,
+      currentLesson.value.steps.length
+    )
+  }
+
   async function bootstrap() {
     progressStore.loadProgress()
     await lessonStore.loadLessons()
@@ -73,7 +131,12 @@ export function useLessonCatalog() {
     editorCode,
     completedLessonIds,
     completedStepIds,
+    completedStepCount,
+    completionPercent,
     bootstrap,
-    selectLesson
+    selectLesson,
+    markStepCompleted,
+    markCurrentStepCompleted,
+    toggleCurrentStepCompleted
   }
 }

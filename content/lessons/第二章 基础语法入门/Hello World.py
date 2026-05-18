@@ -43,3 +43,13 @@ print("Hello, World!")
 # 
 # 刚开始学的时候，建议多改几个单词再运行，建立“我写什么，程序就输出什么”的直觉。
 print("Python 很有趣")
+
+# @step.id: q1
+# @step.type: quiz
+# @step.title: 小测验
+# @step.content:
+# 下面哪个函数可以把内容输出到屏幕？
+# @step.option: a | print() | true
+# @step.option: b | input() | false
+# @step.option: c | len() | false
+# @step.correct_answer: a

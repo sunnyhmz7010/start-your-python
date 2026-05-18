@@ -1,29 +1,64 @@
 import { invoke, isTauri } from '@tauri-apps/api/core'
 import { buildChaptersFromLessonSources, getBundledCourseFileChapters, type LessonSourceFile } from './courseFiles'
-import type { ContentProvider } from './contentProvider'
+import type { ContentLoadResult, ContentProvider } from './contentProvider'
 
-let chaptersCachePromise: Promise<Awaited<ReturnType<typeof loadChapters>>> | null = null
+let chaptersCachePromise: Promise<ContentLoadResult> | null = null
+
+function formatErrorDetail(error: unknown) {
+  if (error instanceof Error) {
+    return error.message
+  }
+
+  return String(error)
+}
 
 async function loadChapters() {
   if (isTauri()) {
     try {
       const files = await invoke<LessonSourceFile[]>('load_lesson_sources')
-      return buildChaptersFromLessonSources(files)
+      return {
+        chapters: buildChaptersFromLessonSources(files),
+        status: {
+          source: 'external',
+          warning: null
+        }
+      } satisfies ContentLoadResult
     } catch (error) {
       console.warn('Falling back to bundled lesson files.', error)
+      return {
+        chapters: await getBundledCourseFileChapters(),
+        status: {
+          source: 'bundled',
+          warning: {
+            message: '外部课程目录加载失败，已切换到内置课程。',
+            detail: formatErrorDetail(error)
+          }
+        }
+      } satisfies ContentLoadResult
     }
   }
 
-  return getBundledCourseFileChapters()
+  return {
+    chapters: await getBundledCourseFileChapters(),
+    status: {
+      source: 'bundled',
+      warning: null
+    }
+  } satisfies ContentLoadResult
 }
 
 export const localContentProvider: ContentProvider = {
-  async getChapters() {
+  async getChaptersWithStatus() {
     if (!chaptersCachePromise) {
       chaptersCachePromise = loadChapters()
     }
 
     return chaptersCachePromise
+  },
+
+  async getChapters() {
+    const result = await this.getChaptersWithStatus()
+    return result.chapters
   },
 
   async getLessonById(id) {

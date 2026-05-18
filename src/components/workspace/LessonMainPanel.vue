@@ -4,6 +4,8 @@
       v-if="workspaceMode === 'editor'"
       :lesson="lesson"
       :code="editorCode"
+      :is-python-running="isPythonRunning"
+      :python-status="pythonStatus"
       @update-code="$emit('updateCode', $event)"
       @run-code="$emit('runEditorCode')"
     />
@@ -11,13 +13,17 @@
       v-else
       :lesson="lesson"
       :step="step"
+      :is-python-running="isPythonRunning"
+      :python-status="pythonStatus"
       @run-step-code="$emit('runStepCode', $event)"
+      @answer-quiz="$emit('answerQuiz', $event)"
     />
   </section>
 </template>
 
 <script setup lang="ts">
-import type { Lesson, LessonStep } from '@/types/lesson'
+import type { Lesson, LessonStep, QuizAnswerPayload } from '@/types/lesson'
+import type { PythonRuntimeStatus } from '@/types/runtime'
 import type { WorkspaceMode } from './types'
 import EditorCodeView from './EditorCodeView.vue'
 import RunLessonView from './RunLessonView.vue'
@@ -27,12 +33,15 @@ defineProps<{
   step: LessonStep | null
   workspaceMode: WorkspaceMode
   editorCode: string
+  isPythonRunning: boolean
+  pythonStatus: PythonRuntimeStatus
 }>()
 
 defineEmits<{
   updateCode: [code: string]
   runEditorCode: []
   runStepCode: [step: LessonStep]
+  answerQuiz: [payload: QuizAnswerPayload]
 }>()
 </script>
 

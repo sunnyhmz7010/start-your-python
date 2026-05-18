@@ -19,6 +19,7 @@ use tauri::{Emitter, Manager, State};
 use uuid::Uuid;
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 struct LessonSourceFile {
   file_path: String,
   source: String,
@@ -31,19 +32,31 @@ struct PythonCommandSpec {
 }
 
 #[derive(Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
 struct PythonAvailability {
   available: bool,
   command: Option<String>,
+  version: Option<String>,
+  executable_path: Option<String>,
   error: Option<String>,
 }
 
+#[derive(Clone)]
+struct DetectedPythonCommand {
+  spec: PythonCommandSpec,
+  version: String,
+  executable_path: Option<String>,
+}
+
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 struct PythonRunSession {
   session_id: String,
   command: String,
 }
 
 #[derive(Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
 struct PythonOutputEvent {
   session_id: String,
   stream: String,
@@ -51,6 +64,7 @@ struct PythonOutputEvent {
 }
 
 #[derive(Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
 struct PythonStateEvent {
   session_id: String,
   status: String,
@@ -139,7 +153,7 @@ fn resolve_lessons_root(app: &tauri::AppHandle) -> Option<PathBuf> {
   candidates.into_iter().find(|path| path.exists() && path.is_dir())
 }
 
-fn try_python_command(spec: &PythonCommandSpec) -> bool {
+fn get_python_version(spec: &PythonCommandSpec) -> Option<String> {
   let mut command = Command::new(&spec.command);
   apply_hidden_process_flags(&mut command);
   for argument in &spec.prefix_args {
@@ -149,15 +163,50 @@ fn try_python_command(spec: &PythonCommandSpec) -> bool {
 
   command
     .output()
-    .map(|output| output.status.success())
-    .unwrap_or(false)
+    .ok()
+    .filter(|output| output.status.success())
+    .map(|output| {
+      let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
+      let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
+      if stdout.is_empty() { stderr } else { stdout }
+    })
+    .filter(|value| !value.is_empty())
+}
+
+fn get_python_executable_path(spec: &PythonCommandSpec) -> Option<String> {
+  let mut command = Command::new(&spec.command);
+  apply_hidden_process_flags(&mut command);
+  for argument in &spec.prefix_args {
+    command.arg(argument);
+  }
+  command.arg("-c").arg("import sys; print(sys.executable)");
+
+  command
+    .output()
+    .ok()
+    .filter(|output| output.status.success())
+    .map(|output| String::from_utf8_lossy(&output.stdout).trim().to_string())
+    .filter(|value| !value.is_empty())
+}
+
+fn try_python_command(spec: &PythonCommandSpec) -> bool {
+  get_python_version(spec).is_some()
+}
+
+fn detect_python_command() -> Option<DetectedPythonCommand> {
+  PYTHON_COMMAND_CANDIDATES
+    .iter()
+    .find_map(|spec| {
+      get_python_version(spec).map(|version| DetectedPythonCommand {
+        spec: spec.clone(),
+        version,
+        executable_path: get_python_executable_path(spec),
+      })
+    })
 }
 
 fn detect_python_command_spec() -> Option<PythonCommandSpec> {
-  PYTHON_COMMAND_CANDIDATES
-    .iter()
-    .find(|spec| try_python_command(spec))
-    .cloned()
+  detect_python_command().map(|detected| detected.spec)
 }
 
 fn emit_output(app: &tauri::AppHandle, payload: PythonOutputEvent) {
@@ -289,10 +338,12 @@ fn load_lesson_sources(app: tauri::AppHandle) -> Result<Vec<LessonSourceFile>, S
 
 #[tauri::command]
 fn detect_python() -> PythonAvailability {
-  if let Some(spec) = detect_python_command_spec() {
+  if let Some(detected) = detect_python_command() {
     return PythonAvailability {
       available: true,
-      command: Some(spec.command),
+      command: Some(detected.spec.command),
+      version: Some(detected.version),
+      executable_path: detected.executable_path,
       error: None,
     };
   }
@@ -300,6 +351,8 @@ fn detect_python() -> PythonAvailability {
   PythonAvailability {
     available: false,
     command: None,
+    version: None,
+    executable_path: None,
     error: Some("未检测到 Python，请先安装并加入 PATH。".into()),
   }
 }
@@ -427,7 +480,10 @@ fn stop_python_run(
 
 #[cfg(test)]
 mod tests {
-  use super::{PythonCommandSpec, PYTHON_COMMAND_CANDIDATES};
+  use super::{
+    LessonSourceFile, PythonAvailability, PythonCommandSpec, PythonOutputEvent, PythonRunSession,
+    PythonStateEvent, PYTHON_COMMAND_CANDIDATES,
+  };
 
   #[test]
   fn defines_python_candidates_in_expected_order() {
@@ -447,6 +503,58 @@ mod tests {
       });
 
     assert_eq!(py.prefix_args, vec!["-3".to_string()]);
+  }
+
+  #[test]
+  fn serializes_lesson_source_files_for_frontend_contract() {
+    let payload = LessonSourceFile {
+      file_path: "content/lessons/demo.py".into(),
+      source: "print(1)".into(),
+    };
+    let value = serde_json::to_value(payload).expect("payload should serialize");
+
+    assert_eq!(value["filePath"], "content/lessons/demo.py");
+    assert!(value.get("file_path").is_none());
+  }
+
+  #[test]
+  fn serializes_python_runtime_payloads_for_frontend_contract() {
+    let availability = PythonAvailability {
+      available: true,
+      command: Some("python".into()),
+      version: Some("Python 3.12.0".into()),
+      executable_path: Some("C:/Python312/python.exe".into()),
+      error: None,
+    };
+    let session = PythonRunSession {
+      session_id: "session-1".into(),
+      command: "python -u -c <code>".into(),
+    };
+    let output = PythonOutputEvent {
+      session_id: "session-1".into(),
+      stream: "stdout".into(),
+      chunk: "hello\n".into(),
+    };
+    let state = PythonStateEvent {
+      session_id: "session-1".into(),
+      status: "completed".into(),
+      exit_code: Some(0),
+      message: None,
+    };
+
+    let availability_value = serde_json::to_value(availability).expect("availability should serialize");
+    let session_value = serde_json::to_value(session).expect("session should serialize");
+    let output_value = serde_json::to_value(output).expect("output should serialize");
+    let state_value = serde_json::to_value(state).expect("state should serialize");
+
+    assert_eq!(availability_value["version"], "Python 3.12.0");
+    assert_eq!(availability_value["executablePath"], "C:/Python312/python.exe");
+    assert_eq!(session_value["sessionId"], "session-1");
+    assert_eq!(output_value["sessionId"], "session-1");
+    assert_eq!(state_value["sessionId"], "session-1");
+    assert_eq!(state_value["exitCode"], 0);
+    assert!(session_value.get("session_id").is_none());
+    assert!(state_value.get("exit_code").is_none());
   }
 }
 

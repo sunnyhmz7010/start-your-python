@@ -38,6 +38,14 @@ vi.mock('@/services/runtime/pythonRuntime', () => ({
   pythonRuntime: runtimeMock
 }))
 
+const contentProviderMock = vi.hoisted(() => ({
+  getChaptersWithStatus: vi.fn()
+}))
+
+vi.mock('@/services/content/localContentProvider', () => {
+  return { localContentProvider: contentProviderMock }
+})
+
 async function waitForWorkspace() {
   await flushPromises()
 }
@@ -61,6 +69,17 @@ describe('HomeView workspace', () => {
     runtimeMock.startRun.mockReset()
     runtimeMock.sendInput.mockReset()
     runtimeMock.stopRun.mockReset()
+    contentProviderMock.getChaptersWithStatus.mockReset()
+    contentProviderMock.getChaptersWithStatus.mockImplementation(async () => {
+      const { getBundledCourseFileChapters } = await import('@/services/content/courseFiles')
+      return {
+        chapters: await getBundledCourseFileChapters(),
+        status: {
+          source: 'bundled',
+          warning: null
+        }
+      }
+    })
     localStorage.setItem('start-your-python.progress', JSON.stringify({
       lessons: {
         lesson_2_1: {
@@ -113,7 +132,12 @@ describe('HomeView workspace', () => {
   })
 
   it('runs the edited lesson file from editor mode', async () => {
-    runtimeMock.detectPython.mockResolvedValue({ available: true, command: 'python' })
+    runtimeMock.detectPython.mockResolvedValue({
+      available: true,
+      command: 'python',
+      version: 'Python 3.12.0',
+      executablePath: 'C:/Python312/python.exe'
+    })
     runtimeMock.startRun.mockResolvedValue({ sessionId: 'session-1', command: 'python -u -c <code>' })
 
     const wrapper = mount(HomeView, {
@@ -131,6 +155,8 @@ describe('HomeView workspace', () => {
 
     expect(runtimeMock.startRun).toHaveBeenCalledWith('print("edited from editor")')
     expect(wrapper.get('[data-testid="tool-tab-terminal"]').classes()).toContain('active')
+    expect(wrapper.get('[data-testid="python-runtime-info"]').text()).toContain('Python 3.12.0')
+    expect(wrapper.get('[data-testid="python-runtime-info"]').text()).toContain('C:/Python312/python.exe')
   })
 
   it('switches to lesson content without executing python when the main run button is clicked', async () => {
@@ -173,6 +199,129 @@ describe('HomeView workspace', () => {
     expect(runtimeMock.startRun).toHaveBeenCalledTimes(1)
     expect(wrapper.get('[data-testid="tool-tab-terminal"]').classes()).toContain('active')
     expect(wrapper.text()).toContain('hello')
+
+    runtimeMock.emitState({ sessionId: 'session-1', status: 'completed', exitCode: 0 })
+    await flushPromises()
+
+    expect(wrapper.findAll('.step-done')).toHaveLength(1)
+    expect(wrapper.get('[data-testid="lesson-progress-summary"]').text()).toContain('1 /')
+  })
+
+  it('marks a lesson step complete even when python exits immediately after start', async () => {
+    runtimeMock.detectPython.mockResolvedValue({ available: true, command: 'python' })
+    runtimeMock.startRun.mockImplementation(async () => {
+      const session = { sessionId: 'session-1', command: 'python -u -c <code>' }
+      queueMicrotask(() => {
+        runtimeMock.emitState({ sessionId: session.sessionId, status: 'completed', exitCode: 0 })
+      })
+      return session
+    })
+
+    const wrapper = mount(HomeView, {
+      global: {
+        plugins: [createPinia()]
+      }
+    })
+
+    await waitForWorkspace()
+    await wrapper.get('[data-testid="run-button"]').trigger('click')
+    await flushPromises()
+    await wrapper.get('[data-testid="step-run-button"]').trigger('click')
+    await flushPromises()
+
+    expect(wrapper.findAll('.step-done')).toHaveLength(1)
+    expect(wrapper.get('[data-testid="lesson-progress-summary"]').text()).toContain('1 /')
+  })
+
+  it('does not complete a lesson step when the python run fails', async () => {
+    runtimeMock.detectPython.mockResolvedValue({ available: true, command: 'python' })
+    runtimeMock.startRun.mockResolvedValue({ sessionId: 'session-1', command: 'python -u -c <code>' })
+
+    const wrapper = mount(HomeView, {
+      global: {
+        plugins: [createPinia()]
+      }
+    })
+
+    await waitForWorkspace()
+    await wrapper.get('[data-testid="run-button"]').trigger('click')
+    await flushPromises()
+    await wrapper.get('[data-testid="step-run-button"]').trigger('click')
+    await flushPromises()
+
+    runtimeMock.emitState({ sessionId: 'session-1', status: 'error', exitCode: 1 })
+    await flushPromises()
+
+    expect(wrapper.findAll('.step-done')).toHaveLength(0)
+    expect(wrapper.get('[data-testid="lesson-progress-summary"]').text()).toContain('0 /')
+  })
+
+  it('disables run actions while python is running', async () => {
+    runtimeMock.detectPython.mockResolvedValue({ available: true, command: 'python' })
+    runtimeMock.startRun.mockResolvedValue({ sessionId: 'session-1', command: 'python -u -c <code>' })
+
+    const wrapper = mount(HomeView, {
+      global: {
+        plugins: [createPinia()]
+      }
+    })
+
+    await waitForWorkspace()
+    await waitForEditor(wrapper)
+    await wrapper.get('[data-testid="editor-run-button"]').trigger('click')
+    await flushPromises()
+
+    expect(wrapper.get('[data-testid="editor-run-button"]').attributes('disabled')).toBeDefined()
+    expect(wrapper.get('[data-testid="run-button"]').attributes('disabled')).toBeDefined()
+  })
+
+  it('shows python preparation states on run buttons', async () => {
+    let resolveDetection!: (value: { available: true; command: string }) => void
+    runtimeMock.detectPython.mockReturnValue(new Promise((resolve) => {
+      resolveDetection = resolve
+    }))
+    runtimeMock.startRun.mockResolvedValue({ sessionId: 'session-1', command: 'python -u -c <code>' })
+
+    const wrapper = mount(HomeView, {
+      global: {
+        plugins: [createPinia()]
+      }
+    })
+
+    await flushPromises()
+    await waitForEditor(wrapper)
+    await wrapper.get('[data-testid="editor-run-button"]').trigger('click')
+    await flushPromises()
+
+    expect(wrapper.get('[data-testid="run-button"]').text()).toBe('Checking')
+    expect(wrapper.get('[data-testid="editor-run-button"]').text()).toBe('Checking Python...')
+    expect(wrapper.get('[data-testid="editor-run-button"]').attributes('disabled')).toBeDefined()
+
+    resolveDetection({ available: true, command: 'python' })
+    await flushPromises()
+
+    runtimeMock.emitState({ sessionId: 'session-1', status: 'completed', exitCode: 0 })
+    await flushPromises()
+
+    await wrapper.get('[data-testid="run-button"]').trigger('click')
+    await flushPromises()
+
+    let resolveStart!: (value: { sessionId: string; command: string }) => void
+    runtimeMock.startRun.mockReturnValue(new Promise((resolve) => {
+      resolveStart = resolve
+    }))
+    await wrapper.get('[data-testid="step-run-button"]').trigger('click')
+    await flushPromises()
+
+    expect(wrapper.get('[data-testid="run-button"]').text()).toBe('Starting')
+    expect(wrapper.get('[data-testid="step-run-button"]').text()).toBe('Starting...')
+    expect(wrapper.get('[data-testid="step-run-button"]').attributes('disabled')).toBeDefined()
+
+    resolveStart({ sessionId: 'session-2', command: 'python -u -c <code>' })
+    await flushPromises()
+
+    expect(wrapper.get('[data-testid="run-button"]').text()).toBe('Running')
+    expect(wrapper.get('[data-testid="step-run-button"]').text()).toBe('Running...')
   })
 
   it('shows install guidance when python is unavailable for a lesson code block', async () => {
@@ -207,9 +356,142 @@ describe('HomeView workspace', () => {
     await waitForWorkspace()
     await wrapper.get('[data-testid="run-button"]').trigger('click')
     await flushPromises()
+    expect(wrapper.get('[data-testid="lesson-progress-summary"]').text()).toContain('0 /')
+
     await wrapper.get('.actions .primary').trigger('click')
     await flushPromises()
 
     expect(wrapper.findAll('.step-done')).toHaveLength(1)
+    expect(wrapper.get('[data-testid="lesson-progress-summary"]').text()).toContain('1 /')
+  })
+
+  it('shows a visible problem when external lesson loading falls back to bundled lessons', async () => {
+    runtimeMock.detectPython.mockResolvedValue({ available: true, command: 'python' })
+    contentProviderMock.getChaptersWithStatus.mockResolvedValue({
+      chapters: [
+        {
+          id: 'chapter-1',
+          title: '第一章',
+          folderName: '第一章',
+          description: 'desc',
+          order: 1,
+          lessons: [
+            {
+              id: 'lesson_syntax_hello_world',
+              title: 'Hello World',
+              chapterTitle: '第一章',
+              chapterOrder: 1,
+              fileName: 'Hello World.py',
+              description: 'desc',
+              difficulty: 'beginner',
+              estimatedTime: 5,
+              chapter: 1,
+              order: 1,
+              pseudoCode: 'print("hello")',
+              steps: [],
+              prerequisites: [],
+              tags: []
+            }
+          ]
+        }
+      ],
+      status: {
+        source: 'bundled',
+        warning: {
+          message: '外部课程目录加载失败，已切换到内置课程。',
+          detail: 'missing content/lessons'
+        }
+      }
+    })
+
+    const wrapper = mount(HomeView, {
+      global: {
+        plugins: [createPinia()]
+      }
+    })
+
+    await waitForWorkspace()
+    await waitForEditor(wrapper)
+
+    expect(wrapper.get('[data-testid="tool-tab-problems"]').classes()).toContain('active')
+    expect(wrapper.text()).toContain('外部课程目录加载失败')
+    expect(wrapper.text()).toContain('missing content/lessons')
+    expect(wrapper.get('[data-testid="content-source-warning"]').text()).toContain('外部课程目录加载失败')
+  })
+
+  it('marks a quiz step complete after the correct answer in run mode', async () => {
+    runtimeMock.detectPython.mockResolvedValue({ available: true, command: 'python' })
+    contentProviderMock.getChaptersWithStatus.mockResolvedValue({
+      chapters: [
+        {
+          id: 'chapter-1',
+          title: '第一章',
+          folderName: '第一章',
+          description: 'desc',
+          order: 1,
+          lessons: [
+            {
+              id: 'lesson_quiz_demo',
+              title: 'Quiz Demo',
+              chapterTitle: '第一章',
+              chapterOrder: 1,
+              fileName: 'Quiz Demo.py',
+              description: 'desc',
+              difficulty: 'beginner',
+              estimatedTime: 5,
+              chapter: 1,
+              order: 1,
+              pseudoCode: '# quiz',
+              steps: [
+                {
+                  id: 'q1',
+                  type: 'quiz',
+                  title: '小测验',
+                  content: '哪个函数可以输出内容？',
+                  options: [
+                    { id: 'a', text: 'print()', isCorrect: true },
+                    { id: 'b', text: 'input()', isCorrect: false }
+                  ],
+                  correctAnswer: 'a'
+                }
+              ],
+              prerequisites: [],
+              tags: []
+            }
+          ]
+        }
+      ],
+      status: {
+        source: 'bundled',
+        warning: null
+      }
+    })
+    localStorage.setItem('start-your-python.progress', JSON.stringify({
+      lessons: {},
+      totalCompleted: 0,
+      totalTimeSpent: 0,
+      recentLessonId: 'lesson_quiz_demo'
+    }))
+
+    const wrapper = mount(HomeView, {
+      global: {
+        plugins: [createPinia()]
+      }
+    })
+
+    await waitForWorkspace()
+    await wrapper.get('[data-testid="run-button"]').trigger('click')
+    await flushPromises()
+
+    expect(wrapper.get('[data-testid="quiz-step"]').text()).toContain('print()')
+
+    await wrapper.findAll('[data-testid="quiz-step"] button')[0].trigger('click')
+    await flushPromises()
+
+    expect(wrapper.text()).toContain('回答正确')
+    expect(wrapper.findAll('.step-done')).toHaveLength(1)
+    const savedProgress = JSON.parse(localStorage.getItem('start-your-python.progress') ?? '{}')
+    expect(savedProgress.lessons.lesson_quiz_demo.stepStates.q1).toBe(true)
+    expect(savedProgress.lessons.lesson_quiz_demo.completed).toBe(true)
   })
 })

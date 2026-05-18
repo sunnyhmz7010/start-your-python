@@ -69,7 +69,13 @@
           <div class="summary-meta">
             <span>{{ currentLesson.estimatedTime }} 分钟</span>
             <span>{{ difficultyLabel(currentLesson.difficulty) }}</span>
+            <span data-testid="mobile-progress-summary">
+              {{ completedStepCount }} / {{ currentLesson.steps.length }} 步
+            </span>
             <span>{{ completedLessonIds.includes(currentLesson.id) ? '已完成' : '学习中' }}</span>
+          </div>
+          <div class="summary-progress" aria-hidden="true">
+            <span :style="{ width: `${completionPercent}%` }" />
           </div>
         </div>
 
@@ -103,6 +109,7 @@
           </div>
 
           <MarkdownContent class="step-content" :source="currentStep.content" />
+          <QuizStep v-if="currentStep.type === 'quiz'" :step="currentStep" @answer="handleAnswerQuiz" />
 
           <pre v-if="currentStep.code" class="step-code"><code>{{ currentStep.code }}</code></pre>
 
@@ -131,8 +138,9 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import MarkdownContent from '@/components/content/MarkdownContent.vue'
+import QuizStep from '@/components/content/QuizStep.vue'
 import { useLessonCatalog } from '@/composables/useLessonCatalog'
-import type { Lesson } from '@/types/lesson'
+import type { Lesson, QuizAnswerPayload } from '@/types/lesson'
 
 const {
   lessonStore,
@@ -143,8 +151,12 @@ const {
   currentStep,
   completedLessonIds,
   completedStepIds,
+  completedStepCount,
+  completionPercent,
   bootstrap,
-  selectLesson
+  selectLesson,
+  markCurrentStepCompleted,
+  toggleCurrentStepCompleted
 } = useLessonCatalog()
 
 const isCatalogOpen = ref(false)
@@ -195,12 +207,7 @@ function handleNextStep() {
     return
   }
 
-  progressStore.setStepCompleted(
-    currentLesson.value.id,
-    currentStep.value.id,
-    true,
-    currentLesson.value.steps.length
-  )
+  markCurrentStepCompleted()
 
   if (!isLastStep.value) {
     lessonStore.nextStep()
@@ -209,17 +216,16 @@ function handleNextStep() {
 }
 
 function handleToggleCurrentStepCompleted() {
-  if (!currentLesson.value || !currentStep.value) {
+  toggleCurrentStepCompleted()
+}
+
+function handleAnswerQuiz(payload: QuizAnswerPayload) {
+  if (!payload.isCorrect || !currentLesson.value || !currentStep.value) {
     return
   }
 
-  const isCompleted = progressStore.isStepCompleted(currentLesson.value.id, currentStep.value.id)
-  progressStore.setStepCompleted(
-    currentLesson.value.id,
-    currentStep.value.id,
-    !isCompleted,
-    currentLesson.value.steps.length
-  )
+  progressStore.setRecentLesson(currentLesson.value.id)
+  markCurrentStepCompleted()
 }
 
 function handleResetLessonProgress() {
@@ -463,6 +469,22 @@ h3 {
   background: rgba(95, 123, 158, 0.18);
   color: #dbe7f8;
   font-size: 12px;
+}
+
+.summary-progress {
+  width: 100%;
+  height: 5px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(95, 123, 158, 0.18);
+}
+
+.summary-progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #88d993;
+  transition: width 0.18s ease;
 }
 
 .step-strip {

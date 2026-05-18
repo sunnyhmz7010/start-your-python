@@ -11,6 +11,7 @@
         <p class="label">当前步骤</p>
         <h3>{{ step?.title ?? '准备开始' }}</h3>
         <MarkdownContent class="content" :source="step?.content ?? '点击右侧步骤开始学习。'" />
+        <QuizStep v-if="step?.type === 'quiz'" :step="step" @answer="$emit('answerQuiz', $event)" />
       </div>
 
       <div v-if="step?.code" class="run-card code">
@@ -20,9 +21,10 @@
             data-testid="step-run-button"
             type="button"
             class="step-run-button"
+            :disabled="isPythonRunning"
             @click="$emit('runStepCode', step)"
           >
-            Run
+            {{ runButtonLabel }}
           </button>
         </div>
         <pre><code>{{ step.code }}</code></pre>
@@ -32,17 +34,37 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import MarkdownContent from '@/components/content/MarkdownContent.vue'
-import type { Lesson, LessonStep } from '@/types/lesson'
+import QuizStep from '@/components/content/QuizStep.vue'
+import type { Lesson, LessonStep, QuizAnswerPayload } from '@/types/lesson'
+import type { PythonRuntimeStatus } from '@/types/runtime'
 
-defineProps<{
+const props = defineProps<{
   lesson: Lesson | null
   step: LessonStep | null
+  isPythonRunning: boolean
+  pythonStatus: PythonRuntimeStatus
 }>()
 
 defineEmits<{
   runStepCode: [step: LessonStep]
+  answerQuiz: [payload: QuizAnswerPayload]
 }>()
+
+const runButtonLabel = computed(() => {
+  if (props.pythonStatus === 'checking') {
+    return 'Checking...'
+  }
+  if (props.pythonStatus === 'starting') {
+    return 'Starting...'
+  }
+  if (props.pythonStatus === 'running') {
+    return 'Running...'
+  }
+
+  return 'Run'
+})
 </script>
 
 <style scoped>
@@ -104,5 +126,10 @@ defineEmits<{
   padding: 6px 12px;
   cursor: pointer;
   font-size: 12px;
+}
+
+.step-run-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 </style>

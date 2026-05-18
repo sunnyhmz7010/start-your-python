@@ -73,7 +73,7 @@ This repository is `start-your-python`, a desktop learning app for Python beginn
 - Product goal: provide a local beginner-friendly Python learning workspace, not a full IDE.
 - UX direction: PyCharm-style workspace with course tree, editor, lesson content, and real terminal execution.
 - Main audience: Chinese-speaking Python beginners.
-- Current app version: `1.1.0`
+- Current app version: `1.2.0`
 
 ## Tech Stack
 
@@ -126,6 +126,8 @@ This repository is `start-your-python`, a desktop learning app for Python beginn
   - stdout
   - stderr
   - `input()` style interaction
+- Learning progress should update from explicit step actions, correct quiz answers, and successful lesson-step code runs that finish with exit code 0.
+- Free editor runs should not update lesson progress.
 - Python runtime is external to the app. The app does not bundle Python.
 - Mobile mode is a reader-oriented course experience and does not depend on system Python.
 
@@ -143,6 +145,7 @@ This repository is `start-your-python`, a desktop learning app for Python beginn
   - `npm run build`
 - Mobile web build:
   - `npm run build:mobile`
+- Do not run `npm run build` and `npm run build:mobile` concurrently. Both commands write to the same `build/` output directory and can fail with Vite `ENOTEMPTY` cleanup errors when run in parallel.
 - Tauri development:
   - `npm run tauri:dev`
 - Tauri build:

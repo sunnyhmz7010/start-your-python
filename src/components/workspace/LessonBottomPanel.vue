@@ -5,6 +5,8 @@
     :terminal-output="terminalOutput"
     :can-submit-input="canSubmitInput"
     :is-python-missing="isPythonMissing"
+    :problem-messages="problemMessages"
+    :python-info="pythonInfo"
     @change-tab="$emit('changeTab', $event)"
     @submit-input="$emit('submitInput', $event)"
     @stop-run="$emit('stopRun')"
@@ -23,6 +25,8 @@ defineProps<{
   terminalOutput: string
   canSubmitInput: boolean
   isPythonMissing: boolean
+  problemMessages: string[]
+  pythonInfo: string | null
 }>()
 
 defineEmits<{

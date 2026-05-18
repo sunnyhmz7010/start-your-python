@@ -1,5 +1,10 @@
 <template>
-  <IdeFrame :current-lesson="currentLesson" @run="handleRunLesson">
+  <IdeFrame
+    :current-lesson="currentLesson"
+    :is-python-running="runtimeStore.isBusy"
+    :python-status="runtimeStore.status"
+    @run="handleRunLesson"
+  >
     <div class="workspace-layout">
       <ProjectToolWindow>
         <LessonTree
@@ -17,9 +22,12 @@
           :step="currentStep"
           :workspace-mode="workspaceMode"
           :editor-code="editorCode"
+          :is-python-running="runtimeStore.isBusy"
+          :python-status="runtimeStore.status"
           @update-code="lessonStore.updateEditorCode"
           @run-editor-code="handleRunEditorCode"
           @run-step-code="handleRunStepCode"
+          @answer-quiz="handleAnswerQuiz"
         />
         <LessonBottomPanel
           :active-tab="activeBottomTab"
@@ -27,13 +35,20 @@
           :terminal-output="runtimeStore.terminalOutput"
           :can-submit-input="runtimeStore.canSubmitInput"
           :is-python-missing="runtimeStore.isPythonMissing"
+          :problem-messages="problemMessages"
+          :python-info="pythonInfo"
           @change-tab="lessonStore.setActiveBottomTab"
           @submit-input="handleSubmitInput"
           @stop-run="runtimeStore.stopRun"
           @recheck-python="() => runtimeStore.detectPython(true)"
           @open-install-lesson="handleOpenInstallPythonLesson"
         />
-        <StatusBar :mode="workspaceMode" :lesson="currentLesson" />
+        <StatusBar
+          :mode="workspaceMode"
+          :lesson="currentLesson"
+          :content-source="lessonStore.contentStatus.source"
+          :content-warning="lessonStore.contentStatus.warning?.message ?? null"
+        />
       </section>
 
       <LessonStepsPanel
@@ -53,7 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import EditorTabs from '@/components/workspace/EditorTabs.vue'
 import IdeFrame from '@/components/workspace/IdeFrame.vue'
 import LessonBottomPanel from '@/components/workspace/LessonBottomPanel.vue'
@@ -64,7 +79,13 @@ import ProjectToolWindow from '@/components/workspace/ProjectToolWindow.vue'
 import StatusBar from '@/components/workspace/StatusBar.vue'
 import { useLessonCatalog } from '@/composables/useLessonCatalog'
 import { useRuntimeStore } from '@/stores/runtime'
-import type { Lesson } from '@/types/lesson'
+import type { Lesson, QuizAnswerPayload } from '@/types/lesson'
+
+type PendingStepRun = {
+  lessonId: string
+  stepId: string
+  totalSteps: number
+}
 
 const {
   lessonStore,
@@ -77,11 +98,35 @@ const {
   completedLessonIds,
   completedStepIds,
   bootstrap,
-  selectLesson
+  selectLesson,
+  markStepCompleted,
+  markCurrentStepCompleted,
+  toggleCurrentStepCompleted
 } = useLessonCatalog()
 const runtimeStore = useRuntimeStore()
+const pendingStepRun = ref<PendingStepRun | null>(null)
 const workspaceMode = computed(() => lessonStore.workspaceMode)
 const activeBottomTab = computed(() => lessonStore.activeBottomTab)
+const problemMessages = computed(() =>
+  lessonStore.contentStatus.warning
+    ? [
+        lessonStore.contentStatus.warning.detail
+          ? `${lessonStore.contentStatus.warning.message} ${lessonStore.contentStatus.warning.detail}`
+          : lessonStore.contentStatus.warning.message
+      ]
+    : []
+)
+const pythonInfo = computed(() => {
+  if (!runtimeStore.python.available) {
+    return null
+  }
+
+  return [
+    runtimeStore.python.command,
+    runtimeStore.python.version,
+    runtimeStore.python.executablePath
+  ].filter(Boolean).join(' · ')
+})
 
 function handleSelectLesson(lesson: Lesson) {
   selectLesson(lesson)
@@ -109,7 +154,15 @@ async function handleRunStepCode(step: Lesson['steps'][number]) {
 
   lessonStore.setActiveBottomTab('terminal')
   progressStore.setRecentLesson(currentLesson.value.id)
-  await runtimeStore.runCode(code)
+  pendingStepRun.value = {
+    lessonId: currentLesson.value.id,
+    stepId: step.id,
+    totalSteps: currentLesson.value.steps.length
+  }
+  const started = await runtimeStore.runCode(code)
+  if (!started) {
+    pendingStepRun.value = null
+  }
 }
 
 async function handleRunEditorCode() {
@@ -140,24 +193,11 @@ function handleNextStep() {
   const step = currentLesson.value.steps[currentStepIndex.value]
   const isLastStep = currentStepIndex.value >= currentLesson.value.steps.length - 1
   if (isLastStep) {
-    progressStore.setStepCompleted(
-      currentLesson.value.id,
-      step.id,
-      true,
-      currentLesson.value.steps.length
-    )
-    if (progressStore.isLessonCompleted(currentLesson.value.id)) {
-      lessonStore.completeLesson()
-    }
+    markStepCompleted(currentLesson.value.id, step.id, currentLesson.value.steps.length)
     return
   }
 
-  progressStore.setStepCompleted(
-    currentLesson.value.id,
-    step.id,
-    true,
-    currentLesson.value.steps.length
-  )
+  markStepCompleted(currentLesson.value.id, step.id, currentLesson.value.steps.length)
   lessonStore.nextStep()
   progressStore.updateCurrentStep(currentLesson.value.id, lessonStore.currentStepIndex)
 }
@@ -172,17 +212,16 @@ function handlePreviousStep() {
 }
 
 function handleToggleCurrentStepCompleted() {
-  if (!currentLesson.value || !currentStep.value) {
+  toggleCurrentStepCompleted()
+}
+
+function handleAnswerQuiz(payload: QuizAnswerPayload) {
+  if (!payload.isCorrect || !currentLesson.value || !currentStep.value) {
     return
   }
 
-  const isCompleted = progressStore.isStepCompleted(currentLesson.value.id, currentStep.value.id)
-  progressStore.setStepCompleted(
-    currentLesson.value.id,
-    currentStep.value.id,
-    !isCompleted,
-    currentLesson.value.steps.length
-  )
+  progressStore.setRecentLesson(currentLesson.value.id)
+  markCurrentStepCompleted()
 }
 
 function handleResetLessonProgress() {
@@ -225,9 +264,31 @@ function handleOpenInstallPythonLesson() {
   lessonStore.setWorkspaceMode('editor')
 }
 
+watch(
+  () => runtimeStore.lastRunState,
+  (state) => {
+    if (!state || !pendingStepRun.value) {
+      return
+    }
+
+    const pending = pendingStepRun.value
+    pendingStepRun.value = null
+
+    if (state.status !== 'completed' || state.exitCode !== 0) {
+      return
+    }
+
+    progressStore.setRecentLesson(pending.lessonId)
+    markStepCompleted(pending.lessonId, pending.stepId, pending.totalSteps)
+  }
+)
+
 onMounted(async () => {
   await runtimeStore.initialize()
   await bootstrap()
+  if (lessonStore.contentStatus.warning) {
+    lessonStore.setActiveBottomTab('problems')
+  }
 })
 </script>
 

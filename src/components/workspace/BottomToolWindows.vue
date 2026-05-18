@@ -9,6 +9,7 @@
         @click="$emit('changeTab', 'problems')"
       >
         Problems
+        <span v-if="problemMessages.length" class="problem-count">{{ problemMessages.length }}</span>
       </button>
       <button
         data-testid="tool-tab-terminal"
@@ -31,8 +32,19 @@
     </div>
 
     <div class="tool-content">
-      <div v-if="activeTab === 'problems'">No problems found</div>
+      <div v-if="activeTab === 'problems'" class="problems-panel">
+        <div v-if="problemMessages.length" class="problem-list">
+          <div v-for="message in problemMessages" :key="message" class="problem-item">
+            <span class="problem-severity">Warning</span>
+            <span>{{ message }}</span>
+          </div>
+        </div>
+        <div v-else>No problems found</div>
+      </div>
       <div v-else-if="activeTab === 'terminal'" class="terminal-panel">
+        <div v-if="pythonInfo" class="runtime-info" data-testid="python-runtime-info">
+          {{ pythonInfo }}
+        </div>
         <pre class="terminal-copy">{{ terminalOutput }}</pre>
 
         <div v-if="isPythonMissing" class="runtime-actions">
@@ -74,6 +86,8 @@ const props = defineProps<{
   terminalOutput: string
   canSubmitInput: boolean
   isPythonMissing: boolean
+  problemMessages: string[]
+  pythonInfo: string | null
 }>()
 
 const emit = defineEmits<{
@@ -135,6 +149,19 @@ function submitInput() {
   color: #fff;
 }
 
+.problem-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  margin-left: 6px;
+  border-radius: 999px;
+  background: #8a5d20;
+  color: #ffe9b3;
+  font-size: 10px;
+}
+
 .tool-content {
   flex: 1;
   padding: 12px 14px;
@@ -160,6 +187,43 @@ pre {
   gap: 12px;
   min-height: 0;
   height: 100%;
+}
+
+.runtime-info {
+  display: inline-flex;
+  align-self: flex-start;
+  border: 1px solid #344153;
+  border-radius: 6px;
+  padding: 5px 8px;
+  background: #1b222c;
+  color: #9fb3cc;
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: 12px;
+}
+
+.problems-panel {
+  color: #cbd4df;
+}
+
+.problem-list {
+  display: grid;
+  gap: 8px;
+}
+
+.problem-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 10px;
+  border: 1px solid #4c3f27;
+  border-radius: 6px;
+  background: #2a261f;
+}
+
+.problem-severity {
+  flex-shrink: 0;
+  color: #ffd37a;
+  font-size: 12px;
 }
 
 .runtime-actions,

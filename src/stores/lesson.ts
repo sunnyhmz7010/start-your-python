@@ -1,11 +1,18 @@
 import { defineStore } from 'pinia'
 import type { Lesson, Chapter, LessonStep } from '@/types/lesson'
 import { localContentProvider } from '@/services/content/localContentProvider'
+import type { ContentLoadStatus } from '@/services/content/contentProvider'
 import type { WorkspaceBottomTab, WorkspaceMode } from '@/components/workspace/types'
+
+const defaultContentStatus = (): ContentLoadStatus => ({
+  source: 'bundled',
+  warning: null
+})
 
 export const useLessonStore = defineStore('lesson', {
   state: () => ({
     chapters: [] as Chapter[],
+    contentStatus: defaultContentStatus(),
     currentLesson: null as Lesson | null,
     workingCopies: {} as Record<string, string>,
     currentEditorCode: '',
@@ -28,7 +35,9 @@ export const useLessonStore = defineStore('lesson', {
 
   actions: {
     async loadLessons() {
-      this.chapters = await localContentProvider.getChapters()
+      const result = await localContentProvider.getChaptersWithStatus()
+      this.chapters = result.chapters
+      this.contentStatus = result.status
     },
 
     selectLesson(lesson: Lesson) {

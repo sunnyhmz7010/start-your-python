@@ -16,6 +16,11 @@ export interface QuizOption {
   isCorrect: boolean
 }
 
+export interface QuizAnswerPayload {
+  optionId: string
+  isCorrect: boolean
+}
+
 export interface Lesson {
   id: string
   title: string

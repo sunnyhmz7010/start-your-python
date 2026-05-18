@@ -13,7 +13,7 @@ type LessonAnnotationKey =
   | 'prerequisites'
   | 'tags'
 
-type StepAnnotationKey = 'id' | 'type' | 'title' | 'content' | 'hint' | 'runtime'
+type StepAnnotationKey = 'id' | 'type' | 'title' | 'content' | 'hint' | 'runtime' | 'option' | 'correct_answer'
 
 type LessonMetadata = {
   id: string
@@ -100,6 +100,36 @@ function normalizeListValue(value: string) {
     .filter(Boolean)
 }
 
+function parseQuizOption(value: string, filePath: string) {
+  const parts = value.split('|').map((item) => item.trim())
+
+  if (parts.length < 2) {
+    throw new Error(`Invalid quiz option annotation in ${filePath}: ${value}`)
+  }
+
+  return {
+    id: parts[0],
+    text: parts[1],
+    isCorrect: parts[2]?.toLowerCase() === 'true'
+  }
+}
+
+function resolveQuizOptions(step: ParsedStep) {
+  if (!step.options?.length) {
+    return step.options
+  }
+
+  if (step.correctAnswer === undefined || step.correctAnswer === null || step.correctAnswer === '') {
+    return step.options
+  }
+
+  const correctAnswer = String(step.correctAnswer)
+  return step.options.map((option) => ({
+    ...option,
+    isCorrect: option.id === correctAnswer
+  }))
+}
+
 function finalizeStep(step: ParsedStep | null): LessonStep | null {
   if (!step) {
     return null
@@ -115,7 +145,9 @@ function finalizeStep(step: ParsedStep | null): LessonStep | null {
     content: step.content,
     code: code || undefined,
     runnableCode: runnableCode || undefined,
-    hint: step.hint
+    hint: step.hint,
+    options: resolveQuizOptions(step),
+    correctAnswer: step.correctAnswer
   }
 }
 
@@ -190,6 +222,8 @@ export function parseLessonFile(filePath: string, source: string): Lesson {
           title: '',
           content: '',
           hint: undefined,
+          options: undefined,
+          correctAnswer: undefined,
           codeLines: [],
           runtimeLines: []
         }
@@ -207,6 +241,10 @@ export function parseLessonFile(filePath: string, source: string): Lesson {
         if (key === 'content') currentStep.content = value
         if (key === 'hint') currentStep.hint = value
         if (key === 'runtime') currentStep.runtimeLines = [value]
+        if (key === 'option') {
+          currentStep.options = [...(currentStep.options ?? []), parseQuizOption(value, filePath)]
+        }
+        if (key === 'correct_answer') currentStep.correctAnswer = value
         index += 1
         continue
       }
@@ -216,6 +254,13 @@ export function parseLessonFile(filePath: string, source: string): Lesson {
       if (key === 'content') currentStep.content = block.value
       if (key === 'hint') currentStep.hint = block.value
       if (key === 'runtime') currentStep.runtimeLines = block.value ? block.value.split('\n') : []
+      if (key === 'option') {
+        const options = block.value
+          ? block.value.split('\n').map((item) => parseQuizOption(item, filePath))
+          : []
+        currentStep.options = [...(currentStep.options ?? []), ...options]
+      }
+      if (key === 'correct_answer') currentStep.correctAnswer = block.value
 
       index = block.nextIndex
       continue

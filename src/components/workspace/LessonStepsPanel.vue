@@ -5,7 +5,12 @@
         <p class="label">学习步骤</p>
         <h2>{{ lesson?.title ?? '等待选择课程' }}</h2>
       </div>
-      <span class="step-total">{{ lesson?.steps.length ?? 0 }} 步</span>
+      <span class="step-total" data-testid="lesson-progress-summary">
+        {{ lesson ? `${completedStepCount} / ${lesson.steps.length} 完成` : '0 步' }}
+      </span>
+    </div>
+    <div v-if="lesson" class="progress-track" aria-hidden="true">
+      <span class="progress-fill" :style="{ width: `${completionPercent}%` }" />
     </div>
 
     <div v-if="lesson" class="steps-list">
@@ -102,6 +107,23 @@ const isCurrentStepCompleted = computed(() => {
   return props.completedStepIds.includes(currentStep.value.id)
 })
 
+const completedStepCount = computed(() => {
+  if (!props.lesson) {
+    return 0
+  }
+
+  const lessonStepIds = new Set(props.lesson.steps.map((step) => step.id))
+  return props.completedStepIds.filter((stepId) => lessonStepIds.has(stepId)).length
+})
+
+const completionPercent = computed(() => {
+  if (!props.lesson?.steps.length) {
+    return 0
+  }
+
+  return Math.round((completedStepCount.value / props.lesson.steps.length) * 100)
+})
+
 function stepTypeLabel(type: LessonStep['type']) {
   const labels: Record<LessonStep['type'], string> = {
     text: '阅读',
@@ -153,6 +175,22 @@ h2 {
 .step-total {
   color: #8ea0b5;
   font-size: 12px;
+  white-space: nowrap;
+}
+
+.progress-track {
+  height: 4px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #1d222a;
+}
+
+.progress-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #88d993;
+  transition: width 0.18s ease;
 }
 
 .steps-list {

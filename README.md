@@ -39,12 +39,13 @@ Python 入门最容易卡在“看懂教程”和“真的跑起来”之间。S
 - PyCharm 风格布局：课程树、编辑区、步骤内容和底部工具窗口
 - 中文章节目录直接来自 `content/lessons/` 下的真实 `.py` 文件
 - 编辑态用于查看课程源码，学习态用于按步骤阅读讲解和示例
-- 学习进度保存在本机设备，重新打开后可继续学习
+- 学习进度保存在本机设备，代码运行成功、答题正确或手动标记后会更新进度
 
 ### 🖥️ 真实运行
 
 - 桌面端课程代码块可调用本机 Python 解释器运行
 - Terminal 支持标准输出、错误输出和 `input()` 输入
+- 课程步骤代码以退出码 0 完成时，会自动标记该步骤完成
 - 未检测到 Python 时，可跳转到安装课程并重新检测
 - Python 运行时来自用户系统，应用本身不捆绑 Python
 
@@ -58,6 +59,7 @@ Python 入门最容易卡在“看懂教程”和“真的跑起来”之间。S
 
 - 课程使用 `.py` 文件承载注解、讲解和示例代码
 - 应用会读取课程文件生成课程树和步骤内容
+- 支持阅读、代码、隐藏运行上下文和随堂测验步骤
 - 课程图片可放在 `public/course-images/` 并在课程 Markdown 中引用
 
 ## ⚡ 快速开始
@@ -119,8 +121,17 @@ content/lessons/
 - `print()` 输出显示为 stdout
 - 语法错误和运行异常显示为 stderr
 - `input()` 会进入交互输入流程
+- 课程步骤运行成功后会更新本课进度；编辑器自由运行不会影响课程进度
 
-### 3. 🖼️ 引用课程图片
+### 3. ✅ 完成进度
+
+课程步骤可以通过三种方式完成：
+
+- 点击“下一步”或“标记本步完成”
+- 课程代码步骤运行成功并以退出码 0 结束
+- 随堂测验选择正确答案
+
+### 4. 🖼️ 引用课程图片
 
 课程图片放在：
 
@@ -141,6 +152,37 @@ public/course-images/
 - 课程树按文件夹和 `.py` 文件组织
 - 课程内容可以和真实 Python 示例代码放在同一个文件里
 - 课程加载、解析和渲染逻辑与用户本地文件结构保持一致
+
+### ✍️ 课程注解格式
+
+课程文件通过注释声明元信息和学习步骤。代码步骤会显示注解后的 Python 代码，`runtime` 可提供运行时需要但不展示给初学者的上下文。
+
+```python
+# @lesson.id: lesson_syntax_hello_world
+# @lesson.title: Hello World
+# @lesson.description: 学习 print 输出。
+# @lesson.difficulty: beginner
+# @lesson.estimated_time: 5
+# @lesson.chapter: 2
+# @lesson.chapter_title: 第二章 基础语法入门
+# @lesson.chapter_order: 2
+# @lesson.order: 1
+
+# @step.id: s1
+# @step.type: code
+# @step.title: print 函数
+# @step.content:
+# print 会把括号里的内容显示到终端。
+print("Hello, Python!")
+
+# @step.id: q1
+# @step.type: quiz
+# @step.title: 小测验
+# @step.content: 哪个函数可以输出内容？
+# @step.option: a | print()
+# @step.option: b | input()
+# @step.correct_answer: a
+```
 
 ### 🧪 终端交互
 

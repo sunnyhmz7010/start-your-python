@@ -14,10 +14,10 @@
           data-testid="run-button"
           class="run-button"
           type="button"
-          :disabled="!currentLesson"
+          :disabled="!currentLesson || isPythonRunning"
           @click="$emit('run')"
         >
-          Run
+          {{ runButtonLabel }}
         </button>
       </div>
     </header>
@@ -34,15 +34,33 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { Lesson } from '@/types/lesson'
+import type { PythonRuntimeStatus } from '@/types/runtime'
 
-defineProps<{
+const props = defineProps<{
   currentLesson: Lesson | null
+  isPythonRunning: boolean
+  pythonStatus: PythonRuntimeStatus
 }>()
 
 defineEmits<{
   run: []
 }>()
+
+const runButtonLabel = computed(() => {
+  if (props.pythonStatus === 'checking') {
+    return 'Checking'
+  }
+  if (props.pythonStatus === 'starting') {
+    return 'Starting'
+  }
+  if (props.pythonStatus === 'running') {
+    return 'Running'
+  }
+
+  return 'Run'
+})
 </script>
 
 <style scoped>

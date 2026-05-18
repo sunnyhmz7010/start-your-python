@@ -1,6 +1,7 @@
 export type PythonRuntimeStatus =
   | 'idle'
   | 'checking'
+  | 'starting'
   | 'python-missing'
   | 'running'
   | 'completed'
@@ -10,6 +11,8 @@ export type PythonRuntimeStatus =
 export interface PythonAvailability {
   available: boolean
   command?: string | null
+  version?: string | null
+  executablePath?: string | null
   error?: string | null
 }
 
