@@ -35,13 +35,11 @@
 
 <script setup lang="ts">
 import type { Lesson } from '@/types/lesson'
-import type { PythonRuntimeStatus } from '@/types/runtime'
 
-const props = defineProps<{
+defineProps<{
   currentLesson: Lesson | null
   isPythonRunning: boolean
   isLessonRunning: boolean
-  pythonStatus: PythonRuntimeStatus
 }>()
 
 defineEmits<{

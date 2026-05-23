@@ -3,10 +3,14 @@ import { createPinia } from 'pinia'
 import { beforeEach, describe, expect, it } from 'vitest'
 import MobileView from '@/views/MobileView.vue'
 
-async function waitForReader() {
-  await flushPromises()
-  await flushPromises()
-  await new Promise((resolve) => setTimeout(resolve, 40))
+async function waitForReader(wrapper: ReturnType<typeof mount>) {
+  for (let attempt = 0; attempt < 25; attempt += 1) {
+    await flushPromises()
+    if (wrapper.find('[data-testid="mobile-reader"]').exists()) {
+      return
+    }
+    await new Promise((resolve) => setTimeout(resolve, 20))
+  }
 }
 
 describe('MobileView reader', () => {
@@ -22,12 +26,13 @@ describe('MobileView reader', () => {
       }
     })
 
-    await waitForReader()
+    await waitForReader(wrapper)
 
     expect(wrapper.get('[data-testid="mobile-reader"]').text()).toContain('分钟')
     expect(wrapper.text()).toContain('纯课程阅读模式')
     expect(wrapper.text()).not.toContain('Run Current File')
     expect(wrapper.text()).not.toContain('Terminal')
+    expect(wrapper.text()).not.toContain('Project')
     expect(wrapper.find('.step-content img').exists()).toBe(true)
   })
 
@@ -38,7 +43,7 @@ describe('MobileView reader', () => {
       }
     })
 
-    await waitForReader()
+    await waitForReader(wrapper)
     const initialTitle = wrapper.get('.step-card h3').text()
     expect(wrapper.get('[data-testid="mobile-progress-summary"]').text()).toContain('0 /')
 
@@ -72,7 +77,7 @@ describe('MobileView reader', () => {
       }
     })
 
-    await waitForReader()
+    await waitForReader(wrapper)
 
     expect(wrapper.get('[data-testid="mobile-reader"]').text()).toContain('小测验')
     await wrapper.findAll('[data-testid="quiz-step"] button')[0].trigger('click')

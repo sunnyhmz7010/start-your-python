@@ -1,20 +1,20 @@
 <template>
   <div class="project-window">
     <div class="stripe">
-      <div class="stripe-tab active" title="Project">
+      <div class="stripe-tab active" title="项目">
         <span class="stripe-glyph project"></span>
       </div>
-      <div class="stripe-tab" title="Structure">
+      <div class="stripe-tab" title="结构">
         <span class="stripe-glyph structure"></span>
       </div>
-      <div class="stripe-tab" title="Services">
+      <div class="stripe-tab" title="服务">
         <span class="stripe-glyph services"></span>
       </div>
     </div>
 
     <div class="project-panel">
       <div class="panel-header">
-        <span class="panel-title">Project</span>
+        <span class="panel-title">项目</span>
         <span class="panel-actions">...</span>
       </div>
       <slot />
