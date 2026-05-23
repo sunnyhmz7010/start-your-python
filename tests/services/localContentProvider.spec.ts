@@ -41,6 +41,30 @@ describe('localContentProvider', () => {
     expect(lesson?.steps[2]?.content).toContain('输出出来')
   })
 
+  it('keeps runnable code complete for direct python execution', () => {
+    const lesson = parseLessonFile('content/lessons/demo.py', `
+# @lesson.id: lesson_demo
+# @lesson.title: Demo
+# @lesson.description: Demo lesson.
+# @lesson.difficulty: beginner
+# @lesson.estimated_time: 5
+# @lesson.chapter: 1
+# @lesson.chapter_title: 第一章
+# @lesson.chapter_order: 1
+# @lesson.order: 1
+
+# @step.id: s1
+# @step.type: code
+# @step.title: 示例
+# @step.content: 运行示例
+print('hello')
+print('world')
+`)
+
+    expect(lesson.steps[0]?.code).toBe("print('hello')\nprint('world')")
+    expect(lesson.steps[0]?.runnableCode).toBe("print('hello')\nprint('world')")
+  })
+
   it('supports step runtime annotations for hidden execution context', () => {
     const lesson = parseLessonFile('content/lessons/demo.py', `
 # @lesson.id: lesson_demo

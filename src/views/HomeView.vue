@@ -2,6 +2,7 @@
   <IdeFrame
     :current-lesson="currentLesson"
     :is-python-running="runtimeStore.isBusy"
+    :is-lesson-running="lessonStore.isLessonRunning"
     :python-status="runtimeStore.status"
     @run="handleRunLesson"
   >
@@ -27,7 +28,6 @@
           @update-code="lessonStore.updateEditorCode"
           @run-step-code="handleRunStepCode"
           @answer-quiz="handleAnswerQuiz"
-          @run-code="handleRunEditorCode"
         />
         <LessonBottomPanel
           :active-tab="activeBottomTab"
@@ -142,16 +142,6 @@ function handleRunLesson() {
   progressStore.setRecentLesson(currentLesson.value.id)
   progressStore.updateCurrentStep(currentLesson.value.id, currentStepIndex.value)
   lessonStore.appendConsoleOutput(`[课程] 预览伪代码：${currentLesson.value.title}\n`)
-}
-
-async function handleRunEditorCode() {
-  if (!currentLesson.value) {
-    return
-  }
-
-  lessonStore.setActiveBottomTab('terminal')
-  progressStore.setRecentLesson(currentLesson.value.id)
-  await runtimeStore.runCode(editorCode.value)
 }
 
 async function handleRunStepCode(step: Lesson['steps'][number]) {

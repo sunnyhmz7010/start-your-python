@@ -7,7 +7,6 @@
       :is-python-running="isPythonRunning"
       :python-status="pythonStatus"
       @update-code="$emit('updateCode', $event)"
-      @run-code="$emit('runCode')"
     />
     <RunLessonView
       v-else
@@ -39,7 +38,6 @@ defineProps<{
 
 defineEmits<{
   updateCode: [code: string]
-  runCode: []
   runStepCode: [step: LessonStep]
   answerQuiz: [payload: QuizAnswerPayload]
 }>()

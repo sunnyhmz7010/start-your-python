@@ -36,7 +36,7 @@
         <div v-if="pythonInfo" class="runtime-info" data-testid="python-runtime-info">
           {{ pythonInfo }}
         </div>
-        <pre class="terminal-copy">{{ terminalOutput }}</pre>
+        <pre class="terminal-copy">{{ displayOutput || 'Python 终端就绪。可粘贴代码并运行。' }}</pre>
 
         <div v-if="isPythonMissing" class="runtime-actions">
           <button data-testid="go-to-install-python" type="button" class="inline-button" @click="$emit('openInstallLesson')">
@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import type { WorkspaceBottomTab } from './types'
 
 const props = defineProps<{
@@ -89,6 +89,11 @@ const emit = defineEmits<{
 }>()
 
 const inputValue = ref('')
+
+const displayOutput = computed(() => {
+  const chunks = [props.consoleOutput.trimEnd(), props.terminalOutput.trimEnd()].filter(Boolean)
+  return chunks.join('\n')
+})
 
 function submitInput() {
   const value = inputValue.value
