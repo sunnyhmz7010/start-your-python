@@ -31,14 +31,12 @@
         />
         <LessonBottomPanel
           :active-tab="activeBottomTab"
-          :console-output="lessonStore.consoleOutput"
           :terminal-output="runtimeStore.terminalOutput"
-          :can-submit-input="runtimeStore.canSubmitInput"
           :is-python-missing="runtimeStore.isPythonMissing"
           :problem-messages="problemMessages"
           :python-info="pythonInfo"
           @change-tab="lessonStore.setActiveBottomTab"
-          @submit-input="handleSubmitInput"
+          @submit-input="runtimeStore.submitInput"
           @stop-run="runtimeStore.stopRun"
           @recheck-python="() => runtimeStore.detectPython(true)"
           @open-install-lesson="handleOpenInstallPythonLesson"
@@ -141,7 +139,6 @@ function handleRunLesson() {
   lessonStore.setActiveBottomTab('terminal')
   progressStore.setRecentLesson(currentLesson.value.id)
   progressStore.updateCurrentStep(currentLesson.value.id, currentStepIndex.value)
-  lessonStore.appendConsoleOutput(`[课程] 预览伪代码：${currentLesson.value.title}\n`)
 }
 
 async function handleRunStepCode(step: Lesson['steps'][number]) {
@@ -173,7 +170,6 @@ function handleGotoStep(index: number) {
   }
 
   lessonStore.setCurrentStep(index)
-  lessonStore.appendConsoleOutput(`[课程] 跳转到步骤 ${lessonStore.currentStepIndex + 1}: ${lessonStore.currentStep?.title}\n`)
   progressStore.updateCurrentStep(currentLesson.value.id, lessonStore.currentStepIndex)
 }
 
@@ -240,10 +236,6 @@ function handleResetAllProgress() {
   if (currentLesson.value) {
     lessonStore.setCurrentStep(0)
   }
-}
-
-async function handleSubmitInput(input: string) {
-  await runtimeStore.submitInput(input)
 }
 
 function handleOpenInstallPythonLesson() {

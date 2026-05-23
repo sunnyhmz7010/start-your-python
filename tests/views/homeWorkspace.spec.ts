@@ -157,7 +157,6 @@ describe('HomeView workspace', () => {
     expect(runtimeMock.startRun).not.toHaveBeenCalled()
     expect(wrapper.find('[data-testid="run-lesson-view"]').exists()).toBe(true)
     expect(wrapper.get('[data-testid="tool-tab-terminal"]').classes()).toContain('active')
-    expect(wrapper.text()).toContain('预览伪代码')
     expect(wrapper.text()).toContain('当前步骤')
   })
 

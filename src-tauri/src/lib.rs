@@ -233,26 +233,75 @@ fn spawn_output_reader<R: Read + Send + 'static>(
   thread::spawn(move || {
     let mut reader = reader;
     let mut buffer = [0_u8; 1024];
+    let mut pending: Vec<u8> = Vec::new();
 
     loop {
       match reader.read(&mut buffer) {
-        Ok(0) => break,
+        Ok(0) => {
+          if !pending.is_empty() {
+            let chunk = String::from_utf8_lossy(&pending).to_string();
+            emit_output(
+              &app,
+              PythonOutputEvent {
+                session_id: session_id.clone(),
+                stream: stream.into(),
+                chunk,
+              },
+            );
+          }
+          break;
+        }
         Ok(count) => {
-          let chunk = String::from_utf8_lossy(&buffer[..count]).to_string();
-          emit_output(
-            &app,
-            PythonOutputEvent {
-              session_id: session_id.clone(),
-              stream: stream.into(),
-              chunk,
-            },
-          );
+          pending.extend_from_slice(&buffer[..count]);
+
+          loop {
+            match std::str::from_utf8(&pending) {
+              Ok(chunk) => {
+                if !chunk.is_empty() {
+                  emit_output(
+                    &app,
+                    PythonOutputEvent {
+                      session_id: session_id.clone(),
+                      stream: stream.into(),
+                      chunk: chunk.to_string(),
+                    },
+                  );
+                }
+                pending.clear();
+                break;
+              }
+              Err(error) => {
+                let valid_up_to = error.valid_up_to();
+                if valid_up_to > 0 {
+                  let chunk = String::from_utf8_lossy(&pending[..valid_up_to]).to_string();
+                  emit_output(
+                    &app,
+                    PythonOutputEvent {
+                      session_id: session_id.clone(),
+                      stream: stream.into(),
+                      chunk,
+                    },
+                  );
+                  pending.drain(..valid_up_to);
+                  continue;
+                }
+
+                if error.error_len().is_none() {
+                  break;
+                }
+
+                pending.clear();
+                break;
+              }
+            }
+          }
         }
         Err(_) => break,
       }
     }
   });
 }
+
 
 fn spawn_process_monitor(
   app: tauri::AppHandle,
@@ -429,7 +478,7 @@ fn start_python_run(
       session_id: session_id.clone(),
       status: "running".into(),
       exit_code: None,
-      message: Some(format!("已启动 {}", spec.command)),
+      message: None,
     },
   );
 

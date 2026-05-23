@@ -47,7 +47,7 @@
           </button>
         </div>
 
-        <form v-if="canSubmitInput" class="terminal-input-row" @submit.prevent="submitInput">
+        <form class="terminal-input-row" @submit.prevent="submitInput">
           <span class="prompt">&gt;</span>
           <input
             v-model="inputValue"
@@ -55,7 +55,7 @@
             class="terminal-input"
             type="text"
             autocomplete="off"
-            placeholder="粘贴或输入代码后按 Enter 发送给 Python"
+            placeholder="输入 Python 交互内容后按 Enter 发送"
           />
           <button data-testid="stop-run" type="button" class="inline-button danger" @click="$emit('stopRun')">
             停止
@@ -72,9 +72,7 @@ import type { WorkspaceBottomTab } from './types'
 
 const props = defineProps<{
   activeTab: WorkspaceBottomTab
-  consoleOutput: string
   terminalOutput: string
-  canSubmitInput: boolean
   isPythonMissing: boolean
   problemMessages: string[]
   pythonInfo: string | null
@@ -91,7 +89,7 @@ const emit = defineEmits<{
 const inputValue = ref('')
 
 const displayOutput = computed(() => {
-  const chunks = [props.consoleOutput.trimEnd(), props.terminalOutput.trimEnd()].filter(Boolean)
+  const chunks = [props.terminalOutput.trimEnd()].filter(Boolean)
   return chunks.join('\n')
 })
 

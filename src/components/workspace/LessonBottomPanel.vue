@@ -1,9 +1,7 @@
 <template>
   <BottomToolWindows
     :active-tab="activeTab"
-    :console-output="consoleOutput"
     :terminal-output="terminalOutput"
-    :can-submit-input="canSubmitInput"
     :is-python-missing="isPythonMissing"
     :problem-messages="problemMessages"
     :python-info="pythonInfo"
@@ -21,9 +19,7 @@ import type { WorkspaceBottomTab } from './types'
 
 defineProps<{
   activeTab: WorkspaceBottomTab
-  consoleOutput: string
   terminalOutput: string
-  canSubmitInput: boolean
   isPythonMissing: boolean
   problemMessages: string[]
   pythonInfo: string | null

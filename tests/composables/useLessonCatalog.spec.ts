@@ -141,7 +141,6 @@ describe('useLessonCatalog', () => {
 
     expect(catalog.progressStore.isLessonCompleted('lesson-1')).toBe(true)
     expect(catalog.lessonStore.isLessonRunning).toBe(false)
-    expect(catalog.lessonStore.consoleOutput).toContain('[课程] 课程完成: Test Lesson')
   })
 
   it('returns false when marking a current step without a selected lesson', () => {
