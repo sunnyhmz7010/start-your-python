@@ -27,7 +27,7 @@
           <strong>{{ step.title }}</strong>
           <small>{{ stepTypeLabel(step.type) }}</small>
         </span>
-        <span v-if="completedStepIds.includes(step.id)" class="step-done">done</span>
+        <span v-if="completedStepIds.includes(step.id)" class="step-done">完成</span>
       </button>
     </div>
 

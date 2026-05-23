@@ -38,7 +38,7 @@
           <span class="lesson-guide"></span>
           <span class="file-icon python-file"></span>
           <span class="lesson-name">{{ lesson.fileName ?? `${lesson.title}.py` }}</span>
-          <span v-if="completedLessonIds.includes(lesson.id)" class="badge completed">done</span>
+          <span v-if="completedLessonIds.includes(lesson.id)" class="badge completed">完成</span>
         </button>
       </div>
     </div>
