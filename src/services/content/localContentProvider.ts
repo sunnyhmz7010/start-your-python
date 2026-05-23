@@ -1,6 +1,11 @@
 import { invoke, isTauri } from '@tauri-apps/api/core'
-import { buildChaptersFromLessonSources, getBundledCourseFileChapters, type LessonSourceFile } from './courseFiles'
-import type { ContentLoadResult, ContentProvider } from './contentProvider'
+import {
+  buildChaptersFromLessonSources,
+  getBundledCourseFileChapters,
+  LessonParseError,
+  type LessonSourceFile
+} from './courseFiles'
+import type { ContentLoadResult, ContentLoadWarning, ContentProvider } from './contentProvider'
 
 let chaptersCachePromise: Promise<ContentLoadResult> | null = null
 
@@ -10,6 +15,42 @@ function formatErrorDetail(error: unknown) {
   }
 
   return String(error)
+}
+
+function buildWarning(error: unknown, fallbackMessage: string): ContentLoadWarning {
+  if (error instanceof LessonParseError) {
+    return {
+      message: fallbackMessage,
+      detail: error.filePath
+        ? `${error.filePath}: ${error.message}`
+        : error.message
+    }
+  }
+
+  return {
+    message: fallbackMessage,
+    detail: formatErrorDetail(error)
+  }
+}
+
+async function loadBundledLessons(warning: ContentLoadWarning | null): Promise<ContentLoadResult> {
+  try {
+    return {
+      chapters: await getBundledCourseFileChapters(),
+      status: {
+        source: 'bundled',
+        warning
+      }
+    }
+  } catch (error) {
+    return {
+      chapters: [],
+      status: {
+        source: 'bundled',
+        warning: buildWarning(error, '课程文件解析失败，课程目录无法加载。')
+      }
+    }
+  }
 }
 
 async function loadChapters() {
@@ -25,26 +66,13 @@ async function loadChapters() {
       } satisfies ContentLoadResult
     } catch (error) {
       console.warn('Falling back to bundled lesson files.', error)
-      return {
-        chapters: await getBundledCourseFileChapters(),
-        status: {
-          source: 'bundled',
-          warning: {
-            message: '外部课程目录加载失败，已切换到内置课程。',
-            detail: formatErrorDetail(error)
-          }
-        }
-      } satisfies ContentLoadResult
+      return loadBundledLessons(
+        buildWarning(error, '外部课程目录加载失败，已切换到内置课程。')
+      )
     }
   }
 
-  return {
-    chapters: await getBundledCourseFileChapters(),
-    status: {
-      source: 'bundled',
-      warning: null
-    }
-  } satisfies ContentLoadResult
+  return loadBundledLessons(null)
 }
 
 export const localContentProvider: ContentProvider = {

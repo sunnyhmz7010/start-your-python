@@ -142,10 +142,11 @@ This repository is `start-your-python`, a desktop learning app for Python beginn
 - Tests:
   - `npm run test`
 - Web build:
-  - `npm run build`
+- `npm run build`
 - Mobile web build:
   - `npm run build:mobile`
 - Do not run `npm run build` and `npm run build:mobile` concurrently. Both commands write to the same `build/` output directory and can fail with Vite `ENOTEMPTY` cleanup errors when run in parallel.
+- GitHub Actions workflows set `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true` to suppress Node 20 deprecation warnings from JavaScript-based actions; keep that flag on when editing CI/CD workflows unless GitHub changes the guidance.
 - Tauri development:
   - `npm run tauri:dev`
 - Tauri build:

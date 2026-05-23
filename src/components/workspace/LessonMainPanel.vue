@@ -4,10 +4,7 @@
       v-if="workspaceMode === 'editor'"
       :lesson="lesson"
       :code="editorCode"
-      :is-python-running="isPythonRunning"
-      :python-status="pythonStatus"
       @update-code="$emit('updateCode', $event)"
-      @run-code="$emit('runEditorCode')"
     />
     <RunLessonView
       v-else
@@ -39,7 +36,6 @@ defineProps<{
 
 defineEmits<{
   updateCode: [code: string]
-  runEditorCode: []
   runStepCode: [step: LessonStep]
   answerQuiz: [payload: QuizAnswerPayload]
 }>()

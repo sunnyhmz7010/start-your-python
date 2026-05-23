@@ -3,15 +3,6 @@
     <div v-if="lesson" class="code-shell">
       <div class="code-header">
         <span>{{ lesson.fileName ?? `${lesson.title}.py` }}</span>
-        <button
-          data-testid="editor-run-button"
-          type="button"
-          class="run-button"
-          :disabled="isPythonRunning"
-          @click="$emit('runCode')"
-        >
-          {{ runButtonLabel }}
-        </button>
       </div>
       <textarea
         data-testid="editor-input"
@@ -26,35 +17,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import type { Lesson } from '@/types/lesson'
-import type { PythonRuntimeStatus } from '@/types/runtime'
 
-const props = defineProps<{
+defineProps<{
   lesson: Lesson | null
   code: string
-  isPythonRunning: boolean
-  pythonStatus: PythonRuntimeStatus
 }>()
 
 defineEmits<{
   updateCode: [code: string]
-  runCode: []
 }>()
-
-const runButtonLabel = computed(() => {
-  if (props.pythonStatus === 'checking') {
-    return 'Checking Python...'
-  }
-  if (props.pythonStatus === 'starting') {
-    return 'Starting...'
-  }
-  if (props.pythonStatus === 'running') {
-    return 'Running...'
-  }
-
-  return 'Run Current File'
-})
 </script>
 
 <style scoped>
@@ -79,21 +51,6 @@ const runButtonLabel = computed(() => {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-}
-
-.run-button {
-  border: 1px solid #3f7f53;
-  background: #2f5d3b;
-  color: #edf7ef;
-  border-radius: 6px;
-  padding: 6px 10px;
-  cursor: pointer;
-  font-size: 12px;
-}
-
-.run-button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
 }
 
 .code-input {

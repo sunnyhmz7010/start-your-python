@@ -35,10 +35,10 @@
 # @step.type: code
 # @step.title: 验证安装
 # @step.content:
-# 安装完成后，打开终端或命令提示符，用下面的命令确认环境是否真的可用。
+# 安装完成后，可以先运行一段 Python 代码确认当前解释器真的可用。
 # 
-# 你应该至少看到：
-# - `python --version` 能返回 Python 版本
-# - `pip --version` 能返回 pip 版本
-python --version
-pip --version
+# 这段代码会打印正在运行的 Python 版本和解释器路径。
+import sys
+
+print(sys.version)
+print(sys.executable)

@@ -25,7 +25,6 @@
           :is-python-running="runtimeStore.isBusy"
           :python-status="runtimeStore.status"
           @update-code="lessonStore.updateEditorCode"
-          @run-editor-code="handleRunEditorCode"
           @run-step-code="handleRunStepCode"
           @answer-quiz="handleAnswerQuiz"
         />
@@ -132,14 +131,16 @@ function handleSelectLesson(lesson: Lesson) {
   selectLesson(lesson)
 }
 
-function handleRunLesson() {
+async function handleRunLesson() {
   if (!currentLesson.value) {
     return
   }
 
   lessonStore.enterRunMode()
+  lessonStore.setActiveBottomTab('terminal')
   progressStore.setRecentLesson(currentLesson.value.id)
   progressStore.updateCurrentStep(currentLesson.value.id, currentStepIndex.value)
+  await runtimeStore.runCode(editorCode.value)
 }
 
 async function handleRunStepCode(step: Lesson['steps'][number]) {
@@ -163,16 +164,6 @@ async function handleRunStepCode(step: Lesson['steps'][number]) {
   if (!started) {
     pendingStepRun.value = null
   }
-}
-
-async function handleRunEditorCode() {
-  if (!currentLesson.value) {
-    return
-  }
-
-  lessonStore.setActiveBottomTab('terminal')
-  progressStore.setRecentLesson(currentLesson.value.id)
-  await runtimeStore.runCode(editorCode.value)
 }
 
 function handleGotoStep(index: number) {

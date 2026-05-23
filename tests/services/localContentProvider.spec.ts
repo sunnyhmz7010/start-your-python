@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { localContentProvider } from '@/services/content/localContentProvider'
-import { parseLessonFile } from '@/services/content/courseFiles'
+import * as courseFiles from '@/services/content/courseFiles'
+import { LessonParseError, parseLessonFile } from '@/services/content/courseFiles'
 
 const tauriCoreMock = vi.hoisted(() => ({
   isTauri: vi.fn(() => false),
@@ -8,6 +9,14 @@ const tauriCoreMock = vi.hoisted(() => ({
 }))
 
 vi.mock('@tauri-apps/api/core', () => tauriCoreMock)
+vi.mock('@/services/content/courseFiles', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/services/content/courseFiles')>()
+
+  return {
+    ...actual,
+    getBundledCourseFileChapters: vi.fn(actual.getBundledCourseFileChapters)
+  }
+})
 
 describe('localContentProvider', () => {
   beforeEach(() => {
@@ -161,6 +170,27 @@ print("hello")
       expect(result.status.source).toBe('bundled')
       expect(result.status.warning?.message).toContain('外部课程目录加载失败')
       expect(result.status.warning?.detail).toBe('missing content/lessons')
+    } finally {
+      warnSpy.mockRestore()
+    }
+  })
+
+  it('returns a parse warning when bundled lesson files are invalid', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+    try {
+      tauriCoreMock.isTauri.mockReturnValue(true)
+      tauriCoreMock.invoke.mockRejectedValue(new Error('external missing'))
+      courseFiles.getBundledCourseFileChapters.mockRejectedValue(
+        new LessonParseError('content/lessons/demo.py', 'Incomplete lesson metadata')
+      )
+
+      vi.resetModules()
+      const { localContentProvider: provider } = await import('@/services/content/localContentProvider')
+      const result = await provider.getChaptersWithStatus()
+
+      expect(result.status.warning?.message).toBe('课程文件解析失败，课程目录无法加载。')
+      expect(result.status.warning?.detail).toContain('content/lessons/demo.py')
+      expect(result.status.warning?.detail).toContain('Incomplete lesson metadata')
     } finally {
       warnSpy.mockRestore()
     }

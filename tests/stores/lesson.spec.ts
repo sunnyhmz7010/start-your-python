@@ -88,4 +88,26 @@ describe('lesson store', () => {
     expect(store.contentStatus.source).toBe('bundled')
     expect(store.contentStatus.warning?.detail).toBe('missing content/lessons')
   })
+
+  it('stores parse failure warnings from the content provider', async () => {
+    const store = useLessonStore()
+
+    contentProviderMock.getChaptersWithStatus.mockResolvedValue({
+      chapters: [],
+      status: {
+        source: 'bundled',
+        warning: {
+          message: '课程文件解析失败，课程目录无法加载。',
+          detail: 'content/lessons/demo.py: Incomplete lesson metadata'
+        }
+      }
+    })
+
+    await store.loadLessons()
+
+    expect(store.chapters).toEqual([])
+    expect(store.contentStatus.source).toBe('bundled')
+    expect(store.contentStatus.warning?.message).toBe('课程文件解析失败，课程目录无法加载。')
+    expect(store.contentStatus.warning?.detail).toContain('content/lessons/demo.py')
+  })
 })

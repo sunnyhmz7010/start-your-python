@@ -109,6 +109,7 @@ describe('HomeView workspace', () => {
 
     expect(wrapper.get('[data-testid="editor-input"]').element).toBeTruthy()
     expect(wrapper.text()).toContain('Project')
+    expect(wrapper.find('[data-testid="editor-run-button"]').exists()).toBe(false)
     expect(wrapper.get('[data-testid="tool-tab-terminal"]').classes()).toContain('active')
     expect(wrapper.text()).not.toContain('学习步骤')
   })
@@ -131,7 +132,7 @@ describe('HomeView workspace', () => {
     expect((editor.element as HTMLTextAreaElement).value).toContain('edited')
   })
 
-  it('runs the edited lesson file from editor mode', async () => {
+  it('runs the edited lesson file from the single top run button', async () => {
     runtimeMock.detectPython.mockResolvedValue({
       available: true,
       command: 'python',
@@ -150,17 +151,19 @@ describe('HomeView workspace', () => {
     await waitForEditor(wrapper)
     const editor = wrapper.get('[data-testid="editor-input"]')
     await editor.setValue('print("edited from editor")')
-    await wrapper.get('[data-testid="editor-run-button"]').trigger('click')
+    await wrapper.get('[data-testid="run-button"]').trigger('click')
     await flushPromises()
 
     expect(runtimeMock.startRun).toHaveBeenCalledWith('print("edited from editor")')
+    expect(wrapper.find('[data-testid="run-lesson-view"]').exists()).toBe(true)
     expect(wrapper.get('[data-testid="tool-tab-terminal"]').classes()).toContain('active')
     expect(wrapper.get('[data-testid="python-runtime-info"]').text()).toContain('Python 3.12.0')
     expect(wrapper.get('[data-testid="python-runtime-info"]').text()).toContain('C:/Python312/python.exe')
   })
 
-  it('switches to lesson content without executing python when the main run button is clicked', async () => {
+  it('switches to lesson content and executes python when the main run button is clicked', async () => {
     runtimeMock.detectPython.mockResolvedValue({ available: true, command: 'python' })
+    runtimeMock.startRun.mockResolvedValue({ sessionId: 'session-1', command: 'python -u -c <code>' })
 
     const wrapper = mount(HomeView, {
       global: {
@@ -172,8 +175,8 @@ describe('HomeView workspace', () => {
     await wrapper.get('[data-testid="run-button"]').trigger('click')
     await flushPromises()
 
-    expect(runtimeMock.startRun).not.toHaveBeenCalled()
-    expect(wrapper.get('[data-testid="tool-tab-run"]').classes()).toContain('active')
+    expect(runtimeMock.startRun).toHaveBeenCalledTimes(1)
+    expect(wrapper.get('[data-testid="tool-tab-terminal"]').classes()).toContain('active')
     expect(wrapper.text()).toContain('学习步骤')
     expect(wrapper.find('[data-testid="run-lesson-view"]').exists()).toBe(true)
   })
@@ -191,12 +194,15 @@ describe('HomeView workspace', () => {
     await waitForWorkspace()
     await wrapper.get('[data-testid="run-button"]').trigger('click')
     await flushPromises()
+    runtimeMock.emitState({ sessionId: 'session-1', status: 'completed', exitCode: 0 })
+    await flushPromises()
+
     await wrapper.get('[data-testid="step-run-button"]').trigger('click')
     await flushPromises()
     runtimeMock.emitOutput({ sessionId: 'session-1', stream: 'stdout', chunk: 'hello\n' })
     await flushPromises()
 
-    expect(runtimeMock.startRun).toHaveBeenCalledTimes(1)
+    expect(runtimeMock.startRun).toHaveBeenCalledTimes(2)
     expect(wrapper.get('[data-testid="tool-tab-terminal"]').classes()).toContain('active')
     expect(wrapper.text()).toContain('hello')
 
@@ -226,6 +232,9 @@ describe('HomeView workspace', () => {
     await waitForWorkspace()
     await wrapper.get('[data-testid="run-button"]').trigger('click')
     await flushPromises()
+    runtimeMock.emitState({ sessionId: 'session-1', status: 'completed', exitCode: 0 })
+    await flushPromises()
+
     await wrapper.get('[data-testid="step-run-button"]').trigger('click')
     await flushPromises()
 
@@ -246,6 +255,9 @@ describe('HomeView workspace', () => {
     await waitForWorkspace()
     await wrapper.get('[data-testid="run-button"]').trigger('click')
     await flushPromises()
+    runtimeMock.emitState({ sessionId: 'session-1', status: 'completed', exitCode: 0 })
+    await flushPromises()
+
     await wrapper.get('[data-testid="step-run-button"]').trigger('click')
     await flushPromises()
 
@@ -268,10 +280,9 @@ describe('HomeView workspace', () => {
 
     await waitForWorkspace()
     await waitForEditor(wrapper)
-    await wrapper.get('[data-testid="editor-run-button"]').trigger('click')
+    await wrapper.get('[data-testid="run-button"]').trigger('click')
     await flushPromises()
 
-    expect(wrapper.get('[data-testid="editor-run-button"]').attributes('disabled')).toBeDefined()
     expect(wrapper.get('[data-testid="run-button"]').attributes('disabled')).toBeDefined()
   })
 
@@ -290,20 +301,16 @@ describe('HomeView workspace', () => {
 
     await flushPromises()
     await waitForEditor(wrapper)
-    await wrapper.get('[data-testid="editor-run-button"]').trigger('click')
+    await wrapper.get('[data-testid="run-button"]').trigger('click')
     await flushPromises()
 
     expect(wrapper.get('[data-testid="run-button"]').text()).toBe('Checking')
-    expect(wrapper.get('[data-testid="editor-run-button"]').text()).toBe('Checking Python...')
-    expect(wrapper.get('[data-testid="editor-run-button"]').attributes('disabled')).toBeDefined()
+    expect(wrapper.get('[data-testid="run-button"]').attributes('disabled')).toBeDefined()
 
     resolveDetection({ available: true, command: 'python' })
     await flushPromises()
 
     runtimeMock.emitState({ sessionId: 'session-1', status: 'completed', exitCode: 0 })
-    await flushPromises()
-
-    await wrapper.get('[data-testid="run-button"]').trigger('click')
     await flushPromises()
 
     let resolveStart!: (value: { sessionId: string; command: string }) => void

@@ -34,6 +34,16 @@ type ParsedStep = LessonStep & {
   runtimeLines: string[]
 }
 
+export class LessonParseError extends Error {
+  filePath: string
+
+  constructor(filePath: string, message: string) {
+    super(message)
+    this.name = 'LessonParseError'
+    this.filePath = filePath
+  }
+}
+
 const lessonModules = import.meta.glob('../../../content/lessons/**/*.py', {
   query: '?raw',
   import: 'default'
@@ -59,12 +69,12 @@ function stripComment(line: string) {
   return line.replace(/^\s*#\s?/, '')
 }
 
-function parseAnnotationLine<T extends string>(line: string, prefix: string) {
+function parseAnnotationLine<T extends string>(line: string, prefix: string, filePath: string) {
   const payload = line.slice(prefix.length)
   const separatorIndex = payload.indexOf(':')
 
   if (separatorIndex === -1) {
-    throw new Error(`Invalid annotation line: ${line}`)
+    throw new LessonParseError(filePath, `Invalid annotation line: ${line}`)
   }
 
   const key = payload.slice(0, separatorIndex).trim() as T
@@ -104,7 +114,7 @@ function parseQuizOption(value: string, filePath: string) {
   const parts = value.split('|').map((item) => item.trim())
 
   if (parts.length < 2) {
-    throw new Error(`Invalid quiz option annotation in ${filePath}: ${value}`)
+    throw new LessonParseError(filePath, `Invalid quiz option annotation: ${value}`)
   }
 
   return {
@@ -165,7 +175,7 @@ export function parseLessonFile(filePath: string, source: string): Lesson {
     const line = lines[index]
 
     if (line.startsWith(LESSON_PREFIX)) {
-      const { key, value } = parseAnnotationLine<LessonAnnotationKey>(line, LESSON_PREFIX)
+      const { key, value } = parseAnnotationLine<LessonAnnotationKey>(line, LESSON_PREFIX, filePath)
 
       if (value) {
         if (key === 'estimated_time' || key === 'chapter' || key === 'chapter_order' || key === 'order') {
@@ -208,7 +218,7 @@ export function parseLessonFile(filePath: string, source: string): Lesson {
     }
 
     if (line.startsWith(STEP_PREFIX)) {
-      const { key, value } = parseAnnotationLine<StepAnnotationKey>(line, STEP_PREFIX)
+      const { key, value } = parseAnnotationLine<StepAnnotationKey>(line, STEP_PREFIX, filePath)
 
       if (key === 'id') {
         const finalizedStep = finalizeStep(currentStep)
@@ -291,7 +301,7 @@ export function parseLessonFile(filePath: string, source: string): Lesson {
     metadata.chapterOrder === undefined ||
     metadata.order === undefined
   ) {
-    throw new Error(`Incomplete lesson metadata in ${filePath}`)
+    throw new LessonParseError(filePath, 'Incomplete lesson metadata')
   }
 
   return {
