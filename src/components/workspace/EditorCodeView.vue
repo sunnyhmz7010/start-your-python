@@ -12,7 +12,7 @@
         @input="$emit('updateCode', ($event.target as HTMLTextAreaElement).value)"
       ></textarea>
     </div>
-    <div v-else class="empty">Select a lesson file to start.</div>
+    <div v-else class="empty">请选择课程文件后开始。</div>
   </div>
 </template>
 

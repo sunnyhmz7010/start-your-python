@@ -27,6 +27,7 @@
           @update-code="lessonStore.updateEditorCode"
           @run-step-code="handleRunStepCode"
           @answer-quiz="handleAnswerQuiz"
+          @run-code="handleRunEditorCode"
         />
         <LessonBottomPanel
           :active-tab="activeBottomTab"
@@ -131,7 +132,7 @@ function handleSelectLesson(lesson: Lesson) {
   selectLesson(lesson)
 }
 
-async function handleRunLesson() {
+function handleRunLesson() {
   if (!currentLesson.value) {
     return
   }
@@ -140,6 +141,16 @@ async function handleRunLesson() {
   lessonStore.setActiveBottomTab('terminal')
   progressStore.setRecentLesson(currentLesson.value.id)
   progressStore.updateCurrentStep(currentLesson.value.id, currentStepIndex.value)
+  lessonStore.appendConsoleOutput(`[课程] 预览伪代码：${currentLesson.value.title}\n`)
+}
+
+async function handleRunEditorCode() {
+  if (!currentLesson.value) {
+    return
+  }
+
+  lessonStore.setActiveBottomTab('terminal')
+  progressStore.setRecentLesson(currentLesson.value.id)
   await runtimeStore.runCode(editorCode.value)
 }
 
@@ -172,7 +183,7 @@ function handleGotoStep(index: number) {
   }
 
   lessonStore.setCurrentStep(index)
-  lessonStore.appendConsoleOutput(`[Run] 跳转到步骤 ${lessonStore.currentStepIndex + 1}: ${lessonStore.currentStep?.title}\n`)
+  lessonStore.appendConsoleOutput(`[课程] 跳转到步骤 ${lessonStore.currentStepIndex + 1}: ${lessonStore.currentStep?.title}\n`)
   progressStore.updateCurrentStep(currentLesson.value.id, lessonStore.currentStepIndex)
 }
 

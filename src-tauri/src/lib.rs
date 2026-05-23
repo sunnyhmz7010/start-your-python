@@ -113,6 +113,11 @@ fn apply_hidden_process_flags(command: &mut Command) {
   }
 }
 
+fn configure_python_command(command: &mut Command) {
+  command.env("PYTHONIOENCODING", "utf-8");
+  command.env("PYTHONUTF8", "1");
+}
+
 fn collect_python_files(dir: &Path, files: &mut Vec<PathBuf>) -> Result<(), String> {
   let entries = fs::read_dir(dir).map_err(|error| format!("Failed to read {}: {}", dir.display(), error))?;
 
@@ -156,6 +161,7 @@ fn resolve_lessons_root(app: &tauri::AppHandle) -> Option<PathBuf> {
 fn get_python_version(spec: &PythonCommandSpec) -> Option<String> {
   let mut command = Command::new(&spec.command);
   apply_hidden_process_flags(&mut command);
+  configure_python_command(&mut command);
   for argument in &spec.prefix_args {
     command.arg(argument);
   }
@@ -176,6 +182,7 @@ fn get_python_version(spec: &PythonCommandSpec) -> Option<String> {
 fn get_python_executable_path(spec: &PythonCommandSpec) -> Option<String> {
   let mut command = Command::new(&spec.command);
   apply_hidden_process_flags(&mut command);
+  configure_python_command(&mut command);
   for argument in &spec.prefix_args {
     command.arg(argument);
   }
@@ -368,10 +375,13 @@ fn start_python_run(
 
   let mut command = Command::new(&spec.command);
   apply_hidden_process_flags(&mut command);
+  configure_python_command(&mut command);
   for argument in &spec.prefix_args {
     command.arg(argument);
   }
   command
+    .arg("-X")
+    .arg("utf8")
     .arg("-u")
     .arg("-c")
     .arg(code)

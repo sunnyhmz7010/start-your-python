@@ -8,7 +8,7 @@
         :class="{ active: activeTab === 'problems' }"
         @click="$emit('changeTab', 'problems')"
       >
-        Problems
+        问题
         <span v-if="problemMessages.length" class="problem-count">{{ problemMessages.length }}</span>
       </button>
       <button
@@ -18,16 +18,7 @@
         :class="{ active: activeTab === 'terminal' }"
         @click="$emit('changeTab', 'terminal')"
       >
-        Terminal
-      </button>
-      <button
-        data-testid="tool-tab-run"
-        type="button"
-        class="tool-tab"
-        :class="{ active: activeTab === 'run' }"
-        @click="$emit('changeTab', 'run')"
-      >
-        Run
+        Python 终端
       </button>
     </div>
 
@@ -35,11 +26,11 @@
       <div v-if="activeTab === 'problems'" class="problems-panel">
         <div v-if="problemMessages.length" class="problem-list">
           <div v-for="message in problemMessages" :key="message" class="problem-item">
-            <span class="problem-severity">Warning</span>
+            <span class="problem-severity">提示</span>
             <span>{{ message }}</span>
           </div>
         </div>
-        <div v-else>No problems found</div>
+        <div v-else>暂无问题</div>
       </div>
       <div v-else-if="activeTab === 'terminal'" class="terminal-panel">
         <div v-if="pythonInfo" class="runtime-info" data-testid="python-runtime-info">
@@ -64,20 +55,19 @@
             class="terminal-input"
             type="text"
             autocomplete="off"
-            placeholder="输入后按 Enter 发送给 Python"
+            placeholder="粘贴或输入代码后按 Enter 发送给 Python"
           />
           <button data-testid="stop-run" type="button" class="inline-button danger" @click="$emit('stopRun')">
-            Stop
+            停止
           </button>
         </form>
       </div>
-      <pre v-else>{{ consoleOutput || terminalOutput || 'Run the current lesson to see output.' }}</pre>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import type { WorkspaceBottomTab } from './types'
 
 const props = defineProps<{
@@ -100,17 +90,8 @@ const emit = defineEmits<{
 
 const inputValue = ref('')
 
-const terminalOutput = computed(() => {
-  if (props.terminalOutput) {
-    return props.terminalOutput
-  }
-
-  return 'Terminal ready. Select a lesson file or press Run to continue.'
-})
-
 function submitInput() {
   const value = inputValue.value
-
   emit('submitInput', value)
   inputValue.value = ''
 }

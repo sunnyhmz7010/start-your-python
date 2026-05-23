@@ -23,7 +23,7 @@
     </header>
 
     <div class="toolbar">
-      <span class="tool-label">Project</span>
+      <span class="tool-label">项目</span>
       <span class="tool-path">{{ currentLesson ? `${currentLesson.title}.py` : 'lesson.py' }}</span>
     </div>
 
@@ -49,17 +49,10 @@ defineEmits<{
 }>()
 
 const runButtonLabel = computed(() => {
-  if (props.pythonStatus === 'checking') {
-    return 'Checking'
-  }
-  if (props.pythonStatus === 'starting') {
-    return 'Starting'
-  }
-  if (props.pythonStatus === 'running') {
-    return 'Running'
-  }
-
-  return 'Run'
+  if (props.pythonStatus === 'checking') return '检查中'
+  if (props.pythonStatus === 'starting') return '启动中'
+  if (props.pythonStatus === 'running') return '运行中'
+  return '运行课程伪代码'
 })
 </script>
 

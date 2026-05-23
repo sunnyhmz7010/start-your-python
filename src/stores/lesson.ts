@@ -54,10 +54,10 @@ export const useLessonStore = defineStore('lesson', {
       if (!this.currentLesson) return
 
       this.workspaceMode = 'run'
-      this.activeBottomTab = 'run'
+      this.activeBottomTab = 'terminal'
       this.isLessonRunning = true
-      this.consoleOutput = `[Run] 课程开始: ${this.currentLesson.title}\n`
-      this.consoleOutput += `[Run] 当前步骤 ${this.currentStepIndex + 1}: ${this.currentStep?.title ?? '准备开始'}\n`
+      this.consoleOutput = `[课程] 开始: ${this.currentLesson.title}\n`
+      this.consoleOutput += `[课程] 当前步骤 ${this.currentStepIndex + 1}: ${this.currentStep?.title ?? '准备开始'}\n`
     },
 
     nextStep() {
@@ -65,7 +65,7 @@ export const useLessonStore = defineStore('lesson', {
 
       if (this.currentStepIndex < this.currentLesson.steps.length - 1) {
         this.currentStepIndex++
-        this.consoleOutput += `[Run] 步骤 ${this.currentStepIndex + 1}: ${this.currentStep?.title}\n`
+        this.consoleOutput += `[课程] 步骤 ${this.currentStepIndex + 1}: ${this.currentStep?.title}\n`
       } else {
         this.completeLesson()
       }
@@ -99,7 +99,7 @@ export const useLessonStore = defineStore('lesson', {
     completeLesson() {
       if (!this.currentLesson) return
 
-      this.consoleOutput += `[Run] 课程完成: ${this.currentLesson.title}\n`
+      this.consoleOutput += `[课程] 课程完成: ${this.currentLesson.title}\n`
       this.isLessonRunning = false
     },
 

@@ -1,9 +1,9 @@
 <template>
   <footer class="status-bar">
-    <span>{{ mode === 'editor' ? 'Editor' : 'Run' }}</span>
-    <span>{{ lesson ? (lesson.fileName ?? `${lesson.title}.py`) : 'No file selected' }}</span>
+    <span>{{ mode === 'editor' ? '编辑器' : '课程运行' }}</span>
+    <span>{{ lesson ? (lesson.fileName ?? `${lesson.title}.py`) : '未选择文件' }}</span>
     <span v-if="contentWarning" class="warning" data-testid="content-source-warning">{{ contentWarning }}</span>
-    <span v-else>{{ contentSource === 'external' ? 'External lessons' : 'Bundled lessons' }}</span>
+    <span v-else>{{ contentSource === 'external' ? '外部课程' : '内置课程' }}</span>
   </footer>
 </template>
 

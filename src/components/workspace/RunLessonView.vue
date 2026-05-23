@@ -2,7 +2,7 @@
   <div class="run-view" data-testid="run-lesson-view">
     <div v-if="lesson" class="run-shell">
       <div class="run-header">
-        <span class="badge">Run</span>
+        <span class="badge">课程</span>
         <h2>{{ lesson.title }}</h2>
         <p>{{ lesson.description }}</p>
       </div>
@@ -16,7 +16,7 @@
 
       <div v-if="step?.code" class="run-card code">
         <div class="code-header">
-          <p class="label">示例</p>
+          <p class="label">示例代码</p>
           <button
             data-testid="step-run-button"
             type="button"
@@ -27,7 +27,7 @@
             {{ runButtonLabel }}
           </button>
         </div>
-        <pre><code>{{ step.code }}</code></pre>
+        <pre><code>{{ step.runnableCode ?? step.code }}</code></pre>
       </div>
     </div>
   </div>
@@ -53,17 +53,10 @@ defineEmits<{
 }>()
 
 const runButtonLabel = computed(() => {
-  if (props.pythonStatus === 'checking') {
-    return 'Checking...'
-  }
-  if (props.pythonStatus === 'starting') {
-    return 'Starting...'
-  }
-  if (props.pythonStatus === 'running') {
-    return 'Running...'
-  }
-
-  return 'Run'
+  if (props.pythonStatus === 'checking') return '检查中...'
+  if (props.pythonStatus === 'starting') return '启动中...'
+  if (props.pythonStatus === 'running') return '运行中...'
+  return '运行该代码'
 })
 </script>
 
