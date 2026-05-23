@@ -73,7 +73,7 @@ This repository is `start-your-python`, a desktop learning app for Python beginn
 - Product goal: provide a local beginner-friendly Python learning workspace, not a full IDE.
 - UX direction: PyCharm-style workspace with course tree, editor, lesson content, and real terminal execution.
 - Main audience: Chinese-speaking Python beginners.
-- Current app version: `1.2.0`
+- Current app version: `1.3.0`
 
 ## Tech Stack
 
@@ -168,11 +168,12 @@ This repository is `start-your-python`, a desktop learning app for Python beginn
 - Learning progress, recent study state, and terminal state are under `src/stores/`.
 - Markdown lesson content is rendered through `src/components/content/MarkdownContent.vue`; keep `src/utils/sanitizeHtml.ts` in place before any `v-html` rendering.
 - Keep changes targeted. Avoid broad UI rewrites unless requested.
+- Icon source of truth: keep `resources/icon.svg` as the canonical input for both Tauri and Capacitor. Use `npm run icons:desktop` for `src-tauri/icons/*`, `npm run icons:android` after `npx cap add android`, and `npm run icons:generate` to refresh both from the same source.
 
 ## Repository Release Conventions
 
 - Version tags follow this style:
-  - stable: `v1.2.0`
+  - stable: `v1.3.0`
   - prerelease example: `v1.2.1-beta.1`
 - When releasing:
   - update `package.json`
@@ -185,13 +186,13 @@ This repository is `start-your-python`, a desktop learning app for Python beginn
 - GitHub Actions CI is defined in `.github/workflows/ci.yaml` and runs on pushes and pull requests to `main`.
 - GitHub Actions CD is defined in `.github/workflows/cd.yaml` and runs on the `Release published` event.
 - CD uploads Windows installer/bundle outputs, portable Windows zips, and signed Android release APKs to the GitHub Release.
-- Windows portable zip filenames must include version and platform, for example `StartYourPython-v1.2.0-win-amd64.zip`.
+- Windows portable zip filenames must include version and platform, for example `StartYourPython-v1.3.0-win-amd64.zip`.
 - Windows CD publishes only the amd64 and arm64 portable zips:
-  - `StartYourPython-v1.2.0-win-amd64.zip`
-  - `StartYourPython-v1.2.0-win-arm64.zip`
+  - `StartYourPython-v1.3.0-win-amd64.zip`
+  - `StartYourPython-v1.3.0-win-arm64.zip`
 - Windows portable zip contents must be rooted directly at `Start Your Python.exe` plus `content/`; do not wrap them in an extra top-level folder.
 - The executable inside the Windows portable zip must keep the fixed product name `Start Your Python.exe`, without a version in the executable filename.
-- Android APK filenames must include the version tag and ABI, for example `StartYourPython-v1.2.0-android-arm64-v8a-release.apk`.
+- Android APK filenames must include the version tag and ABI, for example `StartYourPython-v1.3.0-android-arm64-v8a-release.apk`.
 - Android CD builds separate signed release APKs only for `arm64-v8a` and `x86_64` instead of a debug APK or universal APK.
 - Android release signing in CD requires GitHub Secrets named `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, and `ANDROID_KEY_PASSWORD`.
 - Android package name is `com.sunny.startyourpython`.
