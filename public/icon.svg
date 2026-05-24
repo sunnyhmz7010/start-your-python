@@ -35,6 +35,7 @@
     </filter>
   </defs>
 
+  <g transform="translate(40 20) scale(0.92)">
   <g filter="url(#shadow)">
     <rect x="176" y="210" width="672" height="632" rx="84" fill="url(#window)"/>
     <rect x="198" y="352" width="628" height="446" rx="52" fill="url(#windowInner)" opacity="0.96"/>
@@ -79,4 +80,5 @@
   <rect x="440" y="836" width="196" height="112" rx="24" fill="#0f2f58"/>
   <circle cx="536" cy="894" r="24" fill="#35d6ce"/>
   <path d="M412 972C440 944 468 930 536 930C604 930 648 944 698 972H412Z" fill="#12345f"/>
+  </g>
 </svg>
