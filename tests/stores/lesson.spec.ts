@@ -27,6 +27,7 @@ function makeLesson(overrides: Partial<Lesson> = {}): Lesson {
     steps: [],
     prerequisites: [],
     tags: [],
+    references: [],
     ...overrides
   }
 }
@@ -77,7 +78,7 @@ describe('lesson store', () => {
         source: 'bundled',
         warning: {
           message: '外部课程目录加载失败，已切换到内置课程。',
-          detail: 'missing content/lessons'
+          detail: 'missing lessons'
         }
       }
     })
@@ -86,7 +87,7 @@ describe('lesson store', () => {
 
     expect(store.chapters).toHaveLength(1)
     expect(store.contentStatus.source).toBe('bundled')
-    expect(store.contentStatus.warning?.detail).toBe('missing content/lessons')
+    expect(store.contentStatus.warning?.detail).toBe('missing lessons')
   })
 
   it('stores parse failure warnings from the content provider', async () => {
@@ -98,7 +99,7 @@ describe('lesson store', () => {
         source: 'bundled',
         warning: {
           message: '课程文件解析失败，课程目录无法加载。',
-          detail: 'content/lessons/demo.py: Incomplete lesson metadata'
+          detail: 'lessons/demo.py: Incomplete lesson metadata'
         }
       }
     })
@@ -108,6 +109,6 @@ describe('lesson store', () => {
     expect(store.chapters).toEqual([])
     expect(store.contentStatus.source).toBe('bundled')
     expect(store.contentStatus.warning?.message).toBe('课程文件解析失败，课程目录无法加载。')
-    expect(store.contentStatus.warning?.detail).toContain('content/lessons/demo.py')
+    expect(store.contentStatus.warning?.detail).toContain('lessons/demo.py')
   })
 })

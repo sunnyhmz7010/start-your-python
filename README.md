@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/sunnyhmz7010/start-your-python/refs/heads/main/public/icon.svg" alt="Start Your Python Logo" width="120" />
+  <img src="https://raw.githubusercontent.com/sunnyhmz7010/start-your-python/refs/heads/main/public/icon.png" alt="Start Your Python Logo" width="120" />
   <h1>Start Your Python</h1>
   <p>面向 Python 初学者的本地学习工作区，把中文课程、示例代码和真实终端运行放在一个 PyCharm 风格界面里</p>
 </div>
@@ -37,7 +37,7 @@ Python 入门最容易卡在“看懂教程”和“真的跑起来”之间。S
 ### 🧭 学习工作区
 
 - PyCharm 风格布局：课程树、编辑区、步骤内容和底部工具窗口
-- 中文章节目录直接来自 `content/lessons/` 下的真实 `.py` 文件
+- 中文章节目录直接来自 `lessons/` 下的真实 `.py` 文件
 - 编辑态用于查看课程源码，学习态用于按步骤阅读讲解和示例
 - 学习进度保存在本机设备，代码运行成功、答题正确或手动标记后会更新进度
 
@@ -61,6 +61,7 @@ Python 入门最容易卡在“看懂教程”和“真的跑起来”之间。S
 - 应用会读取课程文件生成课程树和步骤内容
 - 支持阅读、代码、隐藏运行上下文和随堂测验步骤
 - 课程图片可放在 `public/course-images/` 并在课程 Markdown 中引用
+- 课程可声明外部参考链接，例如 [菜鸟教程 Python3 教程](https://www.runoob.com/python3/python3-tutorial.html) 和 [Python 官方教程](https://docs.python.org/zh-cn/3/tutorial/)
 
 ## ⚡ 快速开始
 
@@ -85,7 +86,7 @@ py -3 --version
 
 1. 从 [Releases](https://github.com/sunnyhmz7010/start-your-python/releases) 下载对应架构的 Windows 便携包，例如 `StartYourPython-vX.Y.Z-win-amd64.zip` 或 `StartYourPython-vX.Y.Z-win-arm64.zip`
 2. 解压后直接运行根目录里的 `Start Your Python.exe`
-3. 压缩包根目录会同时包含课程文件目录 `content/`
+3. 压缩包根目录会同时包含课程文件目录 `lessons/`
 
 ## 📖 使用方式
 
@@ -94,13 +95,13 @@ py -3 --version
 打开应用后，从左侧课程树选择章节。课程内容来自：
 
 ```text
-content/lessons/
+lessons/
 ```
 
 示例结构：
 
 ```text
-content/lessons/
+lessons/
 ├─ 第一章 Python环境准备/
 │  ├─ Python是什么.py
 │  ├─ 安装Python.py
@@ -167,6 +168,9 @@ public/course-images/
 # @lesson.chapter_title: 第二章 基础语法入门
 # @lesson.chapter_order: 2
 # @lesson.order: 1
+# @lesson.references:
+# https://www.runoob.com/python3/python3-tutorial.html
+# https://docs.python.org/zh-cn/3/tutorial/
 
 # @step.id: s1
 # @step.type: code
@@ -222,9 +226,9 @@ start-your-python/
 │  ├─ views/                     # 桌面端和移动端页面视图
 │  └─ utils/                     # HTML 清理等通用工具
 ├─ src-tauri/                    # Tauri 桌面壳、Rust 命令和应用配置
-├─ content/lessons/              # 中文 Python 课程源码与步骤内容
-├─ public/course-images/         # 课程图片资源
-├─ resources/                    # 应用图标等打包资源
+├─ lessons/                      # 中文 Python 课程源码与步骤内容
+├─ public/                       # Web 静态资源、favicon 和课程图片
+├─ resources/                    # Tauri/Capacitor 图标生成源资源
 ├─ scripts/                      # 发布和打包脚本
 ├─ tests/                        # Vitest 测试
 ├─ capacitor.config.ts           # Capacitor 移动端配置

@@ -12,6 +12,7 @@ type LessonAnnotationKey =
   | 'order'
   | 'prerequisites'
   | 'tags'
+  | 'references'
 
 type StepAnnotationKey = 'id' | 'type' | 'title' | 'content' | 'hint' | 'runtime' | 'option' | 'correct_answer'
 
@@ -27,6 +28,7 @@ type LessonMetadata = {
   order: number
   prerequisites: string[]
   tags: string[]
+  references: string[]
 }
 
 type ParsedStep = LessonStep & {
@@ -44,7 +46,7 @@ export class LessonParseError extends Error {
   }
 }
 
-const lessonModules = import.meta.glob('../../../content/lessons/**/*.py', {
+const lessonModules = import.meta.glob('../../../lessons/**/*.py', {
   query: '?raw',
   import: 'default'
 }) as Record<string, () => Promise<string>>
@@ -165,7 +167,8 @@ export function parseLessonFile(filePath: string, source: string): Lesson {
   const lines = source.replace(/\r\n/g, '\n').split('\n')
   const metadata: Partial<LessonMetadata> = {
     prerequisites: [],
-    tags: []
+    tags: [],
+    references: []
   }
   const steps: LessonStep[] = []
   let currentStep: ParsedStep | null = null
@@ -192,6 +195,8 @@ export function parseLessonFile(filePath: string, source: string): Lesson {
           metadata.prerequisites = normalizeListValue(value)
         } else if (key === 'tags') {
           metadata.tags = normalizeListValue(value)
+        } else if (key === 'references') {
+          metadata.references = normalizeListValue(value)
         } else if (key === 'difficulty') {
           metadata.difficulty = value as Lesson['difficulty']
         } else if (key === 'id') {
@@ -212,6 +217,7 @@ export function parseLessonFile(filePath: string, source: string): Lesson {
       if (key === 'description') metadata.description = block.value
       if (key === 'prerequisites') metadata.prerequisites = block.value ? block.value.split('\n').map((item) => item.trim()).filter(Boolean) : []
       if (key === 'tags') metadata.tags = block.value ? block.value.split('\n').map((item) => item.trim()).filter(Boolean) : []
+      if (key === 'references') metadata.references = block.value ? block.value.split('\n').map((item) => item.trim()).filter(Boolean) : []
 
       index = block.nextIndex
       continue
@@ -318,7 +324,8 @@ export function parseLessonFile(filePath: string, source: string): Lesson {
     pseudoCode: source.trim(),
     steps,
     prerequisites: metadata.prerequisites ?? [],
-    tags: metadata.tags ?? []
+    tags: metadata.tags ?? [],
+    references: metadata.references ?? []
   }
 }
 

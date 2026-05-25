@@ -42,7 +42,7 @@ describe('localContentProvider', () => {
   })
 
   it('keeps runnable code complete for direct python execution', () => {
-    const lesson = parseLessonFile('content/lessons/demo.py', `
+    const lesson = parseLessonFile('lessons/demo.py', `
 # @lesson.id: lesson_demo
 # @lesson.title: Demo
 # @lesson.description: Demo lesson.
@@ -52,6 +52,9 @@ describe('localContentProvider', () => {
 # @lesson.chapter_title: 第一章
 # @lesson.chapter_order: 1
 # @lesson.order: 1
+# @lesson.references:
+# https://www.runoob.com/python3/
+# https://docs.python.org/zh-cn/3/tutorial/
 
 # @step.id: s1
 # @step.type: code
@@ -63,10 +66,14 @@ print('world')
 
     expect(lesson.steps[0]?.code).toBe("print('hello')\nprint('world')")
     expect(lesson.steps[0]?.runnableCode).toBe("print('hello')\nprint('world')")
+    expect(lesson.references).toEqual([
+      'https://www.runoob.com/python3/',
+      'https://docs.python.org/zh-cn/3/tutorial/'
+    ])
   })
 
   it('supports step runtime annotations for hidden execution context', () => {
-    const lesson = parseLessonFile('content/lessons/demo.py', `
+    const lesson = parseLessonFile('lessons/demo.py', `
 # @lesson.id: lesson_demo
 # @lesson.title: Demo
 # @lesson.description: Demo lesson.
@@ -91,7 +98,7 @@ print(name)
   })
 
   it('parses quiz options and answers from lesson annotations', () => {
-    const lesson = parseLessonFile('content/lessons/demo.py', `
+    const lesson = parseLessonFile('lessons/demo.py', `
 # @lesson.id: lesson_quiz_demo
 # @lesson.title: Quiz Demo
 # @lesson.description: Demo lesson.
@@ -120,7 +127,7 @@ print(name)
   })
 
   it('uses correct_answer to resolve quiz answers when option flags are omitted', () => {
-    const lesson = parseLessonFile('content/lessons/demo.py', `
+    const lesson = parseLessonFile('lessons/demo.py', `
 # @lesson.id: lesson_quiz_answer_demo
 # @lesson.title: Quiz Answer Demo
 # @lesson.description: Demo lesson.
@@ -150,7 +157,7 @@ print(name)
     tauriCoreMock.isTauri.mockReturnValue(true)
     tauriCoreMock.invoke.mockResolvedValue([
       {
-        filePath: 'content/lessons/第一章/demo.py',
+        filePath: 'lessons/第一章/demo.py',
         source: `
 # @lesson.id: lesson_tauri_demo
 # @lesson.title: Tauri Demo
@@ -184,7 +191,7 @@ print("hello")
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
     try {
       tauriCoreMock.isTauri.mockReturnValue(true)
-      tauriCoreMock.invoke.mockRejectedValue(new Error('missing content/lessons'))
+      tauriCoreMock.invoke.mockRejectedValue(new Error('missing lessons'))
 
       vi.resetModules()
       const { localContentProvider: provider } = await import('@/services/content/localContentProvider')
@@ -193,7 +200,7 @@ print("hello")
       expect(result.chapters.length).toBeGreaterThan(0)
       expect(result.status.source).toBe('bundled')
       expect(result.status.warning?.message).toContain('外部课程目录加载失败')
-      expect(result.status.warning?.detail).toBe('missing content/lessons')
+      expect(result.status.warning?.detail).toBe('missing lessons')
     } finally {
       warnSpy.mockRestore()
     }
@@ -205,7 +212,7 @@ print("hello")
       tauriCoreMock.isTauri.mockReturnValue(true)
       tauriCoreMock.invoke.mockRejectedValue(new Error('external missing'))
       courseFiles.getBundledCourseFileChapters.mockRejectedValue(
-        new LessonParseError('content/lessons/demo.py', 'Incomplete lesson metadata')
+        new LessonParseError('lessons/demo.py', 'Incomplete lesson metadata')
       )
 
       vi.resetModules()
@@ -213,7 +220,7 @@ print("hello")
       const result = await provider.getChaptersWithStatus()
 
       expect(result.status.warning?.message).toBe('课程文件解析失败，课程目录无法加载。')
-      expect(result.status.warning?.detail).toContain('content/lessons/demo.py')
+      expect(result.status.warning?.detail).toContain('lessons/demo.py')
       expect(result.status.warning?.detail).toContain('Incomplete lesson metadata')
     } finally {
       warnSpy.mockRestore()

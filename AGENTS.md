@@ -89,8 +89,9 @@ This repository is `start-your-python`, a desktop learning app for Python beginn
 
 - App entry and UI source: `src/`
 - Tauri shell: `src-tauri/`
-- Course content: `content/lessons/`
+- Course content: `lessons/`
 - Course images: `public/course-images/`
+- Web-visible static assets stay in `public/`; icon generation source assets stay in `resources/`.
 - Tests: `tests/`
 - Scripts: `scripts/`
 - User docs: `README.md`
@@ -116,7 +117,7 @@ This repository is `start-your-python`, a desktop learning app for Python beginn
 - Do not introduce account systems, cloud sync, or AI chat unless explicitly requested.
 - Prefer preserving the current local learning tool framing.
 - Preserve Chinese product copy unless the task is specifically about rewriting copy.
-- Course content is sourced from real `.py` files under `content/lessons/`.
+- Course content is sourced from real `.py` files under `lessons/`.
 
 ## Runtime Model
 
@@ -190,7 +191,7 @@ This repository is `start-your-python`, a desktop learning app for Python beginn
 - Windows CD publishes only the amd64 and arm64 portable zips:
   - `StartYourPython-v1.3.0-win-amd64.zip`
   - `StartYourPython-v1.3.0-win-arm64.zip`
-- Windows portable zip contents must be rooted directly at `Start Your Python.exe` plus `content/`; do not wrap them in an extra top-level folder.
+- Windows portable zip contents must be rooted directly at `Start Your Python.exe` plus `lessons/`; do not wrap them in an extra top-level folder.
 - The executable inside the Windows portable zip must keep the fixed product name `Start Your Python.exe`, without a version in the executable filename.
 - Android APK filenames must include the version tag and ABI, for example `StartYourPython-v1.3.0-android-arm64-v8a-release.apk`.
 - Android CD builds separate signed release APKs only for `arm64-v8a` and `x86_64` instead of a debug APK or universal APK.

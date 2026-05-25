@@ -36,6 +36,7 @@ export interface Lesson {
   steps: LessonStep[]
   prerequisites: string[]
   tags: string[]
+  references: string[]
 }
 
 export interface Chapter {

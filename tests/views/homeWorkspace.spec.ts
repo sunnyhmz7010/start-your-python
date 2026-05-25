@@ -435,7 +435,8 @@ describe('HomeView workspace', () => {
               pseudoCode: 'print("hello")',
               steps: [],
               prerequisites: [],
-              tags: []
+              tags: [],
+              references: []
             }
           ]
         }
@@ -444,7 +445,7 @@ describe('HomeView workspace', () => {
         source: 'bundled',
         warning: {
           message: '外部课程目录加载失败，已切换到内置课程。',
-          detail: 'missing content/lessons'
+          detail: 'missing lessons'
         }
       }
     })
@@ -460,7 +461,7 @@ describe('HomeView workspace', () => {
 
     expect(wrapper.get('[data-testid="tool-tab-problems"]').classes()).toContain('active')
     expect(wrapper.text()).toContain('外部课程目录加载失败')
-    expect(wrapper.text()).toContain('missing content/lessons')
+    expect(wrapper.text()).toContain('missing lessons')
     expect(wrapper.get('[data-testid="content-source-warning"]').text()).toContain('外部课程目录加载失败')
   })
 
@@ -501,7 +502,8 @@ describe('HomeView workspace', () => {
                 }
               ],
               prerequisites: [],
-              tags: []
+              tags: [],
+              references: []
             }
           ]
         }

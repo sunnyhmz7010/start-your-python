@@ -2,7 +2,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 
 const root = process.cwd()
-const lessonsRoot = path.join(root, 'content', 'lessons')
+const lessonsRoot = path.join(root, 'lessons')
 
 function formatScalarComment(prefix, value) {
   return `# ${prefix}: ${value}`

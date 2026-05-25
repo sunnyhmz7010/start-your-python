@@ -11,7 +11,7 @@ if ($arch -notin @("amd64", "arm64")) {
 }
 $version = $packageJson.version
 $sourceExe = Join-Path $projectRoot "src-tauri\target\$target\release\start-your-python.exe"
-$sourceContent = Join-Path $projectRoot "content"
+$sourceLessons = Join-Path $projectRoot "lessons"
 
 if (-not (Test-Path $sourceExe)) {
   $sourceExe = Join-Path $projectRoot "src-tauri\target\release\start-your-python.exe"
@@ -21,8 +21,8 @@ if (-not (Test-Path $sourceExe)) {
   throw "Tauri executable not found at $sourceExe. Run 'npm run tauri:build' first."
 }
 
-if (-not (Test-Path $sourceContent)) {
-  throw "Content directory not found at $sourceContent."
+if (-not (Test-Path $sourceLessons)) {
+  throw "Lessons directory not found at $sourceLessons."
 }
 
 $releaseRoot = Join-Path $projectRoot "release\windows"
@@ -41,7 +41,7 @@ if (Test-Path $bundleZip) {
 
 New-Item -ItemType Directory -Path $stagingDir -Force | Out-Null
 Copy-Item $sourceExe $portableExe -Force
-Copy-Item $sourceContent (Join-Path $stagingDir "content") -Recurse -Force
+Copy-Item $sourceLessons (Join-Path $stagingDir "lessons") -Recurse -Force
 Compress-Archive -Path (Join-Path $stagingDir "*") -DestinationPath $bundleZip -CompressionLevel Optimal
 Remove-Item $stagingDir -Recurse -Force
 
@@ -51,4 +51,4 @@ Write-Host "  Target: $target"
 Write-Host "  Arch: $arch"
 Write-Host "  Contains:"
 Write-Host "    Start Your Python.exe"
-Write-Host "    content/"
+Write-Host "    lessons/"

@@ -34,6 +34,8 @@ describe('MobileView reader', () => {
     expect(wrapper.text()).not.toContain('Terminal')
     expect(wrapper.text()).not.toContain('Project')
     expect(wrapper.find('.step-content img').exists()).toBe(true)
+    expect(wrapper.get('[data-testid="mobile-reference-list"]').text()).toContain('菜鸟教程')
+    expect(wrapper.get('[data-testid="mobile-reference-list"]').text()).toContain('Python 官方文档')
   })
 
   it('tracks step navigation and completion in reader mode', async () => {
