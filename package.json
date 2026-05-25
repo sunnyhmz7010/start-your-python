@@ -17,7 +17,7 @@
     "tauri:build": "npm run icons:desktop && powershell -NoProfile -ExecutionPolicy Bypass -Command \"$env:Path += ';' + (Join-Path $env:USERPROFILE '.cargo\\bin'); tauri build --no-bundle\"",
     "tauri:bundle": "npm run icons:desktop && powershell -NoProfile -ExecutionPolicy Bypass -Command \"$env:Path += ';' + (Join-Path $env:USERPROFILE '.cargo\\bin'); tauri build\"",
     "tauri:release": "npm run tauri:build && powershell -NoProfile -ExecutionPolicy Bypass -File .\\scripts\\package-windows-release.ps1",
-    "icons:desktop": "npx tauri icon resources/icon.svg --output src-tauri/icons",
+    "icons:desktop": "npx tauri icon resources/icon.png --output src-tauri/icons",
     "icons:android": "npx @capacitor/assets generate --android --assetPath resources",
     "icons:generate": "npm run icons:desktop && npm run icons:android"
   },

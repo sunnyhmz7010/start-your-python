@@ -168,7 +168,7 @@ This repository is `start-your-python`, a desktop learning app for Python beginn
 - Learning progress, recent study state, and terminal state are under `src/stores/`.
 - Markdown lesson content is rendered through `src/components/content/MarkdownContent.vue`; keep `src/utils/sanitizeHtml.ts` in place before any `v-html` rendering.
 - Keep changes targeted. Avoid broad UI rewrites unless requested.
-- Icon source of truth: keep `resources/icon.svg` as the canonical input for both Tauri and Capacitor. Use `npm run icons:desktop` for `src-tauri/icons/*`, `npm run icons:android` after `npx cap add android`, and `npm run icons:generate` to refresh both from the same source.
+- Icon source of truth: keep `resources/icon.png` as the canonical input for both Tauri and Capacitor. Use `npm run icons:desktop` for `src-tauri/icons/*`, `npm run icons:android` after `npx cap add android`, and `npm run icons:generate` to refresh both from the same source. Preserve the full source image composition; do not crop or redraw it when updating app icons.
 
 ## Repository Release Conventions
 

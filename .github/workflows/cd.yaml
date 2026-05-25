@@ -44,9 +44,6 @@ jobs:
       - name: Generate desktop icons
         run: npm run icons:desktop
 
-      - name: Generate desktop icons
-        run: npm run icons:desktop
-
       - name: Build Tauri bundle
         run: npx tauri build --target ${{ matrix.target }}
 
