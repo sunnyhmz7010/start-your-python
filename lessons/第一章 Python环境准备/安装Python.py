@@ -10,19 +10,17 @@
 # @lesson.order: 2
 # @lesson.prerequisites: 
 # @lesson.tags: 
-# @lesson.references:
-# https://www.runoob.com/python3/
-# https://docs.python.org/zh-cn/3/tutorial/
-
 # @step.id: s1
 # @step.type: text
 # @step.title: 下载地址
 # @step.content:
-# 推荐从 **Python 官网**下载对应系统的安装包。
+# 推荐从 **[Python 官网下载页](https://www.python.org/downloads/)** 下载对应系统的安装包。
 # 
 # 如果你用的是 Windows，通常选择最新版的 64 位安装器即可；如果是 macOS，则下载对应芯片架构的安装包。
 # 
-# ![Python install checklist](/course-images/python-install-checklist.svg)
+# 下面是真实的 Python 官网下载页截图，看到页面上的黄色下载按钮后，先确认系统和版本，再开始下载。
+# 
+# ![Python 官网下载页截图](/course-images/python-downloads-page.png)
 
 # @step.id: s2
 # @step.type: text

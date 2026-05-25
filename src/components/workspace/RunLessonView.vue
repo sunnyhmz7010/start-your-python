@@ -5,17 +5,6 @@
         <span class="badge">课程</span>
         <h2>{{ lesson.title }}</h2>
         <p>{{ lesson.description }}</p>
-        <div v-if="lesson.references.length" class="reference-list">
-          <a
-            v-for="reference in lesson.references"
-            :key="reference"
-            :href="reference"
-            target="_blank"
-            rel="noreferrer"
-          >
-            {{ formatReference(reference) }}
-          </a>
-        </div>
       </div>
 
       <div class="run-card">
@@ -70,16 +59,6 @@ const runButtonLabel = computed(() => {
   return '运行代码'
 })
 
-function formatReference(reference: string) {
-  try {
-    const url = new URL(reference)
-    if (url.hostname.includes('runoob.com')) return '菜鸟教程'
-    if (url.hostname.includes('docs.python.org')) return 'Python 官方文档'
-    return url.hostname
-  } catch {
-    return reference
-  }
-}
 </script>
 
 <style scoped>
@@ -101,23 +80,6 @@ function formatReference(reference: string) {
 .content {
   color: #c7cfda;
   line-height: 1.6;
-}
-
-.reference-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.reference-list a {
-  border: 1px solid #3a4352;
-  border-radius: 999px;
-  padding: 5px 9px;
-  color: #8fd0ff;
-  background: #202631;
-  font-size: 12px;
-  text-decoration: none;
 }
 
 .badge,

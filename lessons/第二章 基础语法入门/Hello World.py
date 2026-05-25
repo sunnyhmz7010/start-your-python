@@ -10,10 +10,6 @@
 # @lesson.order: 1
 # @lesson.prerequisites: 
 # @lesson.tags: 
-# @lesson.references:
-# https://www.runoob.com/python3/
-# https://docs.python.org/zh-cn/3/tutorial/
-
 # @step.id: s1
 # @step.type: code
 # @step.title: print函数
@@ -22,7 +18,9 @@
 # 
 # 当你执行这行代码时，Python 会读取括号里的文本，再把它显示在终端或控制台。
 # 
-# ![Hello world flow](/course-images/hello-world-flow.svg)
+# 如果想看更多最基础的入门例子，可以对照 **[菜鸟教程 Python3 教程](https://www.runoob.com/python3/python3-tutorial.html)**。下面是真实教程页面截图，左侧目录能看到后续会学到的基础语法、数据类型和条件控制。
+# 
+# ![菜鸟教程 Python3 教程页面截图](/course-images/runoob-python3-tutorial.png)
 print("Hello, World!")
 
 # @step.id: s2

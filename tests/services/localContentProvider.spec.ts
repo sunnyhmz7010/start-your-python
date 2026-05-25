@@ -52,10 +52,6 @@ describe('localContentProvider', () => {
 # @lesson.chapter_title: 第一章
 # @lesson.chapter_order: 1
 # @lesson.order: 1
-# @lesson.references:
-# https://www.runoob.com/python3/
-# https://docs.python.org/zh-cn/3/tutorial/
-
 # @step.id: s1
 # @step.type: code
 # @step.title: 示例
@@ -66,10 +62,6 @@ print('world')
 
     expect(lesson.steps[0]?.code).toBe("print('hello')\nprint('world')")
     expect(lesson.steps[0]?.runnableCode).toBe("print('hello')\nprint('world')")
-    expect(lesson.references).toEqual([
-      'https://www.runoob.com/python3/',
-      'https://docs.python.org/zh-cn/3/tutorial/'
-    ])
   })
 
   it('supports step runtime annotations for hidden execution context', () => {

@@ -10,10 +10,6 @@
 # @lesson.order: 2
 # @lesson.prerequisites: 
 # @lesson.tags: 
-# @lesson.references:
-# https://www.runoob.com/python3/
-# https://docs.python.org/zh-cn/3/tutorial/
-
 # @step.id: s1
 # @step.type: text
 # @step.title: 注释
@@ -25,7 +21,9 @@
 # - 给未来的自己留提示
 # - 帮同学或同事更快读懂程序
 # 
-# ![Syntax structure](/course-images/syntax-structure.svg)
+# Python 官方教程的 **[Python 速览](https://docs.python.org/zh-cn/3/tutorial/introduction.html)** 也展示了注释和交互式输入的写法。下面是真实文档截图，注意示例里 `#` 后面的内容只是说明，不会被执行。
+# 
+# ![Python 官方教程注释示例截图](/course-images/python-docs-tutorial.png)
 
 # @step.id: s2
 # @step.type: text

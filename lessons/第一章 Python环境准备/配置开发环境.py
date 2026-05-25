@@ -10,10 +10,6 @@
 # @lesson.order: 3
 # @lesson.prerequisites: 
 # @lesson.tags: 
-# @lesson.references:
-# https://www.runoob.com/python3/
-# https://docs.python.org/zh-cn/3/tutorial/
-
 # @step.id: s1
 # @step.type: text
 # @step.title: 认识解释器
@@ -31,6 +27,10 @@
 # @step.title: 认识编辑器和 IDE
 # @step.content:
 # 编辑器是“写代码的地方”，IDE 是“把写代码、项目管理、终端、运行按钮整合到一起的工作台”。
+# 
+# 如果你想用 VS Code，可以参考官方的 **[Getting Started with Python in VS Code](https://code.visualstudio.com/docs/python/python-tutorial)**。它会从安装解释器、创建文件、运行代码开始讲。
+# 
+# ![VS Code Python 教程页面截图](/course-images/vscode-python-tutorial.png)
 # 
 # 你可以把关系先记成：
 # - **解释器**：执行代码

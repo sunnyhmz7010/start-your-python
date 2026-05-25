@@ -435,8 +435,7 @@ describe('HomeView workspace', () => {
               pseudoCode: 'print("hello")',
               steps: [],
               prerequisites: [],
-              tags: [],
-              references: []
+              tags: []
             }
           ]
         }
@@ -502,8 +501,7 @@ describe('HomeView workspace', () => {
                 }
               ],
               prerequisites: [],
-              tags: [],
-              references: []
+              tags: []
             }
           ]
         }

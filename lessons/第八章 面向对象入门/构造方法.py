@@ -10,10 +10,6 @@
 # @lesson.order: 3
 # @lesson.prerequisites: 
 # @lesson.tags: 
-# @lesson.references:
-# https://www.runoob.com/python3/
-# https://docs.python.org/zh-cn/3/tutorial/
-
 # @step.id: s1
 # @step.type: text
 # @step.title: 初始化

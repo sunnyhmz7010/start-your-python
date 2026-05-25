@@ -74,17 +74,6 @@
             </span>
             <span>{{ completedLessonIds.includes(currentLesson.id) ? '已完成' : '学习中' }}</span>
           </div>
-          <div v-if="currentLesson.references.length" class="reference-list" data-testid="mobile-reference-list">
-            <a
-              v-for="reference in currentLesson.references"
-              :key="reference"
-              :href="reference"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {{ formatReference(reference) }}
-            </a>
-          </div>
           <div class="summary-progress" aria-hidden="true">
             <span :style="{ width: `${completionPercent}%` }" />
           </div>
@@ -188,17 +177,6 @@ function difficultyLabel(level: Lesson['difficulty']) {
   }
 
   return labels[level]
-}
-
-function formatReference(reference: string) {
-  try {
-    const url = new URL(reference)
-    if (url.hostname.includes('runoob.com')) return '菜鸟教程'
-    if (url.hostname.includes('docs.python.org')) return 'Python 官方文档'
-    return url.hostname
-  } catch {
-    return reference
-  }
 }
 
 function handleSelectLesson(lesson: Lesson) {
@@ -491,22 +469,6 @@ h3 {
   background: rgba(95, 123, 158, 0.18);
   color: #dbe7f8;
   font-size: 12px;
-}
-
-.reference-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.reference-list a {
-  border: 1px solid rgba(129, 171, 236, 0.28);
-  border-radius: 999px;
-  padding: 6px 10px;
-  color: #9ed7ff;
-  background: rgba(106, 150, 219, 0.14);
-  font-size: 12px;
-  text-decoration: none;
 }
 
 .summary-progress {

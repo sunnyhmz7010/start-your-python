@@ -27,7 +27,6 @@ function makeLesson(overrides: Partial<Lesson> = {}): Lesson {
     steps: [],
     prerequisites: [],
     tags: [],
-    references: [],
     ...overrides
   }
 }

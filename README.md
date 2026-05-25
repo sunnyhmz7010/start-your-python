@@ -61,7 +61,7 @@ Python 入门最容易卡在“看懂教程”和“真的跑起来”之间。S
 - 应用会读取课程文件生成课程树和步骤内容
 - 支持阅读、代码、隐藏运行上下文和随堂测验步骤
 - 课程图片可放在 `public/course-images/` 并在课程 Markdown 中引用
-- 课程可声明外部参考链接，例如 [菜鸟教程 Python3 教程](https://www.runoob.com/python3/python3-tutorial.html) 和 [Python 官方教程](https://docs.python.org/zh-cn/3/tutorial/)
+- 课程讲解中可按上下文放入外部参考链接，例如菜鸟教程、Python 官方文档或工具官网
 
 ## ⚡ 快速开始
 
@@ -168,15 +168,13 @@ public/course-images/
 # @lesson.chapter_title: 第二章 基础语法入门
 # @lesson.chapter_order: 2
 # @lesson.order: 1
-# @lesson.references:
-# https://www.runoob.com/python3/python3-tutorial.html
-# https://docs.python.org/zh-cn/3/tutorial/
 
 # @step.id: s1
 # @step.type: code
 # @step.title: print 函数
 # @step.content:
-# print 会把括号里的内容显示到终端。
+# print 会把括号里的内容显示到终端。更多基础例子可参考
+# [菜鸟教程 Python3 教程](https://www.runoob.com/python3/python3-tutorial.html)。
 print("Hello, Python!")
 
 # @step.id: q1

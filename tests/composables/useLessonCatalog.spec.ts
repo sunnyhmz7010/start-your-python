@@ -36,7 +36,6 @@ function makeLesson(overrides: Partial<Lesson> = {}): Lesson {
     steps: [makeStep('step-1'), makeStep('step-2'), makeStep('step-3')],
     prerequisites: [],
     tags: [],
-    references: [],
     ...overrides
   }
 }
