@@ -29,7 +29,7 @@ Python 入门最容易卡在“看懂教程”和“真的跑起来”之间。S
 ## 📸 截图预览
 
 <p align="center">
-  截图占位
+  <img src="public/preview/desktop-workspace.png" alt="Start Your Python 桌面学习工作区截图" width="900" />
 </p>
 
 ## 🚀 核心能力
