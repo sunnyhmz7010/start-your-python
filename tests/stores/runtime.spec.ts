@@ -321,6 +321,8 @@ describe("runtime store", () => {
 
     await store.runCode("while True: pass");
     await store.stopRun();
+    expect(store.status).toBe("stopping");
+
     runtimeMock.emitState({
       sessionId: "session-1",
       status: "stopped",
@@ -330,6 +332,15 @@ describe("runtime store", () => {
     expect(runtimeMock.stopRun).toHaveBeenCalledWith("session-1");
     expect(store.status).toBe("stopped");
     expect(store.terminalOutput).toContain("已停止");
+  });
+
+  it("shows a message when stopping without a running session", async () => {
+    const store = useRuntimeStore();
+
+    await store.stopRun();
+
+    expect(runtimeMock.stopRun).not.toHaveBeenCalled();
+    expect(store.terminalOutput).toContain("当前没有正在运行的 Python 程序");
   });
 
   it("shows detection failures in the terminal", async () => {

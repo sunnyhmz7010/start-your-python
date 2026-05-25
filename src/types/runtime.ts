@@ -4,6 +4,7 @@ export type PythonRuntimeStatus =
   | 'starting'
   | 'python-missing'
   | 'running'
+  | 'stopping'
   | 'completed'
   | 'error'
   | 'stopped'

@@ -3,6 +3,7 @@
     :active-tab="activeTab"
     :terminal-output="terminalOutput"
     :is-python-missing="isPythonMissing"
+    :is-python-running="isPythonRunning"
     :problem-messages="problemMessages"
     :python-info="pythonInfo"
     @change-tab="$emit('changeTab', $event)"
@@ -21,6 +22,7 @@ defineProps<{
   activeTab: WorkspaceBottomTab
   terminalOutput: string
   isPythonMissing: boolean
+  isPythonRunning: boolean
   problemMessages: string[]
   pythonInfo: string | null
 }>()

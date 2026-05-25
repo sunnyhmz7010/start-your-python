@@ -47,17 +47,27 @@
           </button>
         </div>
 
-        <form class="terminal-input-row" @submit.prevent="submitInput">
+        <form data-testid="terminal-form" class="terminal-input-row" @submit.prevent="submitInput">
           <span class="prompt">&gt;</span>
-          <input
+          <textarea
             v-model="inputValue"
             data-testid="terminal-input"
             class="terminal-input"
-            type="text"
-            autocomplete="off"
-            placeholder="输入 Python 交互内容后按 Enter 发送"
+            rows="2"
+            :placeholder="inputPlaceholder"
+            @keydown.enter.exact="handleEnter"
+            @keydown.ctrl.enter.prevent="submitInput"
           />
-          <button data-testid="stop-run" type="button" class="inline-button danger" @click="$emit('stopRun')">
+          <button data-testid="terminal-submit" type="submit" class="inline-button">
+            {{ submitLabel }}
+          </button>
+          <button
+            data-testid="stop-run"
+            type="button"
+            class="inline-button danger"
+            :disabled="!isPythonRunning"
+            @click="$emit('stopRun')"
+          >
             停止
           </button>
         </form>
@@ -74,6 +84,7 @@ const props = defineProps<{
   activeTab: WorkspaceBottomTab
   terminalOutput: string
   isPythonMissing: boolean
+  isPythonRunning: boolean
   problemMessages: string[]
   pythonInfo: string | null
 }>()
@@ -93,8 +104,29 @@ const displayOutput = computed(() => {
   return chunks.join('\n')
 })
 
+const inputPlaceholder = computed(() =>
+  props.isPythonRunning
+    ? '程序等待输入时，输入内容后按 Enter 发送'
+    : '粘贴 Python 代码后点击运行，或按 Ctrl+Enter 运行'
+)
+
+const submitLabel = computed(() => (props.isPythonRunning ? '发送' : '运行'))
+
+function handleEnter(event: KeyboardEvent) {
+  if (!props.isPythonRunning) {
+    return
+  }
+
+  event.preventDefault()
+  submitInput()
+}
+
 function submitInput() {
   const value = inputValue.value
+  if (!props.isPythonRunning && !value.trim()) {
+    return
+  }
+
   emit('submitInput', value)
   inputValue.value = ''
 }
@@ -226,6 +258,11 @@ pre {
   cursor: pointer;
 }
 
+.inline-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .inline-button.danger {
   background: #4a2428;
   border-color: #603137;
@@ -237,10 +274,14 @@ pre {
 
 .terminal-input {
   flex: 1;
+  min-height: 42px;
+  max-height: 92px;
   border: 1px solid #394150;
   border-radius: 6px;
   background: #181c22;
   color: #e6edf7;
   padding: 8px 10px;
+  resize: vertical;
+  font-family: 'JetBrains Mono', Consolas, monospace;
 }
 </style>

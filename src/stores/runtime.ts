@@ -58,7 +58,8 @@ export const useRuntimeStore = defineStore("runtime", {
     isBusy: (state) =>
       state.status === "checking" ||
       state.status === "starting" ||
-      state.status === "running",
+      state.status === "running" ||
+      state.status === "stopping",
   },
 
   actions: {
@@ -179,6 +180,7 @@ export const useRuntimeStore = defineStore("runtime", {
 
     async submitInput(input: string) {
       if (!this.sessionId) {
+        this.terminalOutput += "[Runtime] 当前没有正在运行的 Python 程序。\n";
         return;
       }
 
@@ -195,12 +197,15 @@ export const useRuntimeStore = defineStore("runtime", {
 
     async stopRun() {
       if (!this.sessionId) {
+        this.terminalOutput += "[Runtime] 当前没有正在运行的 Python 程序。\n";
         return;
       }
 
       try {
+        this.status = "stopping";
         await pythonRuntime.stopRun(this.sessionId);
       } catch (error) {
+        this.status = "running";
         this.terminalOutput += `[Runtime] 停止 Python 失败: ${formatRuntimeError(
           error
         )}\n`;

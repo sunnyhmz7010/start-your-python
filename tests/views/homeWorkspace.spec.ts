@@ -210,6 +210,50 @@ describe('HomeView workspace', () => {
     expect(wrapper.get('[data-testid="lesson-progress-summary"]').text()).toContain('1 /')
   })
 
+  it('runs pasted python code from the bottom terminal when no process is active', async () => {
+    runtimeMock.detectPython.mockResolvedValue({ available: true, command: 'python' })
+    runtimeMock.startRun.mockResolvedValue({ sessionId: 'session-1', command: 'python -u -c <code>' })
+
+    const wrapper = mount(HomeView, {
+      global: {
+        plugins: [createPinia()]
+      }
+    })
+
+    await waitForWorkspace()
+    await waitForEditor(wrapper)
+
+    await wrapper.get('[data-testid="terminal-input"]').setValue('print("terminal")')
+    await wrapper.get('[data-testid="terminal-form"]').trigger('submit')
+    await flushPromises()
+
+    expect(runtimeMock.startRun).toHaveBeenCalledWith('print("terminal")')
+  })
+
+  it('sends bottom terminal input to stdin while python is running', async () => {
+    runtimeMock.detectPython.mockResolvedValue({ available: true, command: 'python' })
+    runtimeMock.startRun.mockResolvedValue({ sessionId: 'session-1', command: 'python -u -c <code>' })
+
+    const wrapper = mount(HomeView, {
+      global: {
+        plugins: [createPinia()]
+      }
+    })
+
+    await waitForWorkspace()
+    await waitForEditor(wrapper)
+
+    await wrapper.get('[data-testid="terminal-input"]').setValue('name = input()')
+    await wrapper.get('[data-testid="terminal-form"]').trigger('submit')
+    await flushPromises()
+    await wrapper.get('[data-testid="terminal-input"]').setValue('Sunny')
+    await wrapper.get('[data-testid="terminal-form"]').trigger('submit')
+    await flushPromises()
+
+    expect(runtimeMock.startRun).toHaveBeenCalledWith('name = input()')
+    expect(runtimeMock.sendInput).toHaveBeenCalledWith('session-1', 'Sunny')
+  })
+
   it('marks a lesson step complete even when python exits immediately after start', async () => {
     runtimeMock.detectPython.mockResolvedValue({ available: true, command: 'python' })
     runtimeMock.startRun.mockImplementation(async () => {

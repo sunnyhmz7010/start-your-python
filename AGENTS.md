@@ -73,7 +73,7 @@ This repository is `start-your-python`, a desktop learning app for Python beginn
 - Product goal: provide a local beginner-friendly Python learning workspace, not a full IDE.
 - UX direction: PyCharm-style workspace with course tree, editor, lesson content, and real terminal execution.
 - Main audience: Chinese-speaking Python beginners.
-- Current app version: `1.3.0`
+- Current app version: `1.5.0`
 
 ## Tech Stack
 

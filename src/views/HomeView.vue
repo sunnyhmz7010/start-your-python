@@ -33,10 +33,11 @@
           :active-tab="activeBottomTab"
           :terminal-output="runtimeStore.terminalOutput"
           :is-python-missing="runtimeStore.isPythonMissing"
+          :is-python-running="runtimeStore.isRunning"
           :problem-messages="problemMessages"
           :python-info="pythonInfo"
           @change-tab="lessonStore.setActiveBottomTab"
-          @submit-input="runtimeStore.submitInput"
+          @submit-input="handleSubmitTerminalInput"
           @stop-run="runtimeStore.stopRun"
           @recheck-python="() => runtimeStore.detectPython(true)"
           @open-install-lesson="handleOpenInstallPythonLesson"
@@ -162,6 +163,17 @@ async function handleRunStepCode(step: Lesson['steps'][number]) {
   if (!started) {
     pendingStepRun.value = null
   }
+}
+
+async function handleSubmitTerminalInput(input: string) {
+  lessonStore.setActiveBottomTab('terminal')
+
+  if (runtimeStore.sessionId) {
+    await runtimeStore.submitInput(input)
+    return
+  }
+
+  await runtimeStore.runCode(input)
 }
 
 function handleGotoStep(index: number) {
