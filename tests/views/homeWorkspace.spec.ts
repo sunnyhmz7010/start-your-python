@@ -345,7 +345,7 @@ describe('HomeView workspace', () => {
     await wrapper.get('[data-testid="run-button"]').trigger('click')
     await flushPromises()
 
-    expect(wrapper.get('[data-testid="run-button"]').text()).toBe('运行课程伪代码')
+    expect(wrapper.get('[data-testid="run-button"]').text()).toBe('运行课程')
     expect(wrapper.get('[data-testid="run-button"]').attributes('disabled')).toBeDefined()
 
     resolveDetection({ available: true, command: 'python' })
@@ -358,14 +358,14 @@ describe('HomeView workspace', () => {
     await wrapper.get('[data-testid="step-run-button"]').trigger('click')
     await flushPromises()
 
-    expect(wrapper.get('[data-testid="run-button"]').text()).toBe('运行课程伪代码')
+    expect(wrapper.get('[data-testid="run-button"]').text()).toBe('运行课程')
     expect(wrapper.get('[data-testid="step-run-button"]').text()).toBe('启动中...')
     expect(wrapper.get('[data-testid="step-run-button"]').attributes('disabled')).toBeDefined()
 
     resolveStart({ sessionId: 'session-2', command: 'python -u -c <code>' })
     await flushPromises()
 
-    expect(wrapper.get('[data-testid="run-button"]').text()).toBe('运行课程伪代码')
+    expect(wrapper.get('[data-testid="run-button"]').text()).toBe('运行课程')
     expect(wrapper.get('[data-testid="step-run-button"]').text()).toBe('运行中...')
   })
 

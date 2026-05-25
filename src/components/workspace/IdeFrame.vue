@@ -46,7 +46,7 @@ defineEmits<{
   run: []
 }>()
 
-const runButtonLabel = '运行课程伪代码'
+const runButtonLabel = '运行课程'
 </script>
 
 <style scoped>

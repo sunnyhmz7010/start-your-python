@@ -56,7 +56,7 @@ const runButtonLabel = computed(() => {
   if (props.pythonStatus === 'checking') return '检查中...'
   if (props.pythonStatus === 'starting') return '启动中...'
   if (props.pythonStatus === 'running') return '运行中...'
-  return '运行该代码'
+  return '运行代码'
 })
 </script>
 
