@@ -149,8 +149,4 @@
   - `ANDROID_KEY_ALIAS`
   - `ANDROID_KEY_PASSWORD`
 
-### 发布说明
 
-- 使用 `## 更新内容` 标题
-- 发布历史维护在 GitHub Releases，不提交 `CHANGELOG.md`
-- GitHub Release 标题使用纯标签名（如 `v0.1.0`），不加项目名前缀
