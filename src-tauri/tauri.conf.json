@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Start Your Python",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "identifier": "com.startyourpython.desktop",
   "build": {
     "frontendDist": "../build",
@@ -22,7 +22,7 @@
       }
     ],
     "security": {
-      "csp": null
+      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:"
     }
   },
   "bundle": {

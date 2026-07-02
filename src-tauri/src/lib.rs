@@ -118,7 +118,12 @@ fn configure_python_command(command: &mut Command) {
   command.env("PYTHONUTF8", "1");
 }
 
-fn collect_python_files(dir: &Path, files: &mut Vec<PathBuf>) -> Result<(), String> {
+fn collect_python_files(dir: &Path, files: &mut Vec<PathBuf>, depth: u32) -> Result<(), String> {
+  const MAX_DEPTH: u32 = 20;
+  if depth > MAX_DEPTH {
+    return Ok(());
+  }
+
   let entries = fs::read_dir(dir).map_err(|error| format!("Failed to read {}: {}", dir.display(), error))?;
 
   for entry in entries {
@@ -126,7 +131,7 @@ fn collect_python_files(dir: &Path, files: &mut Vec<PathBuf>) -> Result<(), Stri
     let path = entry.path();
 
     if path.is_dir() {
-      collect_python_files(&path, files)?;
+      collect_python_files(&path, files, depth + 1)?;
       continue;
     }
 
@@ -286,11 +291,10 @@ fn spawn_output_reader<R: Read + Send + 'static>(
                   continue;
                 }
 
-                if error.error_len().is_none() {
-                  break;
+                if let Some(error_len) = error.error_len() {
+                  pending.drain(..error_len);
+                  continue;
                 }
-
-                pending.clear();
                 break;
               }
             }
@@ -303,6 +307,8 @@ fn spawn_output_reader<R: Read + Send + 'static>(
 }
 
 
+const PYTHON_EXECUTION_TIMEOUT: Duration = Duration::from_secs(30);
+
 fn spawn_process_monitor(
   app: tauri::AppHandle,
   registry: Arc<SessionRegistry>,
@@ -310,7 +316,9 @@ fn spawn_process_monitor(
   child: Arc<Mutex<Child>>,
   stopped: Arc<AtomicBool>,
 ) {
-  thread::spawn(move || loop {
+  thread::spawn(move || {
+    let started_at = std::time::Instant::now();
+    loop {
     let status_result = {
       let mut child = child.lock().expect("child lock poisoned");
       child.try_wait()
@@ -343,7 +351,30 @@ fn spawn_process_monitor(
           .remove(&session_id);
         break;
       }
-      Ok(None) => thread::sleep(Duration::from_millis(50)),
+      Ok(None) => {
+        if started_at.elapsed() > PYTHON_EXECUTION_TIMEOUT {
+          let mut guard = child.lock().expect("child lock poisoned");
+          let _ = guard.kill();
+          let _ = guard.wait();
+          drop(guard);
+          emit_state(
+            &app,
+            PythonStateEvent {
+              session_id: session_id.clone(),
+              status: "timeout".into(),
+              exit_code: None,
+              message: Some("执行超时（30 秒），已自动终止。".into()),
+            },
+          );
+          registry
+            .sessions
+            .lock()
+            .expect("session registry lock poisoned")
+            .remove(&session_id);
+          break;
+        }
+        thread::sleep(Duration::from_millis(50));
+      }
       Err(error) => {
         emit_state(
           &app,
@@ -362,14 +393,14 @@ fn spawn_process_monitor(
         break;
       }
     }
-  });
+  }});
 }
 
 #[tauri::command]
 fn load_lesson_sources(app: tauri::AppHandle) -> Result<Vec<LessonSourceFile>, String> {
   let lessons_root = resolve_lessons_root(&app).ok_or_else(|| "Unable to locate lessons directory".to_string())?;
   let mut files = Vec::new();
-  collect_python_files(&lessons_root, &mut files)?;
+  collect_python_files(&lessons_root, &mut files, 0)?;
   files.sort();
 
   files
@@ -419,8 +450,17 @@ fn start_python_run(
   registry: State<'_, SessionRegistry>,
   code: String,
 ) -> Result<PythonRunSession, String> {
+  const MAX_CONCURRENT_SESSIONS: usize = 3;
+
   let spec = detect_python_command_spec().ok_or_else(|| "未检测到可用的 Python 解释器。".to_string())?;
   let session_id = Uuid::new_v4().to_string();
+
+  {
+    let sessions = registry.sessions.lock().expect("session registry lock poisoned");
+    if sessions.len() >= MAX_CONCURRENT_SESSIONS {
+      return Err("已达到最大并发运行数（3 个），请等待当前任务完成。".into());
+    }
+  }
 
   let mut command = Command::new(&spec.command);
   apply_hidden_process_flags(&mut command);

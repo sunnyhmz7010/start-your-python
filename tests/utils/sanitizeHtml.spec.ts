@@ -26,4 +26,16 @@ describe('sanitizeHtml', () => {
     expect(html).toContain('<img src="/course-images/python-install-checklist.svg" alt="安装">')
     expect(html).not.toContain('https://example.com/bad.png')
   })
+
+  it('rejects path traversal dots in image src', () => {
+    const html = sanitizeHtml('<img src="/course-images/../../etc/passwd.svg" alt="evil">')
+
+    expect(html).not.toContain('etc/passwd')
+  })
+
+  it('rejects URL-encoded path traversal in image src', () => {
+    const html = sanitizeHtml('<img src="/course-images/..%2F..%2Fshadow.png" alt="evil">')
+
+    expect(html).not.toContain('shadow')
+  })
 })

@@ -41,7 +41,7 @@ const DROP_WITH_CONTENT = new Set([
   'textarea'
 ])
 
-const IMAGE_SRC_PATTERN = /^\/course-images\/[\w./-]+\.(?:avif|gif|jpe?g|png|svg|webp)$/i
+const IMAGE_SRC_PATTERN = /^\/course-images\/[\w\/-]+\.(?:avif|gif|jpe?g|png|svg|webp)$/i
 
 function isSafeLink(value: string) {
   const trimmedValue = value.trim()
@@ -59,7 +59,11 @@ function isSafeLink(value: string) {
 }
 
 function isSafeImageSource(value: string) {
-  return IMAGE_SRC_PATTERN.test(value.trim())
+  const trimmed = value.trim()
+  if (trimmed.includes('..') || /\/(%2[eE]){2}/i.test(trimmed)) {
+    return false
+  }
+  return IMAGE_SRC_PATTERN.test(trimmed)
 }
 
 function cloneSafeNode(node: Node, document: Document): Node | null {
