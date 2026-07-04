@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
   - name: Security Report / 安全漏洞反馈
-    url: mailto:mail@sunnyhmz.top
-    about: Please report security vulnerabilities privately by following the security policy. / 安全问题请按安全策略私下反馈。
+    url: https://github.com/sunnyhmz7010/start-your-python
+    about: If you discover a security vulnerability, please do not open a public issue or discussion. Report it privately via email. / 若您发现安全漏洞，请勿通过公开的 Issue 或 Discussion 提交。请通过电子邮件私下联系我们：mail@sunnyhmz.top
