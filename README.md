@@ -284,7 +284,6 @@ npm run test
 本项目基于 [GPL-3.0](./LICENSE) 开源。
 
 ## ⭐ 星标历史
-## Star History
 
 <a href="https://www.star-history.com/?repos=sunnyhmz7010%2Fstart-your-python&type=date&legend=top-left">
  <picture>
