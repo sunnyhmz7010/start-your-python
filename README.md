@@ -10,11 +10,6 @@
   <a href="https://github.com/sunnyhmz7010/start-your-python/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/actions/workflow/status/sunnyhmz7010/start-your-python/ci.yaml?branch=main&label=CI" alt="CI" /></a>
 </p>
 
-<p align="center">
-  <a href="https://github.com/sunnyhmz7010/start-your-python/releases">下载发布包</a> ·
-  <a href="https://github.com/sunnyhmz7010/start-your-python/issues">反馈问题</a>
-</p>
-
 ---
 
 ## ✨ 为什么做这个应用
@@ -65,7 +60,7 @@ Python 入门最容易卡在“看懂教程”和“真的跑起来”之间。S
 
 ## ⚡ 快速开始
 
-### 📋 运行要求
+### 📋 前置要求
 
 - Windows 桌面端运行代码需要系统已安装 Python
 - Android 端用于课程阅读，不依赖系统 Python
@@ -82,7 +77,7 @@ Windows 也可以使用：
 py -3 --version
 ```
 
-### 📦 安装
+### 📦 安装与运行
 
 1. 从 [Releases](https://github.com/sunnyhmz7010/start-your-python/releases) 下载对应架构的 Windows 便携包，例如 `StartYourPython-vX.Y.Z-win-amd64.zip` 或 `StartYourPython-vX.Y.Z-win-arm64.zip`
 2. 解压后直接运行根目录里的 `Start Your Python.exe`
@@ -90,7 +85,7 @@ py -3 --version
 
 ## 📖 使用方式
 
-### 1. 🧑‍🎓 阅读课程
+### 🧑‍🎓 阅读课程
 
 打开应用后，从左侧课程树选择章节。课程内容来自：
 
@@ -115,7 +110,7 @@ lessons/
 ...
 ```
 
-### 2. ▶️ 运行示例
+### ▶️ 运行示例
 
 桌面端可以在课程步骤里运行示例代码。运行结果会出现在底部 Terminal 中：
 
@@ -124,7 +119,7 @@ lessons/
 - `input()` 会进入交互输入流程
 - 课程步骤运行成功后会更新本课进度；编辑器自由运行不会影响课程进度
 
-### 3. ✅ 完成进度
+### ✅ 完成进度
 
 课程步骤可以通过三种方式完成：
 
@@ -132,7 +127,7 @@ lessons/
 - 课程代码步骤运行成功并以退出码 0 结束
 - 随堂测验选择正确答案
 
-### 4. 🖼️ 引用课程图片
+### 🖼️ 引用课程图片
 
 课程图片放在：
 
@@ -210,7 +205,7 @@ print("Hello, Python!")
 - 内容渲染：Marked、课程文件解析、HTML 清理
 - 测试与类型检查：Vitest、Vue Test Utils、vue-tsc
 
-## 🗂️ 项目架构
+## 🗂️ 项目结构
 
 ```text
 start-your-python/
