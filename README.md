@@ -7,7 +7,7 @@
 <p align="center">
   <a href="https://github.com/sunnyhmz7010/start-your-python/releases"><img src="https://img.shields.io/github/v/release/sunnyhmz7010/start-your-python?label=Release&color=3b82f6" alt="Release" /></a>
   <a href="https://github.com/sunnyhmz7010/start-your-python/blob/main/LICENSE"><img src="https://img.shields.io/github/license/sunnyhmz7010/start-your-python?color=10b981" alt="License" /></a>
-  <a href="https://github.com/sunnyhmz7010/start-your-python/actions/workflows/ci.yaml"><img src="https://img.shields.io/github/actions/workflow/status/sunnyhmz7010/start-your-python/ci.yaml?branch=main&label=CI" alt="CI" /></a>
+  <a href="https://github.com/sunnyhmz7010/start-your-python/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/sunnyhmz7010/start-your-python/ci.yml?branch=main&label=CI" alt="CI" /></a>
 </p>
 
 ---
