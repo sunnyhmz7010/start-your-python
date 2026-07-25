@@ -278,16 +278,6 @@ npm run test
 
 本项目基于 [GPL-3.0](./LICENSE) 开源。
 
-## ⭐ 星标历史
-
-<a href="https://www.star-history.com/?repos=sunnyhmz7010%2Fstart-your-python&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=sunnyhmz7010/start-your-python&type=date&theme=dark&legend=top-left&sealed_token=KnPSxKPjYCdEIHaldwxfRdj7xP9S99wMegmEYuIwp2uI4PsMx9TxQksoA5Usq9MAWWDgcF0BjWk-seBYvol7IO7J3x3GF5cMrQZszSCm2aoZ7LTR1LlTywcv9nbV5R3rIC01SX5gMlgvJOi9M9A_nkykzW5GwI2bm4TNQlu40Nb-WYDJnNRB1niUsxi-" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=sunnyhmz7010/start-your-python&type=date&legend=top-left&sealed_token=KnPSxKPjYCdEIHaldwxfRdj7xP9S99wMegmEYuIwp2uI4PsMx9TxQksoA5Usq9MAWWDgcF0BjWk-seBYvol7IO7J3x3GF5cMrQZszSCm2aoZ7LTR1LlTywcv9nbV5R3rIC01SX5gMlgvJOi9M9A_nkykzW5GwI2bm4TNQlu40Nb-WYDJnNRB1niUsxi-" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=sunnyhmz7010/start-your-python&type=date&legend=top-left&sealed_token=KnPSxKPjYCdEIHaldwxfRdj7xP9S99wMegmEYuIwp2uI4PsMx9TxQksoA5Usq9MAWWDgcF0BjWk-seBYvol7IO7J3x3GF5cMrQZszSCm2aoZ7LTR1LlTywcv9nbV5R3rIC01SX5gMlgvJOi9M9A_nkykzW5GwI2bm4TNQlu40Nb-WYDJnNRB1niUsxi-" />
- </picture>
-</a>
-
 <div align="center">
   <sub>Built with ❤️ by Sunny</sub>
 </div>
