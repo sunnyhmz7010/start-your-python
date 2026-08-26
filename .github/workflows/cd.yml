@@ -8,12 +8,13 @@ on:
     types:
       - published
 
+permissions:
+  contents: write
+
 jobs:
   windows:
     name: Windows Release (${{ matrix.arch }})
     runs-on: windows-latest
-    permissions:
-      contents: write
     strategy:
       fail-fast: false
       matrix:
@@ -72,8 +73,6 @@ jobs:
   android:
     name: Android Release
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
       - name: Checkout
