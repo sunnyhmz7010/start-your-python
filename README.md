@@ -1,7 +1,7 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/sunnyhmz7010/start-your-python/refs/heads/main/public/icon.png" alt="Start Your Python Logo" width="120" />
   <h1>Start Your Python</h1>
-  <p>把中文课程、示例代码和本机运行整合在一起的 Python 入门学习工作区</p>
+  <p>面向 Python 初学者的本地学习工作区，把中文课程、示例代码和真实终端运行放在一个 PyCharm 风格界面里</p>
 </div>
 
 <p align="center">
